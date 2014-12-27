@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
 <material>
-	<technique name="Techniques/DiffNormal.xml" />
+	<technique name="Techniques/DiffNormalEmissive.xml" quality="1"/>
 	<texture unit="diffuse" name="DroneAnarchy/Resources/Textures/pattern26_d.tga" />
 	<texture unit="normal" name="DroneAnarchy/Resources/Textures/pattern26_n.tga" />
+	<texture unit="emissive" name="DroneAnarchy/Resources/Textures/pattern26_g.tga" />
 	<parameter name="MatDiffColor" value="0.6 0.6 0.6 1" />
 	<parameter name="MatSpecColor" value="0.4 0.4 0.4 10" />
-	<parameter name="MatEmissiveColor" value="0 0 0 1" />
+	<parameter name="MatEmissiveColor" value="1 1 1 1" />
 	<cull value="none" />
 	<shadowcull value="none" />
 </material>
