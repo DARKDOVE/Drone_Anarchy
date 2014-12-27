@@ -199,7 +199,7 @@ void CreateHUD()
 	radarScreenBase_.position = Vector2(0, -99);
 	radarScreenBase_.opacity = 0.9f;
 	radarScreenBase_.priority = 2;
-	radarScreenBase_.color = Color(0.0, 0.4, 0.3);
+	radarScreenBase_.color = Color(0.0, 0.4, 0.3,0.7);
 	
 	
 	Sprite@ radarScreen = ui.root.CreateChild("Sprite");
@@ -381,9 +381,9 @@ void PlayBackgroundMusic(String musicName)
 void CreateValueAnimation()
 {
 	valAnim_ = ValueAnimation();
-	valAnim_.SetKeyFrame(0, Variant(Color(0.0, 0.4, 0.3)));
+	valAnim_.SetKeyFrame(0, Variant(Color(0.0, 0.4, 0.3, 0.7)));
 	valAnim_.SetKeyFrame(0.3, Variant(Color(0.3,0.0,0.0)));
-	valAnim_.SetKeyFrame(1, Variant(Color(0.0, 0.4, 0.3)));
+	valAnim_.SetKeyFrame(1, Variant(Color(0.0, 0.4, 0.3, 0.7)));
 }
 
 void SubscribeToEvents()

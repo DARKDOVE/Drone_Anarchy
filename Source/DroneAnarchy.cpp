@@ -37,6 +37,7 @@
 #include <ParticleEmitter.h>
 #include <PhysicsWorld.h>
 #include <PhysicsEvents.h>
+#include <FileSystem.h>
 
 #include <CoreEvents.h>
 #include "CustomEvents.h"
@@ -81,9 +82,18 @@ void DroneAnarchy::Setup()
     srand(time(NULL) % 1000);
 
     engineParameters_["ResourcePaths"] = "CoreData;Assets";
-    engineParameters_["LogName"]   = "DroneAnarchy.log";
     engineParameters_["WindowResizable"] = true;
     engineParameters_["FullScreen"] = false;
+
+    FileSystem* filesystem = GetSubsystem<FileSystem>();
+    String dirName = filesystem->GetCurrentDir() + "AppLog";
+
+    if(!filesystem->DirExists(dirName))
+    {
+        filesystem->CreateDir(dirName);
+    }
+
+    engineParameters_["LogName"] = dirName + "/DroneAnarchy.log";
 }
 
 void DroneAnarchy::Start()
