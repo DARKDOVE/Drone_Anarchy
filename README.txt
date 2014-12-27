@@ -1,7 +1,7 @@
  DRONE ANARCHY
 ==========================
 
-A simple test project inspired by NinjaSnowWars and intended to be used in exploring the basic and essential parts of Urho3D(http://urho3d.github.io/). Drone Anarchy is an experimental project of PROJECT DARKDOVE(http://darkdove.proboards.com/).
+A simple experimental project inspired by NinjaSnowWars and intended to be used in exploring the basic and essential parts of Urho3D(http://urho3d.github.io/). Drone Anarchy is the pilot project of PROJECT DARKDOVE(http://darkdove.proboards.com/).
 
 This work is Licensed under the MIT license, see License.txt for details.
 
