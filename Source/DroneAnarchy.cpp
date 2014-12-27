@@ -81,7 +81,7 @@ void DroneAnarchy::Setup()
 {
     srand(time(NULL) % 1000);
 
-    engineParameters_["ResourcePaths"] = "CoreData;Assets";
+    engineParameters_["ResourcePaths"] = "CoreData;Data";
     engineParameters_["WindowResizable"] = true;
     engineParameters_["FullScreen"] = false;
 
