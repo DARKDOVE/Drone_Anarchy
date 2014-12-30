@@ -54,38 +54,17 @@ public:
 
 
 private:
-    void CreateScene();
-    void CreateDebugHud();
 
-
-    void SetWindowTitleAndIcon();
-
-    void CreateValueAnimation();
-    void CreateAudioSystem();
-    void PlaySoundFX(Node* soundNode, String soundName);
-    void PlayBackgroundMusic(String musicName);
-
-    //This is to prevent the pause that occurs in loading a resource for the first time
-    void LoadBackgroundResources();
-    void SubscribeToEvents();
-
-    void CreatePlayer();
-    void CreateCameraAndLight();
-    void Fire();
 
     void StartGame();
+    void PauseGame();
     void StartCounterToGame();
     void InitiateGameOver();
     void CleanupScene();
-
-    void SpawnDrone();
-    Sprite* CreateDroneSprite();
-    void UpdateDroneSprites();
-    void UpdateHealthTexture(float healthFraction);
-    void UpdateScoreDisplay();
-
-    void SpawnBullet(bool first);
-    void SpawnExplosion(Vector3 position);
+    void SubscribeToEvents();
+    void SetWindowTitleAndIcon();
+    //This is to prevent the pause that occurs in loading a resource for the first time
+    void LoadBackgroundResources();
 
     void CreateInterface();
     void CreateHUD();
@@ -93,20 +72,41 @@ private:
     void CreatePlayerScoreUI();
     void CreateDisplayTexts();
 
+    void CreateScene();
+    void CreateDebugHud();
+    void CreatePlayer();
+    void CreateCameraAndLight();
+    void CreateValueAnimation();
+    void CreateAudioSystem();
+    Sprite* CreateDroneSprite();
+
+    void Fire();
+    void PlaySoundFX(Node* soundNode, String soundName);
+    void PlayBackgroundMusic(String musicName);
+
+    void SpawnDrone();
+    void SpawnBullet(bool first);
+    void SpawnExplosion(Vector3 position);
+
+    void UpdateDroneSprites();
+    void UpdateHealthTexture(float healthFraction);
+    void UpdateScoreDisplay();
 
     void HandleKeyOnOutGame(int key);
     void HandleKeyOnInGame(int key);
-    void PauseGame();
 
 
 
     float spriteUpdateCounter_;
     float droneSpawnCounter_;
     float gamePhaseCounter_;
-    bool onQuit_;
+
     int playerScore_;
 
-    bool playerDestroyed_ = false;
+    bool onQuit_;
+    bool playerDestroyed_;
+
+    GameState gameState_;
 
     SharedPtr<Scene> scene_;
     SharedPtr<Node> cameraNode_;
@@ -126,7 +126,7 @@ private:
     SharedPtr<Text> playerScoreMessageText_;
     SharedPtr<Text> optionsInfoText_;
     SharedPtr<SoundSource> backgroundMusicSource_;
-    GameState gameState_;
+
 };
 
 
