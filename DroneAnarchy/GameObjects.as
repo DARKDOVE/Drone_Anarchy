@@ -2,26 +2,26 @@
 
 class PlayerObject : ScriptObject
 {
-	float maximumHealth;
-	float currentHealth;
-	float healthDeductionRate;
+	float maximumHealth_;
+	float currentHealth_;
+	float healthDeductionRate_;
 	
 	
 	PlayerObject()
 	{
-		maximumHealth = currentHealth = 100;
-		healthDeductionRate = 2;
+		maximumHealth_ = currentHealth_ = 100;
+		healthDeductionRate_ = 2;
 	}
 	
 	void OnHit()
 	{
-		currentHealth -= healthDeductionRate;
-		if(currentHealth < 0.0f )
+		currentHealth_ -= healthDeductionRate_;
+		if(currentHealth_ < 0.0f )
 		{
-			currentHealth = 0.0f;
+			currentHealth_ = 0.0f;
 		}
 		
-		float healthFraction = currentHealth / maximumHealth;
+		float healthFraction = currentHealth_ / maximumHealth_;
 		VariantMap eventData;
 		eventData["CurrentHealthFraction"] = healthFraction;
 		SendEvent("PlayerHit", eventData);
@@ -33,19 +33,19 @@ class PlayerObject : ScriptObject
 class DroneObject : ScriptObject
 {
 	
-	float currentHealthLevel;
-	float attackTime;
-	float attackTimer;
+	float currentHealthLevel_;
+	float attackTime_;
+	float attackTimer_;
 	
-	bool hasAttacked;
+	bool hasAttacked_;
 	
 	
 	DroneObject()
 	{
-		currentHealthLevel = 6;
-		attackTime = 37;
-		attackTimer = 0;
-		hasAttacked = false;
+		currentHealthLevel_ = 6;
+		attackTime_ = 37;
+		attackTimer_ = 0;
+		hasAttacked_ = false;
 		
 	}
 	
@@ -69,7 +69,7 @@ class DroneObject : ScriptObject
 	void FixedUpdate(float timestep)
 	{
 		
-		if(currentHealthLevel <= 0)
+		if(currentHealthLevel_ <= 0)
 		{
 			//Add explosion Effects
 			VariantMap eventData;
@@ -77,10 +77,10 @@ class DroneObject : ScriptObject
 			SendEvent("DroneDestroyed", eventData);
 			Destroy();
 		}
-		else if(!hasAttacked)
+		else if(!hasAttacked_)
 		{
-			attackTimer += timestep;
-			if(attackTimer >= attackTime)
+			attackTimer_ += timestep;
+			if(attackTimer_ >= attackTime_)
 			{
 				Attack();
 			}
@@ -111,7 +111,7 @@ class DroneObject : ScriptObject
 		objectBody.kinematic = false;
 				
 		objectBody.linearVelocity = node.rotation * Vector3(0,-15, -35);
-		hasAttacked = true;
+		hasAttacked_ = true;
 	}
 	
 	void Destroy()
@@ -123,7 +123,7 @@ class DroneObject : ScriptObject
 	
 	void OnHit()
 	{
-		currentHealthLevel -= 1;
+		currentHealthLevel_ -= 1;
 	}
 	
 }
@@ -132,14 +132,14 @@ class DroneObject : ScriptObject
 ///Bullet Object Class
 class BulletObject : ScriptObject
 {
-	float termTime;
-	float termTimeCounter;
+	float termTime_;
+	float termTimeCounter_;
 	
 	
 	BulletObject()
 	{
-		termTime = 1;
-		termTimeCounter = 0;
+		termTime_ = 1;
+		termTimeCounter_ = 0;
 	}
 	
 	
@@ -151,9 +151,9 @@ class BulletObject : ScriptObject
 	
 	void FixedUpdate(float timestep)
 	{
-		termTimeCounter += timestep;
+		termTimeCounter_ += timestep;
 		
-		if(termTimeCounter >= termTime)
+		if(termTimeCounter_ >= termTime_)
 		{
 			Destroy();
 		}
@@ -186,18 +186,18 @@ class BulletObject : ScriptObject
 ///Explosion Object
 class ExplosionObject : ScriptObject
 {
-	float duration;
+	float duration_;
 	
 	
 	ExplosionObject()
 	{
-		duration = 0.78f;
+		duration_ = 0.78f;
 	}
 	
 	void FixedUpdate(float timestep)
 	{
-		duration -= timestep;
-		if(duration < 0.0f)
+		duration_ -= timestep;
+		if(duration_ < 0.0f)
 		{
 			node.Remove();
 		}
