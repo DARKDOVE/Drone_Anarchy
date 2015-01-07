@@ -1,26 +1,3 @@
-//
-// Copyright (c) 2014 - 2015 Drone Anarchy.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-//
-
-
 #include <ctime>
 
 #include "DroneAnarchy.h"
@@ -33,8 +10,7 @@
 #include <XMLFile.h>
 #include <ResourceCache.h>
 #include <DebugHud.h>
-#include <Script.h>
-#include <ScriptFile.h>
+
 #include <ScriptInstance.h>
 #include <Viewport.h>
 #include <Font.h>
@@ -69,6 +45,16 @@
 #include <Variant.h>
 
 
+
+#ifdef USE_SCRIPT_OBJECT
+    #include <Script.h>
+    #include <ScriptFile.h>
+#else
+    #include "GameObjects.h"
+#endif
+
+
+
 const int BULLET_COLLISION_LAYER = 1;
 const int PLAYER_COLLISION_LAYER = 2;
 const int DRONE_COLLISION_LAYER = 3;
@@ -94,9 +80,20 @@ DroneAnarchy::DroneAnarchy(Urho3D::Context *context) : Application(context)
     spriteUpdateCounter_ = droneSpawnCounter_ = 0;
     playerScore_ = 0;
     onQuit_ = false;
-    context_->RegisterSubsystem(new Script(context_));
     gameState_ = GS_OUTGAME;
     playerDestroyed_ = false;
+
+
+#ifdef USE_SCRIPT_OBJECT
+    context_->RegisterSubsystem(new Script(context_));
+#else
+    context_->RegisterFactory<PlayerObject>();
+    context_->RegisterFactory<DroneObject>();
+    context_->RegisterFactory<BulletObject>();
+    context_->RegisterFactory<ExplosionObject>();
+#endif
+
+
 }
 
 
@@ -388,9 +385,14 @@ void DroneAnarchy::CreatePlayer()
     playerCS->SetSphere(2.0f);
 
 
+
+#ifdef USE_SCRIPT_OBJECT
     ResourceCache* cache = GetSubsystem<ResourceCache>();
     ScriptInstance* sInstance = playerNode_->CreateComponent<ScriptInstance>();
     sInstance->CreateObject(cache->GetResource<ScriptFile>("DroneAnarchy/GameObjects.as"),"PlayerObject");
+#else
+    playerNode_->CreateComponent<PlayerObject>();
+#endif
 
     playerDestroyed_ = false;
 
@@ -493,6 +495,7 @@ void DroneAnarchy::CleanupScene()
 
     droneRootNode_->RemoveAllChildren();
 
+#ifdef USE_SCRIPT_OBJECT
     //Cleanup any bullet still remaining in the scene
     PODVector< Node * >  scriptedNodes;
     scene_->GetChildrenWithComponent<ScriptInstance>(scriptedNodes);
@@ -507,6 +510,26 @@ void DroneAnarchy::CleanupScene()
             scriptedNodes[i]->Remove();
         }
     }
+#else
+    PODVector<Node*> bulletNodes;
+    scene_->GetChildrenWithComponent<BulletObject>(bulletNodes);
+
+    for(int i=0; i<bulletNodes.Size();i++)
+    {
+        bulletNodes[i]->Remove();
+    }
+
+    PODVector<Node*> explosionNodes;
+    scene_->GetChildrenWithComponent<BulletObject>(explosionNodes);
+
+    for(int i=0; i<explosionNodes.Size();i++)
+    {
+        bulletNodes[i]->Remove();
+    }
+
+#endif
+
+
 
     //Remove the player Node
     playerNode_->Remove();
@@ -545,8 +568,12 @@ void DroneAnarchy::SpawnDrone()
     CollisionShape* droneCS = droneNode->CreateComponent<CollisionShape>();
     droneCS->SetSphere(0.3f);
 
+#ifdef USE_SCRIPT_OBJECT
     ScriptInstance* sInstance = droneNode->CreateComponent<ScriptInstance>();
     sInstance->CreateObject(cache->GetResource<ScriptFile>("DroneAnarchy/GameObjects.as"),"DroneObject");
+#else
+    droneNode->CreateComponent<DroneObject>();
+#endif
 
     AnimationController* animController = droneNode->CreateComponent<AnimationController>();
     animController->PlayExclusive("DroneAnarchy/Resources/Models/open_arm.ani", 0, false);
@@ -631,10 +658,13 @@ void DroneAnarchy::SpawnBullet(bool first)
     bulletTrail->SetEffect(cache->GetResource<ParticleEffect>("DroneAnarchy/Resources/Particles/bullet_particle.xml"));
     bulletTrail->SetEnabled(true);
 
+
+#ifdef USE_SCRIPT_OBJECT
     ScriptInstance* sInstance = bulletNode->CreateComponent<ScriptInstance>();
     sInstance->CreateObject(cache->GetResource<ScriptFile>("DroneAnarchy/GameObjects.as"),"BulletObject");
-
-
+#else
+    bulletNode->CreateComponent<BulletObject>();
+#endif
 
     RigidBody* bulletRB = bulletNode->CreateComponent<RigidBody>();
     bulletRB->SetMass(1.0f);
@@ -663,8 +693,13 @@ void DroneAnarchy::SpawnExplosion(Vector3 position)
     explosion->SetEffect(cache->GetResource<ParticleEffect>("DroneAnarchy/Resources/Particles/explosion.xml"));
     explosion->SetEnabled(true);
 
+
+#ifdef USE_SCRIPT_OBJECT
     ScriptInstance* sInstance = explosionNode->CreateComponent<ScriptInstance>();
     sInstance->CreateObject(cache->GetResource<ScriptFile>("DroneAnarchy/GameObjects.as"),"ExplosionObject");
+#else
+    explosionNode->CreateComponent<ExplosionObject>();
+#endif
 
     PlaySoundFX(explosionNode, "DroneAnarchy/Resources/Sounds/explosion.ogg");
 
