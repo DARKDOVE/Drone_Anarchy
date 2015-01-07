@@ -169,7 +169,7 @@ class BulletObject : ScriptObject
 		if(droneObj !is null)
 		{
 			droneObj.OnHit();
-			SendEvent("DroneHit",VariantMap());
+			SendEvent("DroneHit");
 		}
 		
 		Destroy();
