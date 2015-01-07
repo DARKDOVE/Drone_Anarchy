@@ -40,6 +40,9 @@
 #include <ValueAnimation.h>
 #include <SoundSource.h>
 
+//Comment out the line below to build using LogicComponent
+#define USE_SCRIPT_OBJECT
+
 
 enum GameState
 {
