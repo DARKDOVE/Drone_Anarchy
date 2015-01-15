@@ -32,7 +32,6 @@
 #include <Light.h>
 #include <Audio.h>
 #include <XMLFile.h>
-#include <ResourceCache.h>
 #include <DebugHud.h>
 
 #include <ScriptInstance.h>
