@@ -25,20 +25,19 @@
 #ifndef __DRONEANARCHY_H_
 #define __DRONEANARCHY_H_
 
-#include <Application.h>
-#include <Engine.h>
-#include <InputEvents.h>
-#include <Renderer.h>
-#include <ResourceCache.h>
-#include <Sprite.h>
-#include <Texture2D.h>
-#include <UI.h>
-#include <Scene.h>
-#include <Node.h>
-#include <InputEvents.h>
-#include <Text.h>
-#include <ValueAnimation.h>
-#include <SoundSource.h>
+#include <Urho3D/Engine/Application.h>
+#include <Urho3D/Engine/Engine.h>
+#include <Urho3D/Input/InputEvents.h>
+#include <Urho3D/Graphics/Renderer.h>
+#include <Urho3D/Resource/ResourceCache.h>
+#include <Urho3D/UI/Sprite.h>
+#include <Urho3D/Graphics/Texture2D.h>
+#include <Urho3D/UI/UI.h>
+#include <Urho3D/Scene/Scene.h>
+#include <Urho3D/Scene/Node.h>
+#include <Urho3D/UI/Text.h>
+#include <Urho3D/Scene/ValueAnimation.h>
+#include <Urho3D/Audio/SoundSource.h>
 
 //Comment out the line below to build using LogicComponent
 #define USE_SCRIPT_OBJECT

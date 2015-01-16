@@ -24,13 +24,14 @@
 
 
 #include "GameObjects.h"
-#include <Node.h>
-#include <PhysicsEvents.h>
-#include <ValueAnimation.h>
-#include <AnimationController.h>
-#include <RigidBody.h>
-#include <Object.h>
-#include <Sprite.h>
+
+#include <Urho3D/Scene/Node.h>
+#include <Urho3D/Physics/PhysicsEvents.h>
+#include <Urho3D/Scene/ValueAnimation.h>
+#include <Urho3D/Graphics/AnimationController.h>
+#include <Urho3D/Physics/RigidBody.h>
+#include <Urho3D/Core/Object.h>
+#include <Urho3D/UI/Sprite.h>
 
 
 PlayerObject::PlayerObject(Context* context):

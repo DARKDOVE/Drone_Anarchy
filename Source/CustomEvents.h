@@ -25,7 +25,7 @@
 #ifndef CUSTOMEVENTS_H
 #define CUSTOMEVENTS_H
 
-#include <Object.h>
+#include <Urho3D/Core/Object.h>
 
 
 

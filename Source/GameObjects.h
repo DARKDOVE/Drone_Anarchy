@@ -25,9 +25,10 @@
 #ifndef GAMEOBJECTS_H
 #define GAMEOBJECTS_H
 
-#include <LogicComponent.h>
-#include <Engine.h>
 #include "CustomEvents.h"
+
+#include <Urho3D/Scene/LogicComponent.h>
+#include <Urho3D/Engine/Engine.h>
 
 using namespace Urho3D;
 

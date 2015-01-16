@@ -25,47 +25,49 @@
 #include <ctime>
 
 #include "DroneAnarchy.h"
-#include <Zone.h>
-#include <StaticModel.h>
-#include <RigidBody.h>
-#include <CollisionShape.h>
-#include <Light.h>
-#include <Audio.h>
-#include <XMLFile.h>
-#include <DebugHud.h>
-
-#include <ScriptInstance.h>
-#include <Viewport.h>
-#include <Font.h>
-#include <Animation.h>
-
-#include <Octree.h>
-#include <Material.h>
-#include <AnimationController.h>
-#include <AnimatedModel.h>
-#include <Texture2D.h>
-#include <Sprite.h>
-#include <Graphics.h>
-#include <Image.h>
-
-#include <SoundSource3D.h>
-#include <SoundListener.h>
-#include <Sound.h>
-#include <Color.h>
-#include <BillboardSet.h>
-#include <Camera.h>
-
-#include <ParticleEffect.h>
-#include <ParticleEmitter.h>
-#include <PhysicsWorld.h>
-#include <PhysicsEvents.h>
-#include <FileSystem.h>
-
-#include <CoreEvents.h>
 #include "CustomEvents.h"
 
-#include <UI.h>
-#include <Variant.h>
+#include <Urho3D/Graphics/Zone.h>
+#include <Urho3D/Graphics/StaticModel.h>
+#include <Urho3D/Physics/RigidBody.h>
+#include <Urho3D/Physics/CollisionShape.h>
+#include <Urho3D/Graphics/Light.h>
+#include <Urho3D/Audio/Audio.h>
+#include <Urho3D/Resource/XMLFile.h>
+#include <Urho3D/Resource/ResourceCache.h>
+#include <Urho3D/Engine/DebugHud.h>
+
+#include <Urho3D/Script/ScriptInstance.h>
+#include <Urho3D/Graphics/Viewport.h>
+#include <Urho3D/UI/Font.h>
+#include <Urho3D/Graphics/Animation.h>
+
+#include <Urho3D/Graphics/Octree.h>
+#include <Urho3D/Graphics/Material.h>
+#include <Urho3D/Graphics/AnimationController.h>
+#include <Urho3D/Graphics/AnimatedModel.h>
+#include <Urho3D/Graphics/Texture2D.h>
+#include <Urho3D/UI/Sprite.h>
+#include <Urho3D/Graphics/Graphics.h>
+#include <Urho3D/Resource/Image.h>
+
+#include <Urho3D/Audio/SoundSource3D.h>
+#include <Urho3D/Audio/SoundListener.h>
+#include <Urho3D/Audio/Sound.h>
+#include <Urho3D/Math/Color.h>
+#include <Urho3D/Graphics/BillboardSet.h>
+#include <Urho3D/Graphics/Camera.h>
+
+#include <Urho3D/Graphics/ParticleEffect.h>
+#include <Urho3D/Graphics/ParticleEmitter.h>
+#include <Urho3D/Physics/PhysicsWorld.h>
+#include <Urho3D/Physics/PhysicsEvents.h>
+#include <Urho3D/IO/FileSystem.h>
+
+#include <Urho3D/Core/CoreEvents.h>
+
+#include <Urho3D/UI/UI.h>
+#include <Urho3D/Core/Variant.h>
 
 
 
