@@ -24,8 +24,6 @@
 
 #include <ctime>
 
-#include "DroneAnarchy.h"
-#include "CustomEvents.h"
 
 #include <Urho3D/Graphics/Zone.h>
 #include <Urho3D/Graphics/StaticModel.h>
@@ -69,6 +67,8 @@
 #include <Urho3D/UI/UI.h>
 #include <Urho3D/Core/Variant.h>
 
+#include "CustomEvents.h"
+#include "DroneAnarchy.h"
 
 
 #ifdef USE_SCRIPT_OBJECT
