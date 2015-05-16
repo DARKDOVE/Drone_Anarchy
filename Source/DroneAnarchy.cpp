@@ -72,8 +72,8 @@
 
 
 #ifdef USE_SCRIPT_OBJECT
-    #include <Script.h>
-    #include <ScriptFile.h>
+    #include <Urho3D/Script/Script.h>
+    #include <Urho3D/Script/ScriptFile.h>
 #else
     #include "GameObjects.h"
 #endif
