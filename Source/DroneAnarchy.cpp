@@ -24,7 +24,7 @@
 
 #include <ctime>
 
-
+#include <Urho3D/Urho3D.h>
 #include <Urho3D/Graphics/Zone.h>
 #include <Urho3D/Graphics/StaticModel.h>
 #include <Urho3D/Physics/RigidBody.h>
@@ -33,12 +33,22 @@
 #include <Urho3D/Audio/Audio.h>
 #include <Urho3D/Resource/XMLFile.h>
 #include <Urho3D/Resource/ResourceCache.h>
+#include <Urho3D/Engine/Engine.h>
 #include <Urho3D/Engine/DebugHud.h>
+#include <Urho3D/Engine/Application.h>
 
 #include <Urho3D/Script/ScriptInstance.h>
 #include <Urho3D/Graphics/Viewport.h>
+#include <Urho3D/Graphics/Renderer.h>
 #include <Urho3D/UI/Font.h>
 #include <Urho3D/Graphics/Animation.h>
+#include <Urho3D/Input/Input.h>
+#include <Urho3D/Input/InputEvents.h>
+
+#include <Urho3D/Scene/Scene.h>
+#include <Urho3D/Scene/Node.h>
+#include <Urho3D/Scene/ValueAnimation.h>
+
 
 #include <Urho3D/Graphics/Octree.h>
 #include <Urho3D/Graphics/Material.h>
@@ -46,6 +56,7 @@
 #include <Urho3D/Graphics/AnimatedModel.h>
 #include <Urho3D/Graphics/Texture2D.h>
 #include <Urho3D/UI/Sprite.h>
+#include <Urho3D/UI/Text.h>
 #include <Urho3D/Graphics/Graphics.h>
 #include <Urho3D/Resource/Image.h>
 
