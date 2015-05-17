@@ -23,8 +23,7 @@
 
 
 
-#include "GameObjects.h"
-
+#include <Urho3D/Urho3D.h>
 #include <Urho3D/Scene/Node.h>
 #include <Urho3D/Physics/PhysicsEvents.h>
 #include <Urho3D/Scene/ValueAnimation.h>
@@ -32,6 +31,12 @@
 #include <Urho3D/Physics/RigidBody.h>
 #include <Urho3D/Core/Object.h>
 #include <Urho3D/UI/Sprite.h>
+
+#include <Urho3D/Scene/LogicComponent.h>
+#include <Urho3D/Engine/Engine.h>
+
+#include "CustomEvents.h"
+#include "GameObjects.h"
 
 
 PlayerObject::PlayerObject(Context* context):
