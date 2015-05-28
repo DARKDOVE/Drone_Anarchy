@@ -43,3 +43,9 @@ the code of Urho3DPlayer by adding the following line in its Setup() function
 srand(time(NULL) % 1000);
 SetRandomSeed(rand());
 //
+
+
+CONTRIBUTORS
+-------------
+BlueMagnificent
+jimmarlowe
