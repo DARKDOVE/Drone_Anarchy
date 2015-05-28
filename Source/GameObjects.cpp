@@ -142,7 +142,7 @@ void DroneObject::Attack()
     GetNode()->SetAnimationEnabled(false);
 
     AnimationController* animController = GetComponent<AnimationController>();
-    animController->PlayExclusive("DroneAnarchy/Resources/Models/close_arm.ani", 0, false);
+    animController->PlayExclusive("Resources/Models/close_arm.ani", 0, false);
     RigidBody* objectBody = GetComponent<RigidBody>();
     objectBody->SetKinematic(false);
 

@@ -106,7 +106,7 @@ class DroneObject : ScriptObject
 		node.animationEnabled = false;
 			
 		AnimationController@ animController = node.GetComponent("AnimationController");
-		animController.PlayExclusive("DroneAnarchy/Resources/Models/close_arm.ani", 0, false);
+		animController.PlayExclusive("Resources/Models/close_arm.ani", 0, false);
 		RigidBody@ objectBody = node.GetComponent("RigidBody");
 		objectBody.kinematic = false;
 				

@@ -1,4 +1,4 @@
-#include "DroneAnarchy/GameObjects.as"
+#include "GameObjects.as"
 
 enum GameState
 {
@@ -95,7 +95,7 @@ void StartGame()
 	healthFillSprite_.imageRect = IntRect(0, 0, 512, 64);
 	UpdateHealthTexture(1);
 	
-	PlayBackgroundMusic("DroneAnarchy/Resources/Sounds/cyber_dance.ogg");
+	PlayBackgroundMusic("Resources/Sounds/cyber_dance.ogg");
 	StartCounterToGame();
 }
 
@@ -157,7 +157,7 @@ void CreateHUD()
 {
 	Sprite@ hudSprite = ui.root.CreateChild("Sprite");
 	
-	hudSprite.texture = cache.GetResource("Texture2D", "DroneAnarchy/Resources/Textures/hud.png");
+	hudSprite.texture = cache.GetResource("Texture2D", "Resources/Textures/hud.png");
 	hudSprite.SetAlignment(HA_CENTER, VA_BOTTOM);
 	hudSprite.SetSize(512, 256);
 	hudSprite.SetHotSpot(256, 256);
@@ -165,7 +165,7 @@ void CreateHUD()
 	hudSprite.priority = 3;
 	
 	Sprite@ hudSpriteBG = ui.root.CreateChild("Sprite");
-	hudSpriteBG.texture = cache.GetResource("Texture2D", "DroneAnarchy/Resources/Textures/hud_bg.png");
+	hudSpriteBG.texture = cache.GetResource("Texture2D", "Resources/Textures/hud_bg.png");
 	hudSpriteBG.SetAlignment(HA_CENTER, VA_BOTTOM);
 	hudSpriteBG.SetSize(512, 256);
 	hudSpriteBG.SetHotSpot(256, 256);
@@ -174,7 +174,7 @@ void CreateHUD()
 	hudSpriteBG.priority = -3;
 	
 	Sprite@ healthBaseSprite = ui.root.CreateChild("Sprite");
-	healthBaseSprite.texture = cache.GetResource("Texture2D", "DroneAnarchy/Resources/Textures/health_bg.png");
+	healthBaseSprite.texture = cache.GetResource("Texture2D", "Resources/Textures/health_bg.png");
 	healthBaseSprite.SetAlignment(HA_CENTER, VA_BOTTOM);
 	healthBaseSprite.SetSize(512,128);
 	healthBaseSprite.SetHotSpot(256,64);
@@ -183,7 +183,7 @@ void CreateHUD()
 	healthBaseSprite.opacity = 0.9f;
 	
 	healthFillSprite_ = healthBaseSprite.CreateChild("Sprite");
-	healthFillSprite_.texture = cache.GetResource("Texture2D", "DroneAnarchy/Resources/Textures/health_bar_green.png");
+	healthFillSprite_.texture = cache.GetResource("Texture2D", "Resources/Textures/health_bar_green.png");
 	healthFillSprite_.SetAlignment(HA_CENTER, VA_CENTER);
 	healthFillSprite_.SetSize(256, 25);
 	healthFillSprite_.SetHotSpot(128, 25);
@@ -192,7 +192,7 @@ void CreateHUD()
 	healthFillSprite_.blendMode = BLEND_ALPHA;
 	
 	radarScreenBase_ = ui.root.CreateChild("Sprite");
-	radarScreenBase_.texture = cache.GetResource("Texture2D", "DroneAnarchy/Resources/Textures/radar_screen_base_.png");
+	radarScreenBase_.texture = cache.GetResource("Texture2D", "Resources/Textures/radar_screen_base_.png");
 	radarScreenBase_.SetSize(128, 128);
 	radarScreenBase_.SetAlignment(HA_CENTER, VA_BOTTOM);
 	radarScreenBase_.SetHotSpot(64, 64);
@@ -203,7 +203,7 @@ void CreateHUD()
 	
 	
 	Sprite@ radarScreen = ui.root.CreateChild("Sprite");
-	radarScreen.texture = cache.GetResource("Texture2D", "DroneAnarchy/Resources/Textures/radar_screen.png");
+	radarScreen.texture = cache.GetResource("Texture2D", "Resources/Textures/radar_screen.png");
 	radarScreen.SetSize(128, 128);
 	radarScreen.SetAlignment(HA_CENTER, VA_BOTTOM);
 	radarScreen.SetHotSpot(64, 64);
@@ -212,7 +212,7 @@ void CreateHUD()
 	radarScreen.priority = 4;
 	
 	targetSprite_ = ui.root.CreateChild("Sprite");
-	targetSprite_.texture = cache.GetResource("Texture2D","DroneAnarchy/Resources/Textures/target.png");
+	targetSprite_.texture = cache.GetResource("Texture2D","Resources/Textures/target.png");
 	targetSprite_.SetSize(70,70);
 	targetSprite_.SetAlignment(HA_CENTER, VA_CENTER);
 	targetSprite_.SetHotSpot(35,35);
@@ -225,7 +225,7 @@ void CreateHUD()
 void CreateEnemyCounterUI()
 {
 	enemyCounterText_ = ui.root.CreateChild("Text");
-	enemyCounterText_.SetFont(cache.GetResource("Font", "DroneAnarchy/Resources/Fonts/segment7standard.otf"),15);
+	enemyCounterText_.SetFont(cache.GetResource("Font", "Resources/Fonts/segment7standard.otf"),15);
 	enemyCounterText_.SetAlignment(HA_CENTER, VA_BOTTOM);
 	
 	enemyCounterText_.color = Color(0.7f, 0.0f, 0.0f);
@@ -238,7 +238,7 @@ void CreateEnemyCounterUI()
 void CreatePlayerScoreUI()
 {
 	playerScoreText_ = ui.root.CreateChild("Text");
-	playerScoreText_.SetFont(cache.GetResource("Font", "DroneAnarchy/Resources/Fonts/segment7standard.otf"),15);
+	playerScoreText_.SetFont(cache.GetResource("Font", "Resources/Fonts/segment7standard.otf"),15);
 	playerScoreText_.SetAlignment(HA_CENTER, VA_BOTTOM);
 	
 	playerScoreText_.color = Color(0.0f, 0.9f, 0.2f);
@@ -253,14 +253,14 @@ void CreateDisplayTexts()
 {
 
 	statusText_ = ui.root.CreateChild("Text");
-	statusText_.SetFont(cache.GetResource("Font", "DroneAnarchy/Resources/Fonts/gtw.ttf"),70);
+	statusText_.SetFont(cache.GetResource("Font", "Resources/Fonts/gtw.ttf"),70);
 	statusText_.SetAlignment(HA_CENTER, VA_TOP);
 	statusText_.color = Color(0.2f, 0.8f, 1.0f);
 	statusText_.priority = 1;
 	statusText_.textEffect = TE_SHADOW;
 
 	playerScoreMessageText_ = ui.root.CreateChild("Text");
-	playerScoreMessageText_.SetFont(cache.GetResource("Font", "DroneAnarchy/Resources/Fonts/gtw.ttf"),50);
+	playerScoreMessageText_.SetFont(cache.GetResource("Font", "Resources/Fonts/gtw.ttf"),50);
 	playerScoreMessageText_.SetAlignment(HA_CENTER, VA_TOP);
 	playerScoreMessageText_.position = IntVector2(0,150);
 	playerScoreMessageText_.color = Color(0.2f, 0.8f, 1.0f);
@@ -268,7 +268,7 @@ void CreateDisplayTexts()
 	
 	
 	optionsInfoText_ = ui.root.CreateChild("Text");
-	optionsInfoText_.SetFont(cache.GetResource("Font", "DroneAnarchy/Resources/Fonts/gtw.ttf"),20);
+	optionsInfoText_.SetFont(cache.GetResource("Font", "Resources/Fonts/gtw.ttf"),20);
 	optionsInfoText_.SetAlignment(HA_CENTER, VA_CENTER);
 	optionsInfoText_.position = IntVector2(0,50);
 	optionsInfoText_.color = Color(0.2f, 0.8f, 1.0f);
@@ -307,27 +307,27 @@ void CreateAudioSystem()
 
 void LoadBackgroundResources()
 {
-	cache.BackgroundLoadResource("Model","DroneAnarchy/Resources/Models/drone_body.mdl");
-	cache.BackgroundLoadResource("Model","DroneAnarchy/Resources/Models/drone_arm.mdl");
-	cache.BackgroundLoadResource("Animation","DroneAnarchy/Resources/Models/open_arm.ani");
-	cache.BackgroundLoadResource("Animation","DroneAnarchy/Resources/Models/close_arm.ani");
+	cache.BackgroundLoadResource("Model","Resources/Models/drone_body.mdl");
+	cache.BackgroundLoadResource("Model","Resources/Models/drone_arm.mdl");
+	cache.BackgroundLoadResource("Animation","Resources/Models/open_arm.ani");
+	cache.BackgroundLoadResource("Animation","Resources/Models/close_arm.ani");
 	
-	cache.BackgroundLoadResource("Texture2D", "DroneAnarchy/Resources/Textures/explosion.png");
+	cache.BackgroundLoadResource("Texture2D", "Resources/Textures/explosion.png");
 	
-	cache.BackgroundLoadResource("ParticleEffect", "DroneAnarchy/Resources/Particles/bullet_particle.xml");
-	cache.BackgroundLoadResource("ParticleEffect", "DroneAnarchy/Resources/Particles/explosion.xml");
+	cache.BackgroundLoadResource("ParticleEffect", "Resources/Particles/bullet_particle.xml");
+	cache.BackgroundLoadResource("ParticleEffect", "Resources/Particles/explosion.xml");
 	
-	cache.BackgroundLoadResource("Material","DroneAnarchy/Resources/Materials/drone_arm.xml");
-	cache.BackgroundLoadResource("Material","DroneAnarchy/Resources/Materials/drone_body.xml");
-	cache.BackgroundLoadResource("Material", "DroneAnarchy/Resources/Materials/bullet_particle.xml");
-	cache.BackgroundLoadResource("Material", "DroneAnarchy/Resources/Materials/explosion.xml");
+	cache.BackgroundLoadResource("Material","Resources/Materials/drone_arm.xml");
+	cache.BackgroundLoadResource("Material","Resources/Materials/drone_body.xml");
+	cache.BackgroundLoadResource("Material", "Resources/Materials/bullet_particle.xml");
+	cache.BackgroundLoadResource("Material", "Resources/Materials/explosion.xml");
 	
-	cache.BackgroundLoadResource("Texture2D", "DroneAnarchy/Resources/Textures/drone_sprite.png");
-	cache.BackgroundLoadResource("Texture2D", "DroneAnarchy/Resources/Textures/health_bar_green.png");
-	cache.BackgroundLoadResource("Texture2D", "DroneAnarchy/Resources/Textures/health_bar_red.png");
-	cache.BackgroundLoadResource("Texture2D", "DroneAnarchy/Resources/Textures/health_bar_yellow.png");
+	cache.BackgroundLoadResource("Texture2D", "Resources/Textures/drone_sprite.png");
+	cache.BackgroundLoadResource("Texture2D", "Resources/Textures/health_bar_green.png");
+	cache.BackgroundLoadResource("Texture2D", "Resources/Textures/health_bar_red.png");
+	cache.BackgroundLoadResource("Texture2D", "Resources/Textures/health_bar_yellow.png");
 	
-	cache.BackgroundLoadResource("Sound", "DroneAnarchy/Resources/Sounds/boom1.wav");
+	cache.BackgroundLoadResource("Sound", "Resources/Sounds/boom1.wav");
 	
 	
 }
@@ -354,15 +354,15 @@ void CreateScene()
 	Node@ planeNode = scene_.CreateChild("Plane");
 	StaticModel@ plane = planeNode.CreateComponent("StaticModel");
 	
-	plane.model = cache.GetResource("Model", "DroneAnarchy/Resources/Models/floor.mdl");
-	plane.material = cache.GetResource("Material", "DroneAnarchy/Resources/Materials/floor.xml");
+	plane.model = cache.GetResource("Model", "Resources/Models/floor.mdl");
+	plane.material = cache.GetResource("Material", "Resources/Materials/floor.xml");
 
 	
 	//Add physics Components to the plane
 	RigidBody@ planeBody = planeNode.CreateComponent("RigidBody");
 	planeBody.SetCollisionLayerAndMask(FLOOR_COLLISION_LAYER, DRONE_COLLISION_LAYER | BULLET_COLLISION_LAYER);
 	CollisionShape@ colShape = planeNode.CreateComponent("CollisionShape");
-	colShape.SetTriangleMesh(cache.GetResource("Model", "DroneAnarchy/Resources/Models/floor.mdl"));
+	colShape.SetTriangleMesh(cache.GetResource("Model", "Resources/Models/floor.mdl"));
 	
 }
 
@@ -472,7 +472,7 @@ void InitiateGameOver()
 	gameState_ = GS_OUTGAME;
 	
 	CleanupScene();
-	PlayBackgroundMusic("DroneAnarchy/Resources/Sounds/Defeated.ogg");
+	PlayBackgroundMusic("Resources/Sounds/Defeated.ogg");
 	
 	targetSprite_.visible = false;
 	statusText_.text = "YOU FAILED";
@@ -612,7 +612,7 @@ void HandlePlayerHit(StringHash eventType, VariantMap& eventData)
 	
 	//Show Warning
 	radarScreenBase_.SetAttributeAnimation("Color", valAnim_, WM_ONCE);
-	PlaySoundFX(cameraNode_,"DroneAnarchy/Resources/Sounds/boom5.ogg");
+	PlaySoundFX(cameraNode_,"Resources/Sounds/boom5.ogg");
 	
 	if(playerHealthFraction == 0)
 	{
@@ -654,11 +654,11 @@ void SpawnExplosion(Vector3 position)
 	explosionNode.worldPosition = position;
 	
 	ParticleEmitter@ pEmitter = explosionNode.CreateComponent("ParticleEmitter");
-	pEmitter.effect = cache.GetResource("ParticleEffect", "DroneAnarchy/Resources/Particles/explosion.xml");
+	pEmitter.effect = cache.GetResource("ParticleEffect", "Resources/Particles/explosion.xml");
 	pEmitter.enabled = true;
 	 
 	explosionNode.CreateScriptObject(scriptFile, "ExplosionObject");
-	PlaySoundFX(explosionNode, "DroneAnarchy/Resources/Sounds/explosion.ogg");
+	PlaySoundFX(explosionNode, "Resources/Sounds/explosion.ogg");
 }
 
 
@@ -667,12 +667,12 @@ void SpawnDrone()
 	Node@ droneNode = scene_.CreateChild();
 	droneNode.SetScale(3.0f);
 	AnimatedModel@ droneBody = droneNode.CreateComponent("AnimatedModel");
-	droneBody.model = cache.GetResource("Model", "DroneAnarchy/Resources/Models/drone_body.mdl");
-	droneBody.material = cache.GetResource("Material", "DroneAnarchy/Resources/Materials/drone_body.xml");
+	droneBody.model = cache.GetResource("Model", "Resources/Models/drone_body.mdl");
+	droneBody.material = cache.GetResource("Material", "Resources/Materials/drone_body.xml");
 	
 	AnimatedModel@ droneArm = droneNode.CreateComponent("AnimatedModel");
-	droneArm.model = cache.GetResource("Model", "DroneAnarchy/Resources/Models/drone_arm.mdl");
-	droneArm.material = cache.GetResource("Material", "DroneAnarchy/Resources/Materials/drone_arm.xml");
+	droneArm.model = cache.GetResource("Model", "Resources/Models/drone_arm.mdl");
+	droneArm.material = cache.GetResource("Material", "Resources/Materials/drone_arm.xml");
 	
 	RigidBody@ droneRB = droneNode.CreateComponent("RigidBody");
 	droneRB.mass = 1.0f;
@@ -684,7 +684,7 @@ void SpawnDrone()
 	
 	droneNode.CreateScriptObject(scriptFile,"DroneObject");
 	AnimationController@ animController = droneNode.CreateComponent("AnimationController");
-	animController.PlayExclusive("DroneAnarchy/Resources/Models/open_arm.ani", 0, false);
+	animController.PlayExclusive("Resources/Models/open_arm.ani", 0, false);
 	
 	float nodeYaw = Random(360);
 	droneNode.rotation = Quaternion(0,nodeYaw, 0);
@@ -696,7 +696,7 @@ void SpawnDrone()
 
 Sprite@ CreateDroneSprite()
 {
-	Texture2D@ droneSpriteTex = cache.GetResource("Texture2D", "DroneAnarchy/Resources/Textures/drone_sprite.png");
+	Texture2D@ droneSpriteTex = cache.GetResource("Texture2D", "Resources/Textures/drone_sprite.png");
 	Sprite@ droneSprite = radarScreenBase_.CreateChild("Sprite");
 	
 	droneSprite.texture = droneSpriteTex;
@@ -729,15 +729,15 @@ void UpdateHealthTexture(float healthFraction)
 {
 	if(healthFraction > 0.5)
 	{
-		healthFillSprite_.texture = cache.GetResource("Texture2D", "DroneAnarchy/Resources/Textures/health_bar_green.png");
+		healthFillSprite_.texture = cache.GetResource("Texture2D", "Resources/Textures/health_bar_green.png");
 	}
 	else if(healthFraction > 0.2)
 	{
-		healthFillSprite_.texture = cache.GetResource("Texture2D", "DroneAnarchy/Resources/Textures/health_bar_yellow.png");
+		healthFillSprite_.texture = cache.GetResource("Texture2D", "Resources/Textures/health_bar_yellow.png");
 	}
 	else
 	{
-		healthFillSprite_.texture = cache.GetResource("Texture2D", "DroneAnarchy/Resources/Textures/health_bar_red.png");
+		healthFillSprite_.texture = cache.GetResource("Texture2D", "Resources/Textures/health_bar_red.png");
 	}
 }
 
@@ -745,7 +745,7 @@ void Fire()
 {	
 	SpawnBullet(true);
 	SpawnBullet(false);
-	PlaySoundFX(cameraNode_,"DroneAnarchy/Resources/Sounds/boom1.wav");
+	PlaySoundFX(cameraNode_,"Resources/Sounds/boom1.wav");
 }
 
 void SpawnBullet(bool first)
@@ -759,10 +759,10 @@ void SpawnBullet(bool first)
 	
 	BillboardSet@ bbSet = pNode.CreateComponent("BillboardSet");
 	bbSet.numBillboards = 1;
-	bbSet.material = cache.GetResource("Material", "DroneAnarchy/Resources/Materials/bullet_particle.xml");
+	bbSet.material = cache.GetResource("Material", "Resources/Materials/bullet_particle.xml");
 	
 	ParticleEmitter@ pEmitter = pNode.CreateComponent("ParticleEmitter");
-	pEmitter.effect = cache.GetResource("ParticleEffect", "DroneAnarchy/Resources/Particles/bullet_particle.xml");
+	pEmitter.effect = cache.GetResource("ParticleEffect", "Resources/Particles/bullet_particle.xml");
 	pEmitter.enabled = true;
 	
 	pNode.CreateScriptObject(scriptFile, "BulletObject");
