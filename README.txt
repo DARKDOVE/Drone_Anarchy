@@ -35,8 +35,7 @@ GAME PLAY
 
 NOTE
 -----
-- Due to a bugfix relating to text attribute animation of the Text UI, a master branch build later
-than 4th Dec 2014 is required ( to be precise Urho3D-1.32.91 Snapshot and upward)
+- Urho3D v1.4 and upward is required
 
 - A method used to ensure better randomness of the Random() function involves tweaking
 the code of Urho3DPlayer by adding the following line in its Setup() function
@@ -45,5 +44,3 @@ the code of Urho3DPlayer by adding the following line in its Setup() function
 srand(time(NULL) % 1000);
 SetRandomSeed(rand());
 //
-
-- This application has only been tested on the Windows Platform but should also work on others
