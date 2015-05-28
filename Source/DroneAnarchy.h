@@ -63,6 +63,9 @@ public:
     void HandleDroneHit(StringHash eventType, VariantMap& eventData);
     void HandleCountFinished(StringHash eventType, VariantMap& eventData);
 
+    void HandleHatMove(StringHash eventType, VariantMap& eventData);
+    void HandleButtonDown(StringHash eventType, VariantMap& eventData);
+    void HandleButtonUp(StringHash eventType, VariantMap& eventData);
 
 
 private:
@@ -107,7 +110,8 @@ private:
     void HandleKeyOnOutGame(int key);
     void HandleKeyOnInGame(int key);
 
-
+    void CreateGameControllers();
+    void joystickUpdate ( int position );
 
     float spriteUpdateCounter_;
     float droneSpawnCounter_;
@@ -119,6 +123,7 @@ private:
     bool playerDestroyed_;
 
     GameState gameState_;
+    int joydirection_ ;
 
     SharedPtr<Scene> scene_;
     SharedPtr<Node> cameraNode_;
@@ -138,6 +143,7 @@ private:
     SharedPtr<Text> playerScoreMessageText_;
     SharedPtr<Text> optionsInfoText_;
     SharedPtr<SoundSource> backgroundMusicSource_;
+    virtualController *myjoystick_;
 
 };
 

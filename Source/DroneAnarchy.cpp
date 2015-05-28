@@ -79,6 +79,7 @@
 #include <Urho3D/Core/Variant.h>
 
 #include "CustomEvents.h"
+#include "InputController.h"
 #include "DroneAnarchy.h"
 
 
@@ -113,6 +114,7 @@ const String OPTIONS_MESSAGE = "<SPACE> To Replay | <ESC> To Quit";
 
 DroneAnarchy::DroneAnarchy(Urho3D::Context *context) : Application(context)
 {
+    myjoystick_ = new virtualController;
     spriteUpdateCounter_ = droneSpawnCounter_ = 0;
     playerScore_ = 0;
     onQuit_ = false;
@@ -178,6 +180,7 @@ void DroneAnarchy::Start()
 
 void DroneAnarchy::Stop()
 {
+    delete myjoystick_;
 }
 
 void DroneAnarchy::HandleKeyDown(Urho3D::StringHash eventType, Urho3D::VariantMap &eventData)
@@ -318,6 +321,8 @@ void DroneAnarchy::HandleFixedUpdate(StringHash eventType, VariantMap &eventData
 
 void DroneAnarchy::HandleUpdate(StringHash eventType, VariantMap &eventData)
 {
+    joystickUpdate( joydirection_ );
+    
     if(onQuit_)
     {
         engine_->Exit();
@@ -560,7 +565,7 @@ void DroneAnarchy::CleanupScene()
 
     for(int i=0; i<explosionNodes.Size();i++)
     {
-        bulletNodes[i]->Remove();
+        explosionNodes[i]->Remove();
     }
 
 #endif
@@ -994,6 +999,191 @@ void DroneAnarchy::SubscribeToEvents()
 }
 
 
+// look for a config file to normalize the controller button functions.
+// and set up the event handlers in case 1 joystick is connected
+void DroneAnarchy::CreateGameControllers()
+{
+    if ( GetSubsystem<Input>()->GetNumJoysticks() > 0 )  // is there a game controller plugged in?
+    {
+        myjoystick_ = new virtualController();  // make a controller
+        myjoystick_->load_user_settings( GetSubsystem<ResourceCache>() );
+        SubscribeToEvent("JoystickButtonDown", HANDLER(DroneAnarchy, HandleButtonDown));
+        SubscribeToEvent("JoystickButtonUp", HANDLER(DroneAnarchy, HandleButtonUp ));
+        if ( myjoystick_->button(DA_HAT_UP) > -1 ) // xbox uses both dpad and hat, (and analoge)!
+            SubscribeToEvent("JoystickHatMove", HANDLER(DroneAnarchy, HandleHatMove) );
+    }
+}
+
+// continuous action function. This is needed because unlike keyboard keys,
+// the joystick buttons do not auto-repeat. That not being bad enough, if
+// a linear function is used to move around, it wont be fast enough to get
+// to whats behind you, so the longer you hold down a movement button, the
+// faster you move, up unto a point. You also want fine control to dial in
+// aiming, so the first couple of updates after a button is held tries to
+// limit the number of steps moved, hopefully to improve the aiming.
+void DroneAnarchy::joystickUpdate ( int position )
+{
+    if (GetSubsystem<Input>()->GetNumJoysticks() == 0 || position == -1 || ( myjoystick_ == NULL  ) ) return;
+
+    // reset the counter if the controller emits 0, or the button pressed changes
+    if ( position == 0 || myjoystick_->updatevalue_ != position )
+        myjoystick_->updatecounter_ = 0;
+
+    int move = 1; // start out with 1 clik of movement
+    int dx = 0;
+    int dy = 0;
+
+    // we need a real easing function...
+
+    // fine control starting out, step 0, 4, 7, 9 on are let thru.
+    if ( myjoystick_->updatecounter_ == 1 ) move = 0;
+    if ( myjoystick_->updatecounter_ == 2 ) move = 0;
+    if ( myjoystick_->updatecounter_ == 3 ) move = 0;
+    if ( myjoystick_->updatecounter_ == 5 ) move = 0;
+    if ( myjoystick_->updatecounter_ == 6 ) move = 0;
+    if ( myjoystick_->updatecounter_ == 8 ) move = 0;
+
+    // values to speed up, if the same button is held
+    if ( myjoystick_->updatecounter_ > 20 ) move = 2;
+    if ( myjoystick_->updatecounter_ > 80 ) move = 3;
+    if ( myjoystick_->updatecounter_ > 170 ) move = 5;
+    if ( myjoystick_->updatecounter_ > 223 ) move = 7;
+    if ( myjoystick_->updatecounter_ > 666 ) move = 10;
+    if ( myjoystick_->updatecounter_ > 999 ) move = 12;
+
+    // find out where to go for direction buttons
+    if ( position == myjoystick_->button(CONTROLLER_BUTTON_DPAD_UP))
+    {
+        dx= 0;
+        dy =-move;
+    }
+    else if ( position == myjoystick_->button(CONTROLLER_BUTTON_DPAD_LEFT) )
+    {
+        dx= -move;
+        dy =0;
+    }
+    else if ( position == myjoystick_->button(CONTROLLER_BUTTON_DPAD_DOWN) )
+    {
+        dx= 0;
+        dy =move;
+    }
+    else if ( position == myjoystick_->button(CONTROLLER_BUTTON_DPAD_RIGHT) )
+    {
+        dx= move;
+        dy =0;
+    }
+    // or hat direction
+    else if ( position == myjoystick_->button(DA_HAT_UP))
+    {
+        dx= 0;
+        dy =-move;
+    }
+    else if ( position == myjoystick_->button(DA_HAT_LEFT) )
+    {
+        dx= -move;
+        dy =0;
+    }
+    else if ( position == myjoystick_->button(DA_HAT_DOWN) )
+    {
+        dx= 0;
+        dy =move;
+    }
+    else if ( position == myjoystick_->button(DA_HAT_RIGHT) )
+    {
+        dx= move;
+        dy =0;
+    }
+
+    if ( move > 0 )  // adjust the camera and hud settings
+    {
+        float camYaw = cameraNode_->GetRotation().YawAngle() + (dx * 0.25f);
+        float camPitch = cameraNode_->GetRotation().PitchAngle() + (dy * 0.25f);
+        camPitch = Clamp(camPitch, -20.0f, 70.0f);
+        cameraNode_->SetRotation( Quaternion(camPitch, camYaw, 0.0f));
+        radarScreenBase_->SetRotation(-cameraNode_->GetWorldRotation().YawAngle());
+    }
+
+    // keep track of pseudo easing values
+    myjoystick_->updatevalue_ = position;
+    myjoystick_->updatecounter_ ++;
+}
+
+// Some types of joysticks handle the hat, which is the direction pad,
+// as a separate unit from the buttons. Why, I dont know. If the hat is
+// used then the controller will not emit DPAD button presses. The hat
+// presses will be handled separately because the numbers it produces
+// conflict with button numbers.
+void DroneAnarchy::HandleHatMove(StringHash eventType, VariantMap& eventData)
+{
+    if(gameState_ != GS_INGAME) // if we are not playing, dont get new positions
+    {
+        return;
+    }
+
+    joydirection_ = eventData["Position"].GetInt();
+
+    // for hats that can do both x + y directions, make it do x direction instead, otherwise
+    // the continuous action studders.
+    if ( joydirection_ == 9 || joydirection_ == 12 ) joydirection_ = myjoystick_->button(DA_HAT_LEFT);
+    else if ( joydirection_ == 3 || joydirection_ == 6) joydirection_ = myjoystick_->button(DA_HAT_RIGHT);
+
+}
+
+// Get the joystick button presses. For controllers without the hat, the direction
+// values will go thru here, as does fire control, and pause, exit.
+void DroneAnarchy::HandleButtonDown(StringHash eventType, VariantMap& eventData)
+{
+    int jsButton = eventData["Button"].GetInt();
+
+    if ( myjoystick_ == NULL ) return;
+
+    if ( jsButton == myjoystick_->button(CONTROLLER_BUTTON_DPAD_UP)
+            || jsButton == myjoystick_->button(CONTROLLER_BUTTON_DPAD_LEFT)
+            || jsButton == myjoystick_->button(CONTROLLER_BUTTON_DPAD_DOWN)
+            || jsButton == myjoystick_->button(CONTROLLER_BUTTON_DPAD_RIGHT) )
+    {
+        joydirection_ = jsButton;  // feed the direction and bolt
+        return;
+    }
+
+    // select/back exits always
+    if( jsButton == myjoystick_->button(CONTROLLER_BUTTON_BACK) )
+    {
+        onQuit_ = true;
+    }
+
+    // start in game pauses, unpauses
+    if( jsButton == myjoystick_->button(CONTROLLER_BUTTON_START) && (gameState_ == GS_INGAME || gameState_ == GS_PAUSED) )
+    {
+        PauseGame();
+    }
+
+    //  fire only in game
+    if( jsButton == myjoystick_->button(CONTROLLER_BUTTON_X) && ( gameState_ == GS_INGAME))
+    {
+        Fire();
+    }
+}
+
+// To make the continuous action work with the DPAD buttons, we have
+// to detect a DPAD button up event and send a 0 for the direction,
+// to enable a stop in direction.
+void DroneAnarchy::HandleButtonUp(StringHash eventType, VariantMap& eventData)
+{
+    int jsButton = eventData["Button"].GetInt();
+
+    if ( myjoystick_ == NULL ) return;
+
+    // when one of these buttons goes up, set the direction to 0 so the
+    // continuous control stops.
+    if ( jsButton == myjoystick_->button(CONTROLLER_BUTTON_DPAD_UP)
+            || jsButton == myjoystick_->button(CONTROLLER_BUTTON_DPAD_LEFT)
+            || jsButton == myjoystick_->button(CONTROLLER_BUTTON_DPAD_DOWN)
+            || jsButton == myjoystick_->button(CONTROLLER_BUTTON_DPAD_RIGHT) )
+    {
+        joydirection_ = 0;  // stop the spinning
+    }
+}
 
 
 DEFINE_APPLICATION_MAIN(DroneAnarchy)
