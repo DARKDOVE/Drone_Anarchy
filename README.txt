@@ -48,4 +48,4 @@ SetRandomSeed(rand());
 CONTRIBUTORS
 -------------
 BlueMagnificent
-jimmarlowe
+jimmarlowe (Jim)
