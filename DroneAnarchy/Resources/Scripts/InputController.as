@@ -92,9 +92,9 @@ class virtualController
     // read settings out of a user prepared configuration file
     void load_user_settings()
     { 
-		if ( !cache.Exists ("DroneAnarchy/dajoystick.xml") ) return; // no file, no error in console
+		if ( !cache.Exists ("Resources/Settings/dajoystick.xml") ) return; // no file, no error in console
 		
-        XMLFile@ ujoy = cache.GetResource("XMLFile", "DroneAnarchy/dajoystick.xml");
+        XMLFile@ ujoy = cache.GetResource("XMLFile", "Resources/Settings/dajoystick.xml");
 		if ( ujoy !is null )
 		{
 			clearAll();	// start clean
