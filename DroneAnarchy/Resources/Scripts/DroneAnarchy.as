@@ -1,4 +1,5 @@
 #include "GameObjects.as"
+#include "DroneAnarchy/InputController.as"
 
 enum GameState
 {
@@ -33,6 +34,8 @@ float gamePhaseCounter_ = 0.0f;
 bool onQuit_ = false;
 bool playerDestroyed_ = false;
 
+int joydirection_ = -1;  // which way the game controller wants to go
+
 String optionsMessage_ = "<SPACE> To Replay | <ESC> To Quit";
 
 GameState gameState_ = GS_OUTGAME;
@@ -62,6 +65,8 @@ Text@ optionsInfoText_;
 void Start()
 {
 	graphics.windowTitle = "Drone Anarchy";
+	
+	CreateGameControllers();   // in GameController.as
 	
 	cache.AddResourceDir("DroneAnarchy");
 	
