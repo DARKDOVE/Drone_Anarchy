@@ -63,6 +63,8 @@ void Start()
 {
 	graphics.windowTitle = "Drone Anarchy";
 	
+	cache.AddResourceDir("DroneAnarchy");
+	
 	CreateDebugHud();
 	
 	
