@@ -15,12 +15,11 @@ Urho3D Developers
 
 TO USE
 --------
-Copy the DroneAnarchy folder into one of your Urho3D ResourcePaths folder,
-that will be any of "Data" or "CoreData" folders if using the default setting. 
+Copy the DroneAnarchy folder into the current working directory of the Drone Anarchy executable. 
 
 For C++, add the source files contained in Source folder to your Urho3D C++ project and build
 
-To run using Urho3DPlayer and AngelScript simply pass DroneAnarchy.as file, which is contained in the DroneAnarchy folder, to the Urho3DPlayer.
+To run using Urho3DPlayer and AngelScript simply pass DroneAnarchy.as file, which is contained in the DroneAnarchy/Resources/Scripts folder, to the Urho3DPlayer.
 
 
 GAME PLAY
