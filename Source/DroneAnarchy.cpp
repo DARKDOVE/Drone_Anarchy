@@ -160,6 +160,7 @@ void DroneAnarchy::Start()
 
     SetWindowTitleAndIcon();
 
+    CreateGameControllers();
     CreateDebugHud();
     CreateValueAnimation();
     CreateInterface();
@@ -1029,7 +1030,7 @@ void DroneAnarchy::joystickUpdate ( int position )
     if ( position == 0 || myjoystick_->updatevalue_ != position )
         myjoystick_->updatecounter_ = 0;
 
-    int move = 1; // start out with 1 clik of movement
+    int move = 1; // start out with 1 click of movement
     int dx = 0;
     int dy = 0;
 
