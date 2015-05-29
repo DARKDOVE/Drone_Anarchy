@@ -114,7 +114,7 @@ const String OPTIONS_MESSAGE = "<SPACE> To Replay | <ESC> To Quit";
 
 DroneAnarchy::DroneAnarchy(Urho3D::Context *context) : Application(context)
 {
-    myjoystick_ = new virtualController;
+    myjoystick_ = new virtualController();
     spriteUpdateCounter_ = droneSpawnCounter_ = 0;
     playerScore_ = 0;
     onQuit_ = false;
@@ -322,7 +322,7 @@ void DroneAnarchy::HandleFixedUpdate(StringHash eventType, VariantMap &eventData
 void DroneAnarchy::HandleUpdate(StringHash eventType, VariantMap &eventData)
 {
     joystickUpdate( joydirection_ );
-    
+
     if(onQuit_)
     {
         engine_->Exit();

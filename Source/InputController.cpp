@@ -24,6 +24,7 @@
 #include <Urho3D/Urho3D.h>
 #include <Urho3D/Resource/ResourceCache.h>
 #include <Urho3D/Resource/XMLFile.h>
+#include <Urho3D/Input/InputEvents.h>
 
 #include "InputController.h"
 

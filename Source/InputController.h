@@ -25,7 +25,6 @@
 #ifndef __INPUTCONTROLLER_H_
 #define __INPUTCONTROLLER_H_
 
-class ResourceCache;
 
 // Additional enumerations for controller features
 const int DA_LEFT_TRIGGER = 15;
@@ -36,19 +35,21 @@ const int DA_HAT_LEFT = 19;
 const int DA_HAT_RIGHT = 20;
 const int DA_LAST = 21;
 
-// Contain the game controller functionality 
+using namespace Urho3D;
+
+// Contain the game controller functionality
 class virtualController
 {
-    
-    
-   public : 
+
+
+   public :
     virtualController();  // xbox 360 button mapping is default
     int button ( int index ) const; // return actual controllers button value
     void load_user_settings( ResourceCache* rcache ); // read settings out of a user prepared configuration file
-    
+
     int updatecounter_; // used for pseudo easing movement
     int updatevalue_;  // used for pseudo easing movement
-    
+
    private:
      int lookup[DA_LAST];  // local button database
      void remap_button ( int index, int value ); // overlay an actual controllers button, hat (if it's got one) mapping
