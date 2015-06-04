@@ -480,7 +480,7 @@ void InitiateGameOver()
 	gameState_ = GS_OUTGAME;
 	
 	CleanupScene();
-	PlayBackgroundMusic("Resources/Sounds/Defeated.ogg");
+	PlayBackgroundMusic("Resources/Sounds/defeated.ogg");
 	
 	targetSprite_.visible = false;
 	statusText_.text = "YOU FAILED";
