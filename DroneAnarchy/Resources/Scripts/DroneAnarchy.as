@@ -1,5 +1,5 @@
 #include "GameObjects.as"
-#include "DroneAnarchy/InputController.as"
+#include "InputController.as"
 
 enum GameState
 {
