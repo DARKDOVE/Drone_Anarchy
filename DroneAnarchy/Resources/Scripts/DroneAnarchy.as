@@ -613,7 +613,7 @@ void HandlePlayerHit(StringHash eventType, VariantMap& eventData)
 	float playerHealthFraction = eventData["CurrentHealthFraction"].GetFloat();
 	
 	
-	int range = 512 - ( 512 * playerHealthFraction);
+	int range = 512 - int( 512 * playerHealthFraction);
 	healthFillSprite_.imageRect = IntRect(range, 0, 512 + range, 64);
 	UpdateHealthTexture(playerHealthFraction);
 	
