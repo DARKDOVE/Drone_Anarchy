@@ -66,9 +66,10 @@ void Start()
 {
 	graphics.windowTitle = "Drone Anarchy";
 	
+	cache.AddResourceDir("DroneAnarchy");
+	
 	CreateGameControllers();   // in GameController.as
 	
-	cache.AddResourceDir("DroneAnarchy");
 	
 	CreateDebugHud();
 	
