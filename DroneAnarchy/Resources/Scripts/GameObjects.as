@@ -7,6 +7,13 @@ enum DroneType
 	DT_TOKEN_DRONE
 }
 
+//Bullet Type Enum
+enum BulletObjectType
+{
+	BOT_LOW,
+	BOT_NORMAL,
+	BOT_POWERFUL
+}
 
 ///Player Object
 
@@ -79,7 +86,7 @@ abstract class DroneObjectBase : ScriptObject
 }
 
 
-///Drone Object
+///Low Level Drone Object
 class LowLevelDrone : DroneObjectBase
 {
 	int killPoint_;
@@ -190,18 +197,13 @@ class LowLevelDrone : DroneObjectBase
 }
 
 
-///Bullet Object Class
-class BulletObject : ScriptObject
+///Bullet Base Class
+abstract class BulletObjectBase : ScriptObject
 {
 	float termTime_;
 	float termTimeCounter_;
-	
-	
-	BulletObject()
-	{
-		termTime_ = 1;
-		termTimeCounter_ = 0;
-	}
+	BulletObjectType bulletObjectType_;
+	float damagePoint_;
 	
 	
 	void Start()
@@ -220,17 +222,16 @@ class BulletObject : ScriptObject
 		}
 	}
 	
-
+	
 	void HandleNodeCollision(StringHash eventType, VariantMap& eventData)
 	{
 		Node@ otherNode = eventData["OtherNode"].GetPtr();
-		DroneObject@ droneObj = cast<DroneObject>(otherNode.scriptObject);
+		DroneObjectBase@ droneObj = cast<DroneObjectBase>(otherNode.scriptObject);
 		
 		
 		if(droneObj !is null)
 		{
-			droneObj.OnHit();
-			SendEvent("DroneHit");
+			droneObj.OnHit(damagePoint_);
 		}
 		
 		Destroy();
@@ -240,6 +241,20 @@ class BulletObject : ScriptObject
 	{
 		node.Remove();
 	}
+	
+}
+
+///Low Level Bullet Object
+class LowLevelBullet : BulletObjectBase
+{
+	LowLevelBullet()
+	{
+		bulletObjectType_ = BOT_LOW;
+		termTime_ = 1;
+		termTimeCounter_ = 0;
+		damagePoint_ = 1;
+	}
+
 }
 
 
