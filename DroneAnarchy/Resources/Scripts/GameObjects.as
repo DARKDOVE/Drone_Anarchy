@@ -1,3 +1,13 @@
+//Drone Types Enum
+enum DroneType
+{
+	DT_NORMAL_DRONE,
+	DT_ALPHA_DRONE,
+	DT_SUPREME_DRONE,
+	DT_TOKEN_DRONE
+}
+
+
 ///Player Object
 
 class PlayerObject : ScriptObject
@@ -28,32 +38,72 @@ class PlayerObject : ScriptObject
 	}
 }
 
-///Drone Object
 
-class DroneObject : ScriptObject
+///Drone Base Class
+abstract class DroneObjectBase : ScriptObject
 {
-	
 	float currentHealthLevel_;
 	float attackTime_;
 	float attackTimer_;
+	DroneType droneType_;
 	
 	bool hasAttacked_;
 	
-	
-	DroneObject()
+	DroneType droneType
 	{
+		get const
+		{
+			return droneType_;
+		}
+	}
+	
+	void DelayedStart()
+	{
+		SubscribeToEvent(node, "NodeCollision", "HandleNodeCollision");
+	}
+	
+	void HandleNodeCollision(StringHash eventType, VariantMap& eventData){}
+	
+	void Destroy()
+	{
+		Sprite@ nodeSprite = node.vars["Sprite"].GetPtr();
+		nodeSprite.Remove();
+		node.Remove();
+	}
+	
+	void OnHit(float damagePoint)
+	{
+		currentHealthLevel_ -= damagePoint;
+	}
+	
+}
+
+
+///Drone Object
+class LowLevelDrone : DroneObjectBase
+{
+	int killPoint_;
+	int damagePoint_;
+	
+	LowLevelDrone()
+	{
+		droneType_ = DT_NORMAL_DRONE;
 		currentHealthLevel_ = 6;
 		attackTime_ = 37;
 		attackTimer_ = 0;
 		hasAttacked_ = false;
+		killPoint_ = 2;
+		damagePoint_ = 2;
 		
 	}
 	
 	
 	void DelayedStart()
 	{
+		
+		DroneObjectBase::DelayedStart();
 		SetupNodeAnimation();
-		SubscribeToEvent(node, "NodeCollision", "HandleNodeCollision");
+		Initialise();
 	}
 	
 	void SetupNodeAnimation()
@@ -65,7 +115,6 @@ class DroneObject : ScriptObject
 		node.SetAttributeAnimation("Position", valAnim);
 	}
 	
-	
 	void FixedUpdate(float timestep)
 	{
 		
@@ -74,6 +123,7 @@ class DroneObject : ScriptObject
 			//Add explosion Effects
 			VariantMap eventData;
 			eventData["DronePosition"] = node.worldPosition;
+			eventData["KillPoint"] = killPoint_;
 			SendEvent("DroneDestroyed", eventData);
 			Destroy();
 		}
@@ -96,7 +146,7 @@ class DroneObject : ScriptObject
 		
 		if(playerObj !is null)
 		{
-			playerObj.OnHit();
+			playerObj.OnHit(damagePoint_);
 			Destroy();
 		}
 	}
@@ -114,17 +164,28 @@ class DroneObject : ScriptObject
 		hasAttacked_ = true;
 	}
 	
-	void Destroy()
+	void Initialise()
 	{
-		Sprite@ nodeSprite = node.vars["Sprite"].GetPtr();
-		nodeSprite.Remove();
-		node.Remove();
+		AnimatedModel@ droneBody = node.CreateComponent("AnimatedModel");
+		droneBody.model = cache.GetResource("Model", "Resources/Models/drone_body.mdl");
+		droneBody.material = cache.GetResource("Material", "Resources/Materials/alt_drone_body.xml");
+		
+		AnimatedModel@ droneArm = node.CreateComponent("AnimatedModel");
+		droneArm.model = cache.GetResource("Model", "Resources/Models/drone_arm.mdl");
+		droneArm.material = cache.GetResource("Material", "Resources/Materials/alt_drone_arm.xml");
+		
+		RigidBody@ droneRB = node.CreateComponent("RigidBody");
+		droneRB.mass = 1.0f;
+		droneRB.SetCollisionLayerAndMask(DRONE_COLLISION_LAYER, BULLET_COLLISION_LAYER | PLAYER_COLLISION_LAYER | FLOOR_COLLISION_LAYER);
+		droneRB.kinematic = true;
+		
+		CollisionShape@ droneCS = node.CreateComponent("CollisionShape");
+		droneCS.SetSphere(0.3f);
+		
+		AnimationController@ animController = node.CreateComponent("AnimationController");
+		animController.PlayExclusive("Resources/Models/open_arm.ani", 0, false);
 	}
 	
-	void OnHit()
-	{
-		currentHealthLevel_ -= 1;
-	}
 	
 }
 
