@@ -402,7 +402,6 @@ void SubscribeToEvents()
 	SubscribeToEvent("MouseButtonDown", "HandleMouseClick");
 	SubscribeToEvent("PlayerHit","HandlePlayerHit");
 	SubscribeToEvent("DroneDestroyed", "HandleDroneDestroyed");
-	SubscribeToEvent("DroneHit", "HandleDroneHit");
 	SubscribeToEvent("CountFinished", "HandleCountFinished");
 	SubscribeToEvent(scene_.physicsWorld, "PhysicsPreStep", "HandleFixedUpdate");
 	
@@ -628,11 +627,6 @@ void HandlePlayerHit(StringHash eventType, VariantMap& eventData)
 	}
 }
 
-void HandleDroneHit(StringHash eventType, VariantMap& eventData)
-{
-	playerScore_ += SCORE_ADDITION_RATE;
-	UpdateScoreDisplay();
-}
 
 void HandleDroneDestroyed(StringHash eventType, VariantMap& eventData)
 {
