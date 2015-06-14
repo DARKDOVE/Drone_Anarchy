@@ -21,7 +21,6 @@ class PlayerObject : ScriptObject
 {
 	float maximumHealth_;
 	float currentHealth_;
-	float healthDeductionRate_;
 	
 	
 	PlayerObject()
@@ -30,9 +29,9 @@ class PlayerObject : ScriptObject
 		healthDeductionRate_ = 2;
 	}
 	
-	void OnHit()
+	void OnHit(float damagePoint)
 	{
-		currentHealth_ -= healthDeductionRate_;
+		currentHealth_ -= damagePoint;
 		if(currentHealth_ < 0.0f )
 		{
 			currentHealth_ = 0.0f;
