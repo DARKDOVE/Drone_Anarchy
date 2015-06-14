@@ -630,6 +630,9 @@ void HandlePlayerHit(StringHash eventType, VariantMap& eventData)
 
 void HandleDroneDestroyed(StringHash eventType, VariantMap& eventData)
 {
+	playerScore_ += eventData["KillPoint"].GetInt();
+	UpdateScoreDisplay();
+	
 	Vector3 dronePosition = eventData["DronePosition"].GetVector3();
 	SpawnExplosion(dronePosition);
 }
