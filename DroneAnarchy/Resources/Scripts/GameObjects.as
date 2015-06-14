@@ -67,7 +67,10 @@ abstract class DroneObjectBase : ScriptObject
 	void DelayedStart()
 	{
 		SubscribeToEvent(node, "NodeCollision", "HandleNodeCollision");
+		Initialise();
 	}
+	
+	void Initialise(){}
 	
 	void HandleNodeCollision(StringHash eventType, VariantMap& eventData){}
 	
@@ -110,7 +113,6 @@ class LowLevelDrone : DroneObjectBase
 		
 		DroneObjectBase::DelayedStart();
 		SetupNodeAnimation();
-		Initialise();
 	}
 	
 	void SetupNodeAnimation()
