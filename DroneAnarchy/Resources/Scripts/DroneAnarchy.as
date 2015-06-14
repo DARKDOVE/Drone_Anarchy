@@ -25,6 +25,9 @@ const float CRITICAL_PHASE_RATE = 1;
 const float SCENE_TO_UI_SCALE = 1.6f;
 const float SPRITE_UPDATE_TIME = 0.04f;
 
+const String NORMAL_DRONE_SPRITE = "Resources/Textures/drone_sprite.png";
+const String ALTERNATE_DRONE_SPRITE = "Resources/Textures/alt_drone_sprite.png";
+
 int playerScore_ = 0;
 
 float spriteUpdateCounter_ = 0.0f;
@@ -490,37 +493,27 @@ void InitiateGameOver()
 
 void CleanupScene()
 {
-	//For each drone node in the scene delete the node sprite associated with it and also remove the node
-	Array<Node@> droneNodes = scene_.GetChildrenWithScript("DroneObject",true);
-	for(uint i=0; i < droneNodes.length ; i++)
+	//Remove All Nodes with script object : Drones, Bullets and even the player
+	Array<Node@> scriptedNodes = scene_.GetChildrenWithScript("DroneObject",true);
+	for(uint i=0; i < scriptedNodes.length ; i++)
 	{
-		Node@ droneNode = droneNodes[i];
-		Sprite@ nodeSprite = droneNode.vars["Sprite"].GetPtr();
-		nodeSprite.Remove();
-		droneNode.Remove();
+		Node@ scriptNode = scriptedNodes[i];
+		Sprite@ nodeSprite = scriptNode.vars["Sprite"].GetPtr();
+		
+		if(nodeSprite !is null)
+		{
+			nodeSprite.Remove();
+		}
+		
+		scriptNode.Remove();
 	}
-	
-	//Cleanup any bullet still remaining in the scene
-	Array<Node@> bulletNodes = scene_.GetChildrenWithScript("BulletObject", true);
-	for(uint i = 0; i < bulletNodes.length; i++)
-	{
-		bulletNodes[i].Remove();
-	}
-	
-	//Cleanup any explosion still remaining in the scene
-	Array<Node@> explosionNodes = scene_.GetChildrenWithScript("ExplosionObject", true);
-	for(uint i = 0; i < explosionNodes.length; i++)
-	{
-		explosionNodes[i].Remove();
-	}
-	
-	//Remove the player Node
-	playerNode_.Remove();
 	
 	
 	//Hide the enemy counter and player score texts
 	enemyCounterText_.text = "";
 	playerScoreText_.text = "";
+	
+	
 	
 	
 }
@@ -586,7 +579,7 @@ void HandleFixedUpdate(StringHash eventType, VariantMap& eventData)
 	droneSpawnCounter_ +=timeStep;
 	if(droneSpawnCounter_ >= droneSpawnRate)
 	{
-		if(scene_.GetChildrenWithScript("DroneObject",true).length < MAX_DRONE_COUNT)
+		if(GetDroneCount() < MAX_DRONE_COUNT)
 		{
 			SpawnDrone();
 			UpdateDroneSprites();
@@ -604,6 +597,27 @@ void HandleFixedUpdate(StringHash eventType, VariantMap& eventData)
 	}
 	
 
+}
+
+
+int GetDroneCount()
+{
+	Array<Node@> scriptNodes = scene_.GetChildrenWithScript(true);
+	int count = 0;
+	
+	for(uint i=0; i < scriptNodes.length ; i++)
+	{
+		Node@ droneNode = scriptNodes[i];
+		Sprite@ nodeSprite = droneNode.vars["Sprite"].GetPtr();
+		
+		if(nodeSprite !is null)
+		{
+			count += 1;
+		}
+
+	}
+	
+	return count;
 }
 
 void HandlePlayerHit(StringHash eventType, VariantMap& eventData)
@@ -671,37 +685,20 @@ void SpawnDrone()
 {
 	Node@ droneNode = scene_.CreateChild();
 	droneNode.SetScale(3.0f);
-	AnimatedModel@ droneBody = droneNode.CreateComponent("AnimatedModel");
-	droneBody.model = cache.GetResource("Model", "Resources/Models/drone_body.mdl");
-	droneBody.material = cache.GetResource("Material", "Resources/Materials/drone_body.xml");
 	
-	AnimatedModel@ droneArm = droneNode.CreateComponent("AnimatedModel");
-	droneArm.model = cache.GetResource("Model", "Resources/Models/drone_arm.mdl");
-	droneArm.material = cache.GetResource("Material", "Resources/Materials/drone_arm.xml");
-	
-	RigidBody@ droneRB = droneNode.CreateComponent("RigidBody");
-	droneRB.mass = 1.0f;
-	droneRB.SetCollisionLayerAndMask(DRONE_COLLISION_LAYER, BULLET_COLLISION_LAYER | PLAYER_COLLISION_LAYER | FLOOR_COLLISION_LAYER);
-	droneRB.kinematic = true;
-	
-	CollisionShape@ droneCS = droneNode.CreateComponent("CollisionShape");
-	droneCS.SetSphere(0.3f);
-	
-	droneNode.CreateScriptObject(scriptFile,"DroneObject");
-	AnimationController@ animController = droneNode.CreateComponent("AnimationController");
-	animController.PlayExclusive("Resources/Models/open_arm.ani", 0, false);
+	droneNode.CreateScriptObject(scriptFile,"LowLevelDrone");
 	
 	float nodeYaw = Random(360);
 	droneNode.rotation = Quaternion(0,nodeYaw, 0);
 	droneNode.Translate(Vector3(0,7,40));
-	droneNode.vars["Sprite"] = CreateDroneSprite();
+	droneNode.vars["Sprite"] = CreateDroneSprite(NORMAL_DRONE_SPRITE);
 	
 }
 
 
-Sprite@ CreateDroneSprite()
+Sprite@ CreateDroneSprite(String spriteTexture)
 {
-	Texture2D@ droneSpriteTex = cache.GetResource("Texture2D", "Resources/Textures/drone_sprite.png");
+	Texture2D@ droneSpriteTex = cache.GetResource("Texture2D", spriteTexture);
 	Sprite@ droneSprite = radarScreenBase_.CreateChild("Sprite");
 	
 	droneSprite.texture = droneSpriteTex;
@@ -717,17 +714,24 @@ Sprite@ CreateDroneSprite()
 
 void UpdateDroneSprites()
 {
-	Array<Node@> droneNodes = scene_.GetChildrenWithScript("DroneObject",true);
+	Array<Node@> scriptNodes = scene_.GetChildrenWithScript(true);
+	int count = 0;
 	
-	for(uint i=0; i < droneNodes.length ; i++)
+	for(uint i=0; i < scriptNodes.length ; i++)
 	{
-		Node@ droneNode = droneNodes[i];
+		Node@ droneNode = scriptNodes[i];
 		Sprite@ nodeSprite = droneNode.vars["Sprite"].GetPtr();
-		nodeSprite.position = Vector2(droneNode.worldPosition.x, -(droneNode.worldPosition.z))* SCENE_TO_UI_SCALE;
 		
+		if(nodeSprite !is null)
+		{
+			nodeSprite.position = Vector2(droneNode.worldPosition.x, -(droneNode.worldPosition.z))* SCENE_TO_UI_SCALE;
+			count += 1;
+		}
+	
 	}
 	
-	enemyCounterText_.text = droneNodes.length;
+	enemyCounterText_.text = count;
+	
 }
 
 void UpdateHealthTexture(float healthFraction)
@@ -762,29 +766,7 @@ void SpawnBullet(bool first)
 	float xOffSet = 0.3f * (first ? 1 : -1);
 	pNode.Translate(Vector3(xOffSet,-0.2,0));
 	
-	BillboardSet@ bbSet = pNode.CreateComponent("BillboardSet");
-	bbSet.numBillboards = 1;
-	bbSet.material = cache.GetResource("Material", "Resources/Materials/bullet_particle.xml");
-	
-	ParticleEmitter@ pEmitter = pNode.CreateComponent("ParticleEmitter");
-	pEmitter.effect = cache.GetResource("ParticleEffect", "Resources/Particles/bullet_particle.xml");
-	pEmitter.enabled = true;
-	
-	pNode.CreateScriptObject(scriptFile, "BulletObject");
-	
-	
-	
-	RigidBody@ objBody = pNode.CreateComponent("RigidBody");
-	objBody.mass = 1.0f;
-	objBody.trigger = true;
-	objBody.useGravity = false;
-	objBody.ccdRadius = 0.05;
-	objBody.ccdMotionThreshold = 0.15f;
-	objBody.SetCollisionLayerAndMask(BULLET_COLLISION_LAYER, DRONE_COLLISION_LAYER | FLOOR_COLLISION_LAYER);
-	
-	CollisionShape@ objShape = pNode.CreateComponent("CollisionShape");
-	objShape.SetSphere(0.3f);
-	objBody.linearVelocity = pNode.rotation * Vector3(0,0,70);
+	pNode.CreateScriptObject(scriptFile, "LowLevelBullet");
 }
 
 
