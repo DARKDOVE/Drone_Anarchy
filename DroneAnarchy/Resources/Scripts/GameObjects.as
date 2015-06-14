@@ -26,7 +26,6 @@ class PlayerObject : ScriptObject
 	PlayerObject()
 	{
 		maximumHealth_ = currentHealth_ = 100;
-		healthDeductionRate_ = 2;
 	}
 	
 	void OnHit(float damagePoint)
