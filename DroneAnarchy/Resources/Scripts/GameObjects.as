@@ -206,10 +206,13 @@ abstract class BulletObjectBase : ScriptObject
 	float damagePoint_;
 	
 	
-	void Start()
+	void DelayedStart()
 	{
 		SubscribeToEvent(node, "NodeCollision", "HandleNodeCollision");
+		Initialise();
 	}
+	
+	void Initialise(){};
 	
 	
 	void FixedUpdate(float timestep)
@@ -253,6 +256,30 @@ class LowLevelBullet : BulletObjectBase
 		termTime_ = 1;
 		termTimeCounter_ = 0;
 		damagePoint_ = 1;
+	}
+	
+	void Initialise()
+	{
+		BillboardSet@ bbSet = node.CreateComponent("BillboardSet");
+		bbSet.numBillboards = 1;
+		bbSet.material = cache.GetResource("Material", "Resources/Materials/bullet_particle.xml");
+		
+		ParticleEmitter@ pEmitter = node.CreateComponent("ParticleEmitter");
+		pEmitter.effect = cache.GetResource("ParticleEffect", "Resources/Particles/bullet_particle.xml");
+		pEmitter.enabled = true;
+		
+		
+		RigidBody@ objBody = node.CreateComponent("RigidBody");
+		objBody.mass = 1.0f;
+		objBody.trigger = true;
+		objBody.useGravity = false;
+		objBody.ccdRadius = 0.05;
+		objBody.ccdMotionThreshold = 0.15f;
+		objBody.SetCollisionLayerAndMask(BULLET_COLLISION_LAYER, DRONE_COLLISION_LAYER | FLOOR_COLLISION_LAYER);
+		
+		CollisionShape@ objShape = node.CreateComponent("CollisionShape");
+		objShape.SetSphere(0.3f);
+		objBody.linearVelocity = node.rotation * Vector3(0,0,70);
 	}
 
 }
