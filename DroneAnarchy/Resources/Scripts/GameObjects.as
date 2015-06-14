@@ -176,11 +176,11 @@ class LowLevelDrone : DroneObjectBase
 	{
 		AnimatedModel@ droneBody = node.CreateComponent("AnimatedModel");
 		droneBody.model = cache.GetResource("Model", "Resources/Models/drone_body.mdl");
-		droneBody.material = cache.GetResource("Material", "Resources/Materials/alt_drone_body.xml");
+		droneBody.material = cache.GetResource("Material", "Resources/Materials/drone_body.xml");
 		
 		AnimatedModel@ droneArm = node.CreateComponent("AnimatedModel");
 		droneArm.model = cache.GetResource("Model", "Resources/Models/drone_arm.mdl");
-		droneArm.material = cache.GetResource("Material", "Resources/Materials/alt_drone_arm.xml");
+		droneArm.material = cache.GetResource("Material", "Resources/Materials/drone_arm.xml");
 		
 		RigidBody@ droneRB = node.CreateComponent("RigidBody");
 		droneRB.mass = 1.0f;
