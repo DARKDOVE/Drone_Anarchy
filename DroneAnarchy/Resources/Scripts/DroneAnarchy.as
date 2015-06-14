@@ -494,7 +494,7 @@ void InitiateGameOver()
 void CleanupScene()
 {
 	//Remove All Nodes with script object : Drones, Bullets and even the player
-	Array<Node@> scriptedNodes = scene_.GetChildrenWithScript("DroneObject",true);
+	Array<Node@> scriptedNodes = scene_.GetChildrenWithScript(true);
 	for(uint i=0; i < scriptedNodes.length ; i++)
 	{
 		Node@ scriptNode = scriptedNodes[i];
