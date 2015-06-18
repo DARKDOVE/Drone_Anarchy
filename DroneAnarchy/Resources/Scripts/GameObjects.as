@@ -72,6 +72,30 @@ abstract class DroneObjectBase : ScriptObject
 	
 	void HandleNodeCollision(StringHash eventType, VariantMap& eventData){}
 	
+	void Attack(){}
+	
+	void FixedUpdate(float timestep)
+	{
+		
+		if(currentHealthLevel_ <= 0)
+		{
+			//Add explosion Effects
+			OnDestroyed();
+			Destroy();
+		}
+		else if(!hasAttacked_)
+		{
+			attackTimer_ += timestep;
+			if(attackTimer_ >= attackTime_)
+			{
+				Attack();
+			}
+		}
+		
+	}
+	
+	void OnDestroyed(){}
+	
 	void Destroy()
 	{
 		Sprite@ nodeSprite = node.vars["Sprite"].GetPtr();
@@ -90,7 +114,7 @@ abstract class DroneObjectBase : ScriptObject
 ///Low Level Drone Object
 class LowLevelDrone : DroneObjectBase
 {
-	int killPoint_;
+	int dronePoint_;
 	int damagePoint_;
 	
 	LowLevelDrone()
@@ -100,7 +124,7 @@ class LowLevelDrone : DroneObjectBase
 		attackTime_ = 37;
 		attackTimer_ = 0;
 		hasAttacked_ = false;
-		killPoint_ = 2;
+		dronePoint_ = 2;
 		damagePoint_ = 2;
 		
 	}
@@ -120,29 +144,6 @@ class LowLevelDrone : DroneObjectBase
 		valAnim.SetKeyFrame(0.0f, Variant(node.position));
 		valAnim.SetKeyFrame(90.0f, Variant(node.rotation * Vector3(0,0,-35)));
 		node.SetAttributeAnimation("Position", valAnim);
-	}
-	
-	void FixedUpdate(float timestep)
-	{
-		
-		if(currentHealthLevel_ <= 0)
-		{
-			//Add explosion Effects
-			VariantMap eventData;
-			eventData["DronePosition"] = node.worldPosition;
-			eventData["KillPoint"] = killPoint_;
-			SendEvent("DroneDestroyed", eventData);
-			Destroy();
-		}
-		else if(!hasAttacked_)
-		{
-			attackTimer_ += timestep;
-			if(attackTimer_ >= attackTime_)
-			{
-				Attack();
-			}
-		}
-		
 	}
 	
 	
@@ -193,6 +194,22 @@ class LowLevelDrone : DroneObjectBase
 		animController.PlayExclusive("Resources/Models/open_arm.ani", 0, false);
 	}
 	
+	void OnDestroyed()
+	{
+		VariantMap eventData;
+		eventData["DronePoint"] = dronePoint_;
+		SendEvent("DroneDestroyed", eventData);
+		
+		SpawnExplosion();
+	}
+	
+	void SpawnExplosion()
+	{
+		Node@ explosionNode = scene_.CreateChild("ExplosionNode");
+		explosionNode.worldPosition = node.worldPosition;	 
+		explosionNode.CreateScriptObject(scriptFile, "SimpleExplosion");
+	}
+	
 	
 }
 
@@ -212,7 +229,7 @@ abstract class BulletObjectBase : ScriptObject
 		Initialise();
 	}
 	
-	void Initialise(){};
+	void Initialise(){}
 	
 	
 	void FixedUpdate(float timestep)
@@ -320,6 +337,11 @@ class SimpleExplosion : ExplosionObjectBase
 		ParticleEmitter@ pEmitter = node.CreateComponent("ParticleEmitter");
 		pEmitter.effect = cache.GetResource("ParticleEffect", "Resources/Particles/explosion.xml");
 		pEmitter.enabled = true;
+		
+		VariantMap eventData;
+		eventData["SoundNode"] = node;
+		eventData["SoundName"] = "Resources/Sounds/explosion.ogg";
+		SendEvent("SoundGenerated", eventData);
 	}
 	
 	

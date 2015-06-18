@@ -406,6 +406,7 @@ void SubscribeToEvents()
 	SubscribeToEvent("PlayerHit","HandlePlayerHit");
 	SubscribeToEvent("DroneDestroyed", "HandleDroneDestroyed");
 	SubscribeToEvent("CountFinished", "HandleCountFinished");
+	SubscribeToEvent("SoundGenerated", "HandleSoundGenerated");
 	SubscribeToEvent(scene_.physicsWorld, "PhysicsPreStep", "HandleFixedUpdate");
 	
 }
@@ -644,11 +645,8 @@ void HandlePlayerHit(StringHash eventType, VariantMap& eventData)
 
 void HandleDroneDestroyed(StringHash eventType, VariantMap& eventData)
 {
-	playerScore_ += eventData["KillPoint"].GetInt();
+	playerScore_ += eventData["DronePoint"].GetInt();
 	UpdateScoreDisplay();
-	
-	Vector3 dronePosition = eventData["DronePosition"].GetVector3();
-	SpawnExplosion(dronePosition);
 }
 
 void HandleCountFinished(StringHash eventType, VariantMap& eventData)
@@ -667,14 +665,7 @@ void UpdateScoreDisplay()
 }
  
 
-void SpawnExplosion(Vector3 position)
-{
-	Node@ explosionNode = scene_.CreateChild("ExplosionNode");
-	explosionNode.worldPosition = position;
-	 
-	explosionNode.CreateScriptObject(scriptFile, "SimpleExplosion");
-	PlaySoundFX(explosionNode, "Resources/Sounds/explosion.ogg");
-}
+
 
 
 void SpawnDrone()
@@ -766,7 +757,16 @@ void SpawnBullet(bool first)
 }
 
 
-void PlaySoundFX(Node@ soundNode, String soundName)
+void HandleSoundGenerated(StringHash eventType, VariantMap& eventData)
+{
+	Node@ soundNode = eventData["SoundNode"].GetPtr();
+	String soundName = eventData["SoundName"].GetString();
+	
+	PlaySoundFX(soundNode, soundName);
+}
+
+
+void PlaySoundFX(Node@ soundNode, String soundName )
 {
 	SoundSource3D@ source = soundNode.CreateComponent("SoundSource3D");
 	
