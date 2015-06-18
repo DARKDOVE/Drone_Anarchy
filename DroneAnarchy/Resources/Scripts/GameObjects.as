@@ -284,15 +284,24 @@ class LowLevelBullet : BulletObjectBase
 
 }
 
-
-
-///Explosion Object
-class ExplosionObject : ScriptObject
+///Explosion Object Base
+abstract class ExplosionObjectBase : ScriptObject
 {
 	float duration_;
 	
+	void DelayedStart()
+	{
+		Initialise();
+	}
 	
-	ExplosionObject()
+	void Initialise(){}
+}
+
+///Explosion Object
+class SimpleExplosion : ExplosionObjectBase 
+{
+	
+	SimpleExplosion()
 	{
 		duration_ = 0.78f;
 	}
@@ -304,6 +313,13 @@ class ExplosionObject : ScriptObject
 		{
 			node.Remove();
 		}
+	}
+	
+	void Initialise()
+	{
+		ParticleEmitter@ pEmitter = node.CreateComponent("ParticleEmitter");
+		pEmitter.effect = cache.GetResource("ParticleEffect", "Resources/Particles/explosion.xml");
+		pEmitter.enabled = true;
 	}
 	
 	

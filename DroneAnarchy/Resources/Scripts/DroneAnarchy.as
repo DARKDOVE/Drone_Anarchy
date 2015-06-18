@@ -671,12 +671,8 @@ void SpawnExplosion(Vector3 position)
 {
 	Node@ explosionNode = scene_.CreateChild("ExplosionNode");
 	explosionNode.worldPosition = position;
-	
-	ParticleEmitter@ pEmitter = explosionNode.CreateComponent("ParticleEmitter");
-	pEmitter.effect = cache.GetResource("ParticleEffect", "Resources/Particles/explosion.xml");
-	pEmitter.enabled = true;
 	 
-	explosionNode.CreateScriptObject(scriptFile, "ExplosionObject");
+	explosionNode.CreateScriptObject(scriptFile, "SimpleExplosion");
 	PlaySoundFX(explosionNode, "Resources/Sounds/explosion.ogg");
 }
 
