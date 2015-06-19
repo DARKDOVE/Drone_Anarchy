@@ -8,11 +8,7 @@ enum GameState
 	GS_PAUSED
 }
 
-const int BULLET_COLLISION_LAYER = 1;
-const int PLAYER_COLLISION_LAYER = 2;
-const int DRONE_COLLISION_LAYER = 3;
-const int FLOOR_COLLISION_LAYER = 5;
-const int SCORE_ADDITION_RATE = 1;
+
 
 const uint MAX_DRONE_COUNT = 15;
 
