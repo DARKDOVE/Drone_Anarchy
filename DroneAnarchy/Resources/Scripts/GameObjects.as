@@ -205,7 +205,7 @@ class LowLevelDrone : DroneObjectBase
 	
 	void SpawnExplosion()
 	{
-		Node@ explosionNode = scene_.CreateChild("ExplosionNode");
+		Node@ explosionNode = node.scene.CreateChild("ExplosionNode");
 		explosionNode.worldPosition = node.worldPosition;	 
 		explosionNode.CreateScriptObject(scriptFile, "SimpleExplosion");
 	}
