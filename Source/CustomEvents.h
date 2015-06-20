@@ -37,11 +37,14 @@ EVENT(E_PLAYERHIT, PlayerHit)
 
 EVENT(E_DRONEDESTROYED, DroneDestroyed)
 {
-    PARAM(P_DRONEPOSITION, DronePosition);
+    PARAM(P_DRONEPOINT, DronePoint);
 }
 
-EVENT(E_DRONEHIT, DroneHit)
+
+EVENT(E_SOUNDGENERATED, SoundGenerated)
 {
+    PARAM(P_SOUNDNODE, SoundNode);
+    PARAM(P_SOUNDNAME, SoundName);
 }
 
 EVENT(E_COUNTFINISHED, CountFinished)

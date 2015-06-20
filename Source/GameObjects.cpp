@@ -105,7 +105,6 @@ void DroneObject::FixedUpdate(float timeStep)
 
         //Add explosion Effects
         VariantMap eventData;
-        eventData[P_DRONEPOSITION] = GetNode()->GetWorldPosition();
         SendEvent(E_DRONEDESTROYED, eventData);
         Destroy();
     }
@@ -200,10 +199,7 @@ void BulletObject::HandleNodeCollision(StringHash eventType, VariantMap& eventDa
 
     if(droneObj != NULL)
     {
-        using namespace DroneHit;
-
         droneObj->OnHit();
-        SendEvent(E_DRONEHIT);
     }
 
     Destroy();

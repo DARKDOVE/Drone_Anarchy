@@ -337,8 +337,9 @@ void DroneAnarchy::HandleUpdate(StringHash eventType, VariantMap &eventData)
 void DroneAnarchy::HandleDroneDestroyed(StringHash eventType, VariantMap &eventData)
 {
     using namespace DroneDestroyed;
-    Vector3 dronePosition = eventData[P_DRONEPOSITION].GetVector3();
-    SpawnExplosion(dronePosition);
+
+    playerScore_ += eventData[P_DRONEPOINT].GetInt();
+    UpdateScoreDisplay();
 }
 
 void DroneAnarchy::HandlePlayerHit(StringHash eventType, VariantMap &eventData)
@@ -361,11 +362,16 @@ void DroneAnarchy::HandlePlayerHit(StringHash eventType, VariantMap &eventData)
     }
 }
 
-void DroneAnarchy::HandleDroneHit(StringHash eventType, VariantMap& eventData)
+void DroneAnarchy::HandleSoundGenerated(StringHash eventType, VariantMap& eventData)
 {
-    playerScore_ += SCORE_ADDITION_RATE;
-    UpdateScoreDisplay();
+    using namespace SoundGenerated;
+
+    Node* soundNode = eventData[P_SOUNDNODE].GetPtr();
+    String soundName = eventData[P_SOUNDNAME].GetString();
+
+    PlaySoundFX(soundNode, soundName);
 }
+
 
 void DroneAnarchy::HandleCountFinished(StringHash eventType, VariantMap &eventData)
 {
@@ -545,12 +551,7 @@ void DroneAnarchy::CleanupScene()
     String scriptClassName = String::EMPTY;
     for(int i = 0; i < scriptedNodes.Size(); i++)
     {
-        scriptClassName = scriptedNodes[i]->GetComponent<ScriptInstance>()->GetClassName();
-
-        if(scriptClassName == "BulletObject" || scriptClassName == "ExplosionObject")
-        {
-            scriptedNodes[i]->Remove();
-        }
+        scriptedNodes[i]->Remove();
     }
 #else
     PODVector<Node*> bulletNodes;
@@ -588,38 +589,16 @@ void DroneAnarchy::CleanupScene()
 void DroneAnarchy::SpawnDrone()
 {
 
-    ResourceCache* cache = GetSubsystem<ResourceCache>();
-
     Node* droneNode = droneRootNode_->CreateChild();
     droneNode->SetScale(3.0f);
 
-    AnimatedModel* droneBody = droneNode->CreateComponent<AnimatedModel>();
-    droneBody->SetModel(cache->GetResource<Model>("Resources/Models/drone_body.mdl"));
-    droneBody->SetMaterial(cache->GetResource<Material>("Resources/Materials/drone_body.xml"));
-
-    AnimatedModel* droneArm = droneNode->CreateComponent<AnimatedModel>();
-    droneArm->SetModel(cache->GetResource<Model>("Resources/Models/drone_arm.mdl"));
-    droneArm->SetMaterial(cache->GetResource<Material>("Resources/Materials/drone_arm.xml"));
-
-
-    RigidBody* droneRB = droneNode->CreateComponent<RigidBody>();
-    droneRB->SetMass(1.0f);
-    droneRB->SetCollisionLayerAndMask(DRONE_COLLISION_LAYER, BULLET_COLLISION_LAYER | PLAYER_COLLISION_LAYER | FLOOR_COLLISION_LAYER);
-    droneRB->SetKinematic(true);
-
-    CollisionShape* droneCS = droneNode->CreateComponent<CollisionShape>();
-    droneCS->SetSphere(0.3f);
-
 #ifdef USE_SCRIPT_OBJECT
     ScriptInstance* sInstance = droneNode->CreateComponent<ScriptInstance>();
-    sInstance->CreateObject(cache->GetResource<ScriptFile>("Resources/Scripts/GameObjects.as"),"DroneObject");
+    ResourceCache* cache = GetSubsystem<ResourceCache>();
+    sInstance->CreateObject(cache->GetResource<ScriptFile>("Resources/Scripts/GameObjects.as"),"LowLevelDrone");
 #else
     droneNode->CreateComponent<DroneObject>();
 #endif
-
-    AnimationController* animController = droneNode->CreateComponent<AnimationController>();
-    animController->PlayExclusive("Resources/Models/open_arm.ani", 0, false);
-
 
     float nodeYaw = Random(360);
     droneNode->SetRotation( Quaternion(0,nodeYaw, 0));
@@ -691,59 +670,14 @@ void DroneAnarchy::SpawnBullet(bool first)
     float xOffSet = 0.3f * (first ? 1 : -1);
     bulletNode->Translate(Vector3(xOffSet,-0.2,0));
 
-    ResourceCache* cache = GetSubsystem<ResourceCache>();
-    BillboardSet* bbSet = bulletNode->CreateComponent<BillboardSet>();
-    bbSet->SetNumBillboards(1);
-    bbSet->SetMaterial(cache->GetResource<Material>("Resources/Materials/bullet_particle.xml"));
-
-    ParticleEmitter* bulletTrail = bulletNode->CreateComponent<ParticleEmitter>();
-    bulletTrail->SetEffect(cache->GetResource<ParticleEffect>("Resources/Particles/bullet_particle.xml"));
-    bulletTrail->SetEnabled(true);
-
 
 #ifdef USE_SCRIPT_OBJECT
     ScriptInstance* sInstance = bulletNode->CreateComponent<ScriptInstance>();
-    sInstance->CreateObject(cache->GetResource<ScriptFile>("Resources/Scripts/GameObjects.as"),"BulletObject");
+    ResourceCache* cache = GetSubsystem<ResourceCache>();
+    sInstance->CreateObject(cache->GetResource<ScriptFile>("Resources/Scripts/GameObjects.as"),"LowLevelBullet");
 #else
     bulletNode->CreateComponent<BulletObject>();
 #endif
-
-    RigidBody* bulletRB = bulletNode->CreateComponent<RigidBody>();
-    bulletRB->SetMass(1.0f);
-    bulletRB->SetTrigger(true);
-    bulletRB->SetUseGravity(false);
-
-    bulletRB->SetCcdRadius(0.05f);
-    bulletRB->SetCcdMotionThreshold(0.15f);
-    bulletRB->SetCollisionLayerAndMask(BULLET_COLLISION_LAYER, DRONE_COLLISION_LAYER | FLOOR_COLLISION_LAYER);
-
-    CollisionShape* bulletCS = bulletNode->CreateComponent<CollisionShape>();
-    bulletCS->SetSphere(0.3f);
-
-    bulletRB->SetLinearVelocity(bulletNode->GetRotation() * Vector3(0,0,70));
-
-}
-
-void DroneAnarchy::SpawnExplosion(Vector3 position)
-{
-    ResourceCache* cache = GetSubsystem<ResourceCache>();
-
-    Node* explosionNode = scene_->CreateChild("ExplosionNode");
-    explosionNode->SetWorldPosition(position);
-
-    ParticleEmitter* explosion = explosionNode->CreateComponent<ParticleEmitter>();
-    explosion->SetEffect(cache->GetResource<ParticleEffect>("Resources/Particles/explosion.xml"));
-    explosion->SetEnabled(true);
-
-
-#ifdef USE_SCRIPT_OBJECT
-    ScriptInstance* sInstance = explosionNode->CreateComponent<ScriptInstance>();
-    sInstance->CreateObject(cache->GetResource<ScriptFile>("Resources/Scripts/GameObjects.as"),"ExplosionObject");
-#else
-    explosionNode->CreateComponent<ExplosionObject>();
-#endif
-
-    PlaySoundFX(explosionNode, "Resources/Sounds/explosion.ogg");
 
 }
 
@@ -994,8 +928,8 @@ void DroneAnarchy::SubscribeToEvents()
 
     SubscribeToEvent(E_DRONEDESTROYED, HANDLER(DroneAnarchy, HandleDroneDestroyed));
     SubscribeToEvent(E_PLAYERHIT, HANDLER(DroneAnarchy, HandlePlayerHit));
-    SubscribeToEvent(E_DRONEHIT, HANDLER(DroneAnarchy, HandleDroneHit));
     SubscribeToEvent(E_COUNTFINISHED, HANDLER(DroneAnarchy, HandleCountFinished));
+    SubscribeToEvent(E_SOUNDGENERATED, HANDLER(DroneAnarchy, HandleSoundGenerated));
 
 }
 
