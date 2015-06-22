@@ -353,3 +353,46 @@ class SimpleExplosion : ExplosionObjectBase
 	
 	
 }
+
+
+
+///Weapon Base Class
+abstract class WeaponObjectBase
+{
+	Node@ refNode_;
+	
+	WeaponObjectBase(Node@ refNode)
+	{
+		refNode_ = refNode;
+	}
+	void Fire(){}
+}
+
+
+///Ordinary Weapon
+class OrdinaryWeapon : WeaponObjectBase
+{
+	void Fire()
+	{	
+		SpawnBullet(true);
+		SpawnBullet(false);
+	}
+	
+	OrdinaryWeapon(Node@ refNode)
+	{
+		super(refNode);
+	}
+
+	void SpawnBullet(bool first)
+	{
+		Node@ bulletNode = scene_.CreateChild();
+		bulletNode.worldPosition = refNode_.worldPosition;
+		bulletNode.rotation = refNode_.worldRotation;
+		
+		float xOffSet = 0.3f * (first ? 1 : -1);
+		bulletNode.Translate(Vector3(xOffSet,-0.2,0));
+		
+		bulletNode.CreateScriptObject(scriptFile, "LowLevelBullet");
+	}
+}
+
