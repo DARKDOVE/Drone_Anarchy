@@ -147,11 +147,6 @@ void CreatePlayer()
 	cameraNode.CreateComponent("Camera");
 	cameraNode.Translate(Vector3(0,1.7,0));
 	
-	Node@ lightNode = cameraNode.CreateChild("DirectionalLight");
-    lightNode.direction = Vector3(0.6f, -1.0f, 0.8f);
-    Light@ light = lightNode.CreateComponent("Light");
-    light.lightType = LIGHT_DIRECTIONAL;
-	
 	playerNode_.CreateScriptObject(scriptFile,"PlayerObject");
 	
 	cameraNode.CreateComponent("SoundListener");

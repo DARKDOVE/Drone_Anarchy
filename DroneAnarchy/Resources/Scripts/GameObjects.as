@@ -50,6 +50,13 @@ class PlayerObject : ScriptObject
 		CollisionShape@ playerColShape = node.CreateComponent("CollisionShape");
 		playerColShape.SetSphere(2);
 		SetWeapon(OrdinaryWeapon(node.GetChild("CameraNode")));
+		
+		Node@ cameraNode = node.GetChild("CameraNode");
+		
+		Node@ lightNode = cameraNode.CreateChild("DirectionalLight");
+		lightNode.direction = Vector3(0.6f, -1.0f, 0.8f);
+		Light@ light = lightNode.CreateComponent("Light");
+		light.lightType = LIGHT_DIRECTIONAL;
 	}
 	
 	void HandleActivateWeapon(StringHash eventType, VariantMap& eventData)
@@ -92,7 +99,7 @@ class PlayerObject : ScriptObject
 			
 			SendEvent("PlayerDestroyed",eventData);
 			
-			//node.GetChild("DirectionalLight").enabled = false;
+			node.GetChild("CameraNode").GetChild("DirectionalLight").enabled = false;
 		}
 		
 		float healthFraction = currentHealth_ / maximumHealth_;
