@@ -746,21 +746,7 @@ void UpdateHealthTexture(float healthFraction)
 
 void Fire()
 {	
-	SpawnBullet(true);
-	SpawnBullet(false);
-	PlaySoundFX(cameraNode_,"Resources/Sounds/boom1.wav");
-}
-
-void SpawnBullet(bool first)
-{
-	Node@ pNode = scene_.CreateChild();
-	pNode.worldPosition = cameraNode_.worldPosition;
-	pNode.rotation = cameraNode_.worldRotation;
-	
-	float xOffSet = 0.3f * (first ? 1 : -1);
-	pNode.Translate(Vector3(xOffSet,-0.2,0));
-	
-	pNode.CreateScriptObject(scriptFile, "LowLevelBullet");
+	SendEvent("ActivateWeapon");
 }
 
 
