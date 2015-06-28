@@ -249,12 +249,9 @@ void DroneAnarchy::HandleMouseMove(StringHash eventType, VariantMap &eventData)
         return;
     }
 
-    int dx = eventData["DX"].GetInt();
-    int dy = eventData["DY"].GetInt();
+    using namespace PlayerMouseMove;
 
-    float camYaw = cameraNode_->GetRotation().YawAngle() + (dx * 0.25f);
-    float camPitch = cameraNode_->GetRotation().PitchAngle() + (dy * 0.25f);
-    camPitch = Clamp(camPitch, -20.0f, 70.0f);
+    SendEvent(E_PLAYERMOUSEMOVE,eventData);
 
     cameraNode_->SetRotation( Quaternion(camPitch, camYaw, 0.0f));
     radarScreenBase_->SetRotation(-cameraNode_->GetWorldRotation().YawAngle());
