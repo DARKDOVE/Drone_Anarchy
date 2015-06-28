@@ -318,7 +318,7 @@ void DroneAnarchy::HandleFixedUpdate(StringHash eventType, VariantMap &eventData
 
 void DroneAnarchy::HandleUpdate(StringHash eventType, VariantMap &eventData)
 {
-    joystickUpdate( joydirection_ );
+    JoystickUpdate( joydirection_ );
 
     if(onQuit_)
     {
