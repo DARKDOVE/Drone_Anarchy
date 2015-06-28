@@ -414,6 +414,7 @@ void SubscribeToEvents()
 	SubscribeToEvent("DroneDestroyed", "HandleDroneDestroyed");
 	SubscribeToEvent("CountFinished", "HandleCountFinished");
 	SubscribeToEvent("SoundGenerated", "HandleSoundGenerated");
+	SubscribeToEvent("PlayerDestroyed", "HandlePlayerDestroyed");
 	SubscribeToEvent(scene_.physicsWorld, "PhysicsPreStep", "HandleFixedUpdate");
 	
 }
