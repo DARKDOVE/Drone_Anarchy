@@ -360,7 +360,18 @@ void DroneAnarchy::HandlePlayerHit(StringHash eventType, VariantMap &eventData)
 
 void DroneAnarchy::HandlePlayerDestroyed(StringHash eventType, VariantMap &eventData)
 {
+    using namespace PlayerDestroyed;
 
+    Vector3 camPosition = eventData[P_CAMPOSITION].GetVector3();
+    Quaternion camRotation = eventData[P_CAMROTATION].GetQuaternion();
+
+    cameraNode_->SetWorldPosition(camPosition);
+    cameraNode_->SetWorldRotation(camRotation);
+
+    SetViewportCamera(cameraNode_);
+    cameraNode_->GetChild("DirectionalLight")->SetEnabled(true);
+
+    SetSoundListener(cameraNode_);
 }
 
 void DroneAnarchy::HandleSoundGenerated(StringHash eventType, VariantMap& eventData)
