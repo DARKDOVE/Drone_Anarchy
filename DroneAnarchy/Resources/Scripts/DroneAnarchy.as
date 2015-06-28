@@ -314,6 +314,13 @@ void CreateAudioSystem()
 	backgroundMusicSource_ = backgroundMusicNode.CreateComponent("SoundSource");
     backgroundMusicSource_.soundType = SOUND_MUSIC;
 	
+void SetSoundListener(Node@ listenerNode)
+{
+	if(listenerNode.GetComponent("SoundListener") is null)
+	{
+		return;
+	}
+	audio.listener = listenerNode.GetComponent("SoundListener");
 }
 
 void LoadBackgroundResources()
