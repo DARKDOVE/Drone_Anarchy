@@ -531,10 +531,7 @@ void CleanupScene()
 	//Hide the enemy counter and player score texts
 	enemyCounterText_.text = "";
 	playerScoreText_.text = "";
-	
-	
-	
-	
+
 }
 
 
