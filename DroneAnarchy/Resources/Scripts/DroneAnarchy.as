@@ -128,7 +128,7 @@ void CreateCameraAndLight()
     Light@ light = lightNode.CreateComponent("Light");
     light.lightType = LIGHT_DIRECTIONAL;	
 	
-	audio.listener = cameraNode_.CreateComponent("SoundListener");
+	cameraNode_.CreateComponent("SoundListener");
 	
 	renderer.viewports[0] = Viewport(scene_, cameraNode_.GetComponent("Camera"));
 }
