@@ -663,10 +663,10 @@ void HandleDroneDestroyed(StringHash eventType, VariantMap& eventData)
 
 void HandlePlayerDestroyed(StringHash eventType, VariantMap& eventData)
 {
-	Vector3 position = eventData["CamPosition"].GetVector3();
-	Quaternion rotation = eventData["CamRotation"].GetQuaternion();
-	cameraNode_.rotation = rotation;
-	cameraNode_.position = position;
+	Vector3 camPosition = eventData["CamPosition"].GetVector3();
+	Quaternion camRotation = eventData["CamRotation"].GetQuaternion();
+	cameraNode_.rotation = camRotation;
+	cameraNode_.position = camPosition;
 	
 	SetViewportCamera(cameraNode_);
 	cameraNode_.GetChild("DirectionalLight").enabled = true;
