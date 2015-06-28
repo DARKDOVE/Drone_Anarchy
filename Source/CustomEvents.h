@@ -35,6 +35,14 @@ EVENT(E_PLAYERHIT, PlayerHit)
     PARAM(P_CURRENTHEALTHFRACTION,CurrentHealthFraction );
 }
 
+EVENT(E_PLAYERDESTROYED, PlayerDestroyed)
+{
+    PARAM(P_CAMPOSITION,CamPosition );
+    PARAM(P_CAMROTATION,CamRotation );
+    PARAM(P_PLAYERPOSITION,PlayerPosition );
+    PARAM(P_PLAYERROTATION,PlayerRotation );
+}
+
 EVENT(E_DRONEDESTROYED, DroneDestroyed)
 {
     PARAM(P_DRONEPOINT, DronePoint);

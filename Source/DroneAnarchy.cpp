@@ -362,6 +362,11 @@ void DroneAnarchy::HandlePlayerHit(StringHash eventType, VariantMap &eventData)
     }
 }
 
+void DroneAnarchy::HandlePlayerDestroyed(StringHash eventType, VariantMap &eventData)
+{
+
+}
+
 void DroneAnarchy::HandleSoundGenerated(StringHash eventType, VariantMap& eventData)
 {
     using namespace SoundGenerated;
@@ -375,6 +380,15 @@ void DroneAnarchy::HandleSoundGenerated(StringHash eventType, VariantMap& eventD
 
 void DroneAnarchy::HandleCountFinished(StringHash eventType, VariantMap &eventData)
 {
+    CreatePlayer();
+    SetViewportCamera(playerNode_->GetChild("CameraNode"));
+
+    cameraNode_->GetChild("DirectionalLight")->SetEnabled(false);
+
+    //The following two lines come into play when restarting the game
+    healthFillSprite_->SetImageRect(IntRect(0, 0, 512, 64));
+    UpdateHealthTexture(1);
+
     scene_->SetUpdateEnabled(true);
     gameState_ = GS_INGAME;
 
@@ -426,13 +440,15 @@ void DroneAnarchy::CreateScene()
 void DroneAnarchy::CreatePlayer()
 {
     playerNode_ = scene_->CreateChild("PlayerNode");
-    RigidBody* playerRB = playerNode_->CreateComponent<RigidBody>();
-    playerRB->SetCollisionLayerAndMask(PLAYER_COLLISION_LAYER, DRONE_COLLISION_LAYER);
 
-    CollisionShape* playerCS = playerNode_->CreateComponent<CollisionShape>();
-    playerCS->SetSphere(2.0f);
+    Node* cameraNode = playerNode_->CreateChild("CameraNode");
+    cameraNode->CreateComponent<Camera>();
+    cameraNode->Translate(Vector3(0,1.7,0));
 
-
+    Node* lightNode = cameraNode->CreateChild("DirectionalLight");
+    lightNode->SetDirection( Vector3(0.6f, -1.0f, 0.8f));
+    Light* light = lightNode->CreateComponent<Light>();
+    light->SetLightType(LIGHT_DIRECTIONAL);
 
 #ifdef USE_SCRIPT_OBJECT
     ResourceCache* cache = GetSubsystem<ResourceCache>();
@@ -441,6 +457,9 @@ void DroneAnarchy::CreatePlayer()
 #else
     playerNode_->CreateComponent<PlayerObject>();
 #endif
+
+    cameraNode->CreateComponent<SoundListener>();
+    SetSoundListener(cameraNode);
 
     playerDestroyed_ = false;
 
@@ -452,20 +471,26 @@ void DroneAnarchy::CreateCameraAndLight()
     cameraNode_->CreateComponent<Camera>();
     cameraNode_->Translate(Vector3(0,1.7,0));
 
-    Node* lightNode = cameraNode_->CreateChild("LightNode");
+    Node* lightNode = cameraNode_->CreateChild("DirectionalLight");
     lightNode->SetDirection( Vector3(0.6f, -1.0f, 0.8f));
     Light* light = lightNode->CreateComponent<Light>();
     light->SetLightType(LIGHT_DIRECTIONAL);
 
-
-    Audio* audio = GetSubsystem<Audio>();
-    audio->SetListener(cameraNode_->CreateComponent<SoundListener>());
+    cameraNode_->CreateComponent<SoundListener>();
 
     Renderer* renderer = GetSubsystem<Renderer>();
     Viewport* viewport_ = new Viewport(context_, scene_, cameraNode_->GetComponent<Camera>());
     renderer->SetViewport(0,viewport_);
 }
 
+
+void DroneAnarchy::SetViewportCamera(Node *cameraNode)
+{
+    Renderer* renderer = GetSubsystem<Renderer>();
+    Viewport* viewport = renderer->GetViewport(0);
+
+    viewport->SetCamera(cameraNode->GetComponent<Camera>());
+}
 
 
 void DroneAnarchy::Fire()
@@ -485,9 +510,10 @@ void DroneAnarchy::StartGame()
 
     CreatePlayer();
 
-    //The following two lines become very useful when restarting the game
-    healthFillSprite_->SetImageRect(IntRect(0, 0, 512, 64));
-    UpdateHealthTexture(1);
+    Audio* audio = GetSubsystem<Audio>();
+    audio->SetListener(cameraNode_->CreateComponent<SoundListener>());
+
+
 
     PlayBackgroundMusic("Resources/Sounds/cyber_dance.ogg");
     StartCounterToGame();
@@ -864,6 +890,17 @@ void DroneAnarchy::CreateAudioSystem()
      backgroundMusicSource_->SetSoundType(SOUND_MUSIC);
 }
 
+void DroneAnarchy::SetSoundListener(Node *listenerNode)
+{
+    if(listenerNode->GetComponent<SoundListener>() == NULL)
+    {
+        return;
+    }
+
+    Audio* audio = GetSubsystem<Audio>();
+    audio->SetListener(listenerNode->CreateComponent<SoundListener>());
+}
+
 void DroneAnarchy::PlaySoundFX(Node *soundNode, String soundName)
 {
     // Create the sound channel
@@ -928,6 +965,7 @@ void DroneAnarchy::SubscribeToEvents()
 
     SubscribeToEvent(E_DRONEDESTROYED, HANDLER(DroneAnarchy, HandleDroneDestroyed));
     SubscribeToEvent(E_PLAYERHIT, HANDLER(DroneAnarchy, HandlePlayerHit));
+    SubscribeToEvent(E_PLAYERDESTROYED, HANDLER(DroneAnarchy, HandlePlayerDestroyed));
     SubscribeToEvent(E_COUNTFINISHED, HANDLER(DroneAnarchy, HandleCountFinished));
     SubscribeToEvent(E_SOUNDGENERATED, HANDLER(DroneAnarchy, HandleSoundGenerated));
 

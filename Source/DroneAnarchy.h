@@ -60,6 +60,7 @@ public:
 
     void HandleDroneDestroyed(StringHash eventType, VariantMap& eventData);
     void HandlePlayerHit(StringHash eventType, VariantMap& eventData);
+    void HandlePlayerDestroyed(StringHash eventType, VariantMap& eventData);
     void HandleDroneHit(StringHash eventType, VariantMap& eventData);
     void HandleSoundGenerated(StringHash eventType, VariantMap& eventData);
     void HandleCountFinished(StringHash eventType, VariantMap& eventData);
@@ -96,6 +97,9 @@ private:
     void CreateAudioSystem();
     Sprite* CreateDroneSprite();
 
+    void SetSoundListener(Node* listenerNode);
+    void SetViewportCamera(Node* cameraNode);
+
     void Fire();
     void PlaySoundFX(Node* soundNode, String soundName);
     void PlayBackgroundMusic(String musicName);
@@ -113,6 +117,7 @@ private:
 
     void CreateGameControllers();
     void joystickUpdate ( int position );
+
 
     float spriteUpdateCounter_;
     float droneSpawnCounter_;

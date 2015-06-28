@@ -153,10 +153,13 @@ void CreatePlayer()
     light.lightType = LIGHT_DIRECTIONAL;
 	
 	playerNode_.CreateScriptObject(scriptFile,"PlayerObject");
-	playerDestroyed_ = false;
 	
 	cameraNode.CreateComponent("SoundListener");
 	SetSoundListener(cameraNode);
+	
+	SetViewportCamera(cameraNode);
+	
+	playerDestroyed_ = false;
 
 }
 
@@ -674,7 +677,6 @@ void HandlePlayerDestroyed(StringHash eventType, VariantMap& eventData)
 void HandleCountFinished(StringHash eventType, VariantMap& eventData)
 {
 	CreatePlayer();
-	SetViewportCamera(playerNode_.GetChild("CameraNode"));
 	
 	cameraNode_.GetChild("DirectionalLight").enabled = false;
 	
