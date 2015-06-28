@@ -452,11 +452,6 @@ void DroneAnarchy::CreatePlayer()
     cameraNode->CreateComponent<Camera>();
     cameraNode->Translate(Vector3(0,1.7,0));
 
-    Node* lightNode = cameraNode->CreateChild("DirectionalLight");
-    lightNode->SetDirection( Vector3(0.6f, -1.0f, 0.8f));
-    Light* light = lightNode->CreateComponent<Light>();
-    light->SetLightType(LIGHT_DIRECTIONAL);
-
 #ifdef USE_SCRIPT_OBJECT
     ResourceCache* cache = GetSubsystem<ResourceCache>();
     ScriptInstance* sInstance = playerNode_->CreateComponent<ScriptInstance>();
