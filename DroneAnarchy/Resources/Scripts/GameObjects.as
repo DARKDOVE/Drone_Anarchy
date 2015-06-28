@@ -385,7 +385,7 @@ class OrdinaryWeapon : WeaponObjectBase
 
 	void SpawnBullet(bool first)
 	{
-		Node@ bulletNode = scene_.CreateChild();
+		Node@ bulletNode = refNode_.scene.CreateChild();
 		bulletNode.worldPosition = refNode_.worldPosition;
 		bulletNode.rotation = refNode_.worldRotation;
 		
