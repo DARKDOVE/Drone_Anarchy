@@ -232,6 +232,7 @@ void DroneAnarchy::HandleKeyOnOutGame(int key)
     }
 }
 
+
 void DroneAnarchy::HandleKeyOnInGame(int key)
 {
     if(key == KEY_P)
@@ -239,7 +240,6 @@ void DroneAnarchy::HandleKeyOnInGame(int key)
         PauseGame();
     }
 }
-
 
 
 void DroneAnarchy::HandleMouseMove(StringHash eventType, VariantMap &eventData)
@@ -378,7 +378,7 @@ void DroneAnarchy::HandleSoundGenerated(StringHash eventType, VariantMap& eventD
 {
     using namespace SoundGenerated;
 
-    Node* soundNode = eventData[P_SOUNDNODE].GetPtr();
+    Node* soundNode = static_cast<Node*>(eventData[P_SOUNDNODE].GetPtr());
     String soundName = eventData[P_SOUNDNAME].GetString();
 
     PlaySoundFX(soundNode, soundName);
@@ -388,7 +388,6 @@ void DroneAnarchy::HandleSoundGenerated(StringHash eventType, VariantMap& eventD
 void DroneAnarchy::HandleCountFinished(StringHash eventType, VariantMap &eventData)
 {
     CreatePlayer();
-    SetViewportCamera(playerNode_->GetChild("CameraNode"));
 
     cameraNode_->GetChild("DirectionalLight")->SetEnabled(false);
 
@@ -463,6 +462,8 @@ void DroneAnarchy::CreatePlayer()
     cameraNode->CreateComponent<SoundListener>();
     SetSoundListener(cameraNode);
 
+    SetViewportCamera(cameraNode);
+
     playerDestroyed_ = false;
 
 }
@@ -497,9 +498,9 @@ void DroneAnarchy::SetViewportCamera(Node *cameraNode)
 
 void DroneAnarchy::Fire()
 {
-    SpawnBullet(true);
-    SpawnBullet(false);
-    PlaySoundFX(cameraNode_,"Resources/Sounds/boom1.wav");
+    using namespace ActivateWeapon;
+
+    SendEvent(E_ACTIVATEWEAPON);
 }
 
 void DroneAnarchy::StartGame()
@@ -510,12 +511,7 @@ void DroneAnarchy::StartGame()
     droneSpawnCounter_ = 0.0f;
     playerScore_ = 0;
 
-    CreatePlayer();
-
-    Audio* audio = GetSubsystem<Audio>();
-    audio->SetListener(cameraNode_->CreateComponent<SoundListener>());
-
-
+    SetSoundListener(cameraNode_);
 
     PlayBackgroundMusic("Resources/Sounds/cyber_dance.ogg");
     StartCounterToGame();
@@ -560,6 +556,9 @@ void DroneAnarchy::InitiateGameOver()
 
 void DroneAnarchy::CleanupScene()
 {
+    //Remove the player Node
+    playerNode_->Remove();
+
     Vector<SharedPtr<Node> > droneNodes = droneRootNode_->GetChildren();
 
     for(unsigned int i = 0; i < droneNodes.Size(); i++)
@@ -602,8 +601,6 @@ void DroneAnarchy::CleanupScene()
 
 
 
-    //Remove the player Node
-    playerNode_->Remove();
 
 
     //Hide the enemy counter and player score texts
@@ -686,27 +683,6 @@ void DroneAnarchy::UpdateHealthTexture(float healthFraction)
 void DroneAnarchy::UpdateScoreDisplay()
 {
     playerScoreText_->SetText(String(playerScore_));
-}
-
-
-void DroneAnarchy::SpawnBullet(bool first)
-{
-    Node* bulletNode = scene_->CreateChild("BulletNode");
-    bulletNode->SetWorldPosition(cameraNode_->GetWorldPosition());
-    bulletNode->SetWorldRotation(cameraNode_->GetWorldRotation());
-
-    float xOffSet = 0.3f * (first ? 1 : -1);
-    bulletNode->Translate(Vector3(xOffSet,-0.2,0));
-
-
-#ifdef USE_SCRIPT_OBJECT
-    ScriptInstance* sInstance = bulletNode->CreateComponent<ScriptInstance>();
-    ResourceCache* cache = GetSubsystem<ResourceCache>();
-    sInstance->CreateObject(cache->GetResource<ScriptFile>("Resources/Scripts/GameObjects.as"),"LowLevelBullet");
-#else
-    bulletNode->CreateComponent<BulletObject>();
-#endif
-
 }
 
 
@@ -996,7 +972,7 @@ void DroneAnarchy::CreateGameControllers()
 // faster you move, up unto a point. You also want fine control to dial in
 // aiming, so the first couple of updates after a button is held tries to
 // limit the number of steps moved, hopefully to improve the aiming.
-void DroneAnarchy::joystickUpdate ( int position )
+void DroneAnarchy::JoystickUpdate ( int position )
 {
     if (GetSubsystem<Input>()->GetNumJoysticks() == 0 || position == -1 || ( myjoystick_ == NULL  ) ) return;
 
