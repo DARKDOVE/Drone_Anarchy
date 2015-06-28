@@ -94,14 +94,11 @@ void StartGame()
 	playerScoreMessageText_.text = "";
 	optionsInfoText_.text = "";
 	gamePhaseCounter_ = 0.0f;
+	droneSpawnCounter_ = 0.0f;
 	playerScore_ = 0;
 	
-	CreatePlayer();
-	
-	//The following two lines come into play when restarting the game
-	healthFillSprite_.imageRect = IntRect(0, 0, 512, 64);
-	UpdateHealthTexture(1);
-	
+	SetSoundListener(cameraNode_);
+
 	PlayBackgroundMusic("Resources/Sounds/cyber_dance.ogg");
 	StartCounterToGame();
 }
@@ -136,21 +133,26 @@ void CreateCameraAndLight()
 	renderer.viewports[0] = Viewport(scene_, cameraNode_.GetComponent("Camera"));
 }
 
+
 void SetViewportCamera(Node@ cameraNode)
 {
 	renderer.viewports[0].camera = cameraNode.GetComponent("Camera");
 }
+
 void CreatePlayer()
 {
 	
 	playerNode_ = scene_.CreateChild("PlayerNode");
-	RigidBody@ playerBody  = playerNode_.CreateComponent("RigidBody");
-	playerBody.SetCollisionLayerAndMask(PLAYER_COLLISION_LAYER, DRONE_COLLISION_LAYER);
-	CollisionShape@ playerColShape = playerNode_.CreateComponent("CollisionShape");
-	playerColShape.SetSphere(2);
+	Node@ cameraNode = playerNode_.CreateChild("CameraNode");
+	cameraNode.CreateComponent("Camera");
+	cameraNode.Translate(Vector3(0,1.7,0));
+	
+	Node@ lightNode = cameraNode.CreateChild("DirectionalLight");
+    lightNode.direction = Vector3(0.6f, -1.0f, 0.8f);
+    Light@ light = lightNode.CreateComponent("Light");
+    light.lightType = LIGHT_DIRECTIONAL;
 	
 	playerNode_.CreateScriptObject(scriptFile,"PlayerObject");
-	
 	playerDestroyed_ = false;
 
 }
@@ -314,6 +316,8 @@ void CreateAudioSystem()
 	backgroundMusicSource_ = backgroundMusicNode.CreateComponent("SoundSource");
     backgroundMusicSource_.soundType = SOUND_MUSIC;
 	
+}
+
 void SetSoundListener(Node@ listenerNode)
 {
 	if(listenerNode.GetComponent("SoundListener") is null)
@@ -535,15 +539,9 @@ void HandleMouseMove(StringHash eventType, VariantMap& eventData)
 		return;
 	}
 	
-	int dx = eventData["DX"].GetInt();
-	int dy = eventData["DY"].GetInt();
+	SendEvent("PlayerMouseMove",eventData);
 	
-	float camYaw = cameraNode_.rotation.yaw + (dx * 0.25f);
-	float camPitch = cameraNode_.rotation.pitch + (dy * 0.25f);
-	camPitch = Clamp(camPitch, -20.0f, 70.0f);
-	
-	cameraNode_.rotation = Quaternion(camPitch, camYaw, 0.0f);
-	radarScreenBase_.rotation = -cameraNode_.worldRotation.yaw;
+	radarScreenBase_.rotation = -playerNode_.worldRotation.yaw;
 }
 
 
@@ -657,8 +655,30 @@ void HandleDroneDestroyed(StringHash eventType, VariantMap& eventData)
 	UpdateScoreDisplay();
 }
 
+void HandlePlayerDestroyed(StringHash eventType, VariantMap& eventData)
+{
+	Vector3 position = eventData["CamPosition"].GetVector3();
+	Quaternion rotation = eventData["CamRotation"].GetQuaternion();
+	cameraNode_.rotation = rotation;
+	cameraNode_.position = position;
+	
+	SetViewportCamera(cameraNode_);
+	cameraNode_.GetChild("DirectionalLight").enabled = true;
+	
+	SetSoundListener(cameraNode_);
+}
+
 void HandleCountFinished(StringHash eventType, VariantMap& eventData)
 {
+	CreatePlayer();
+	SetViewportCamera(playerNode_.GetChild("CameraNode"));
+	
+	cameraNode_.GetChild("DirectionalLight").enabled = false;
+	
+	//The following two lines come into play when restarting the game
+	healthFillSprite_.imageRect = IntRect(0, 0, 512, 64);
+	UpdateHealthTexture(1);
+	
 	scene_.updateEnabled = true;
 	gameState_ = GS_INGAME;
 	
@@ -672,10 +692,7 @@ void UpdateScoreDisplay()
 	playerScoreText_.text = playerScore_;
 }
  
-
-
-
-
+ 
 void SpawnDrone()
 {
 	Node@ droneNode = scene_.CreateChild();
@@ -744,6 +761,7 @@ void UpdateHealthTexture(float healthFraction)
 		healthFillSprite_.texture = cache.GetResource("Texture2D", "Resources/Textures/health_bar_red.png");
 	}
 }
+
 
 void Fire()
 {	
