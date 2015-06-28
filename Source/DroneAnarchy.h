@@ -116,7 +116,7 @@ private:
     void HandleKeyOnInGame(int key);
 
     void CreateGameControllers();
-    void joystickUpdate ( int position );
+    void JoystickUpdate ( int position );
 
 
     float spriteUpdateCounter_;
