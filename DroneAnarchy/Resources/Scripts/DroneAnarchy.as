@@ -665,8 +665,8 @@ void HandlePlayerDestroyed(StringHash eventType, VariantMap& eventData)
 {
 	Vector3 camPosition = eventData["CamPosition"].GetVector3();
 	Quaternion camRotation = eventData["CamRotation"].GetQuaternion();
-	cameraNode_.rotation = camRotation;
-	cameraNode_.position = camPosition;
+	cameraNode_.worldRotation = camRotation;
+	cameraNode_.worldPosition = camPosition;
 	
 	SetViewportCamera(cameraNode_);
 	cameraNode_.GetChild("DirectionalLight").enabled = true;
