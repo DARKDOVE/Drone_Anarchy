@@ -136,6 +136,10 @@ void CreateCameraAndLight()
 	renderer.viewports[0] = Viewport(scene_, cameraNode_.GetComponent("Camera"));
 }
 
+void SetViewportCamera(Node@ cameraNode)
+{
+	renderer.viewports[0].camera = cameraNode.GetComponent("Camera");
+}
 void CreatePlayer()
 {
 	
