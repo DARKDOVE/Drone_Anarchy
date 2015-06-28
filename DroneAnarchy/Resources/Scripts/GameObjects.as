@@ -376,6 +376,10 @@ class OrdinaryWeapon : WeaponObjectBase
 	{	
 		SpawnBullet(true);
 		SpawnBullet(false);
+		VariantMap eventData;
+		eventData["SoundNode"] = refNode_;
+		eventData["SoundName"] = "Resources/Sounds/boom1.wav";
+		SendEvent("SoundGenerated", eventData);
 	}
 	
 	OrdinaryWeapon(Node@ refNode)
