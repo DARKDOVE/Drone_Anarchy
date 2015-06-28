@@ -155,6 +155,7 @@ void CreatePlayer()
 	playerNode_.CreateScriptObject(scriptFile,"PlayerObject");
 	playerDestroyed_ = false;
 	
+	cameraNode.CreateComponent("SoundListener");
 	SetSoundListener(cameraNode);
 
 }
