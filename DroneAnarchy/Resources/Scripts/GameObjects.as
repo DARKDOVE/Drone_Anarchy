@@ -28,6 +28,7 @@ class PlayerObject : ScriptObject
 {
 	float maximumHealth_;
 	float currentHealth_;
+	WeaponObjectBase@ weapon_;
 	
 	
 	PlayerObject()
@@ -35,18 +36,74 @@ class PlayerObject : ScriptObject
 		maximumHealth_ = currentHealth_ = 100;
 	}
 	
+	void DelayedStart()
+	{
+		SubscribeToEvent("ActivateWeapon", "HandleActivateWeapon");
+		SubscribeToEvent("PlayerMouseMove","HandleMouseMove");
+		Initialise();
+	}
+	
+	void Initialise()
+	{
+		RigidBody@ playerBody  = node.CreateComponent("RigidBody");
+		playerBody.SetCollisionLayerAndMask(PLAYER_COLLISION_LAYER, DRONE_COLLISION_LAYER);
+		CollisionShape@ playerColShape = node.CreateComponent("CollisionShape");
+		playerColShape.SetSphere(2);
+		SetWeapon(OrdinaryWeapon(node.GetChild("CameraNode")));
+	}
+	
+	void HandleActivateWeapon(StringHash eventType, VariantMap& eventData)
+	{
+		weapon_.Fire();
+	}
+	
+	void HandleMouseMove(StringHash eventType, VariantMap& eventData)
+	{
+		int dx = eventData["DX"].GetInt();
+		int dy = eventData["DY"].GetInt();
+		
+		Node@ cameraNode = node.GetChild("CameraNode");
+		
+		float playerYaw = node.rotation.yaw + (dx * 0.25f);
+		float camPitch = cameraNode.rotation.pitch + (dy * 0.25f);
+		
+		camPitch = Clamp(camPitch, -20.0f, 70.0f);
+		
+		cameraNode.rotation = Quaternion(camPitch, 0.0f, 0.0f);
+		node.rotation = Quaternion(0.0f, playerYaw, 0.0f);
+	}
+	
 	void OnHit(float damagePoint)
 	{
 		currentHealth_ -= damagePoint;
 		if(currentHealth_ < 0.0f )
 		{
+			//if health is equal to or below zero notify that the player
+			//has been destroyed
 			currentHealth_ = 0.0f;
+			VariantMap eventData;
+			
+			Node@ cameraNode = node.GetChild("CameraNode");
+			eventData["CamPosition"] = cameraNode.worldPosition;
+			eventData["CamRotation"] = cameraNode.worldRotation;
+			
+			eventData["PlayerPosition"] = node.worldPosition;
+			eventData["PlayerRotation"] = node.worldRotation;
+			
+			SendEvent("PlayerDestroyed",eventData);
+			
+			//node.GetChild("DirectionalLight").enabled = false;
 		}
 		
 		float healthFraction = currentHealth_ / maximumHealth_;
 		VariantMap eventData;
 		eventData["CurrentHealthFraction"] = healthFraction;
 		SendEvent("PlayerHit", eventData);
+	}
+	
+	void SetWeapon(WeaponObjectBase@ weapon)
+	{
+		weapon_ = weapon;
 	}
 }
 
