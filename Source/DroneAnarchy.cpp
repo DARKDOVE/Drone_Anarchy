@@ -657,7 +657,9 @@ void DroneAnarchy::UpdateDroneSprites()
     {
         Node* droneNode = droneNodes[i];
         Sprite* droneSprite = static_cast<Sprite*>(droneNode->GetVar("Sprite").GetPtr());
-        droneSprite->SetPosition(Vector2(droneNode->GetWorldPosition().x_ , -(droneNode->GetWorldPosition().z_)) * SCENE_TO_UI_SCALE);
+
+        Vector3 relativePos = droneNode->GetWorldPosition() - playerNode_->GetWorldPosition();
+        droneSprite->SetPosition(Vector2(relativePos.x_ , -(relativePos.z_)) * SCENE_TO_UI_SCALE);
     }
 
     enemyCountText_->SetText(String(droneNodes.Size()));

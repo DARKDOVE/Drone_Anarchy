@@ -733,7 +733,8 @@ void UpdateDroneSprites()
 		
 		if(nodeSprite !is null)
 		{
-			nodeSprite.position = Vector2(droneNode.worldPosition.x, -(droneNode.worldPosition.z))* SCENE_TO_UI_SCALE;
+			Vector3 relativePos = droneNode.worldPosition - playerNode_.worldPosition ;
+			nodeSprite.position = Vector2(relativePos.x, -(relativePos.z))* SCENE_TO_UI_SCALE;
 			count += 1;
 		}
 	
