@@ -537,7 +537,19 @@ void HandleMouseMove(StringHash eventType, VariantMap& eventData)
 		return;
 	}
 	
-	SendEvent("PlayerMouseMove",eventData);
+	int dx = eventData["DX"].GetInt();
+	int dy = eventData["DY"].GetInt();
+	
+	RotatePlayer(dx, dy);
+}
+
+
+void RotatePlayer(int dx, int dy)
+{
+	VariantMap eventData;
+	eventData["DX"] = dx;
+	eventData["DY"] = dy;
+	SendEvent("PlayerRotation", eventData);
 	
 	radarScreenBase_.rotation = -playerNode_.worldRotation.yaw;
 }

@@ -216,13 +216,9 @@ void joystickUpdate ( int position )
 	else if ( position == myjoystick_.button(DA_HAT_DOWN) ) { dx= 0; dy =move; }
 	else if ( position == myjoystick_.button(DA_HAT_RIGHT) ) { dx= move; dy =0; }
 
-	if ( move > 0 )  // adjust the camera and hud settings
+	if ( move > 0 )  // Adjust the player view
 	{
-       float camYaw = cameraNode_.rotation.yaw + (dx * 0.25f);
-	   float camPitch = cameraNode_.rotation.pitch + (dy * 0.25f);
-	   camPitch = Clamp(camPitch, -20.0f, 70.0f);
-	   cameraNode_.rotation = Quaternion(camPitch, camYaw, 0.0f);
-	   radarScreenBase_.rotation = -cameraNode_.worldRotation.yaw;
+       RotatePlayer(dx, dy);
     }
     
     // keep track of pseudo easing values 

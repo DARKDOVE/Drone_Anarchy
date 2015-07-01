@@ -55,14 +55,10 @@ EVENT(E_SOUNDGENERATED, SoundGenerated)
     PARAM(P_SOUNDNAME, SoundName);
 }
 
-EVENT(E_PLAYERMOUSEMOVE, PlayerMouseMove)
+EVENT(E_PLAYERROTATION, PlayerRotation)
 {
-    PARAM(P_X, X);
-    PARAM(P_Y, Y);
     PARAM(P_DX, DX);
     PARAM(P_DY, DY);
-    PARAM(P_BUTTONS, Buttons);
-    PARAM(P_QUALIFIERS, Qualifiers);
 }
 
 EVENT(E_COUNTFINISHED, CountFinished)

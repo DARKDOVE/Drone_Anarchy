@@ -100,6 +100,7 @@ private:
     void SetSoundListener(Node* listenerNode);
     void SetViewportCamera(Node* cameraNode);
 
+    void RotatePlayer(int dx, int dy);
     void Fire();
     void PlaySoundFX(Node* soundNode, String soundName);
     void PlayBackgroundMusic(String musicName);

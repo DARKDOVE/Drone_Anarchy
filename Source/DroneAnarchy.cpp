@@ -249,13 +249,23 @@ void DroneAnarchy::HandleMouseMove(StringHash eventType, VariantMap &eventData)
         return;
     }
 
-    using namespace PlayerMouseMove;
 
-    SendEvent(E_PLAYERMOUSEMOVE,eventData);
+    int dx = eventData["DX"].GetInt();
+    int dy = eventData["DY"].GetInt();
+
+    RotatePlayer(dx, dy);
+}
+
+void DroneAnarchy::RotatePlayer(int dx, int dy)
+{
+    using namespace PlayerRotation;
+    VariantMap eventData;
+    eventData[P_DX] = dx;
+    eventData[P_DY] = dy;
+    SendEvent(E_PLAYERROTATION, eventData);
 
     radarScreenBase_->SetRotation(-playerNode_->GetWorldRotation().YawAngle());
 }
-
 
 
 void DroneAnarchy::HandleMouseClick(StringHash eventType, VariantMap &eventData)
@@ -1049,11 +1059,7 @@ void DroneAnarchy::JoystickUpdate ( int position )
 
     if ( move > 0 )  // adjust the camera and hud settings
     {
-        float camYaw = cameraNode_->GetRotation().YawAngle() + (dx * 0.25f);
-        float camPitch = cameraNode_->GetRotation().PitchAngle() + (dy * 0.25f);
-        camPitch = Clamp(camPitch, -20.0f, 70.0f);
-        cameraNode_->SetRotation( Quaternion(camPitch, camYaw, 0.0f));
-        radarScreenBase_->SetRotation(-cameraNode_->GetWorldRotation().YawAngle());
+        RotatePlayer(dx,dy);
     }
 
     // keep track of pseudo easing values

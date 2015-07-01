@@ -39,7 +39,7 @@ class PlayerObject : ScriptObject
 	void DelayedStart()
 	{
 		SubscribeToEvent("ActivateWeapon", "HandleActivateWeapon");
-		SubscribeToEvent("PlayerMouseMove","HandleMouseMove");
+		SubscribeToEvent("PlayerRotation", "HandlePlayerRotation");
 		Initialise();
 	}
 	
@@ -64,7 +64,7 @@ class PlayerObject : ScriptObject
 		weapon_.Fire();
 	}
 	
-	void HandleMouseMove(StringHash eventType, VariantMap& eventData)
+	void HandlePlayerRotation(StringHash eventType, VariantMap& eventData)
 	{
 		int dx = eventData["DX"].GetInt();
 		int dy = eventData["DY"].GetInt();
