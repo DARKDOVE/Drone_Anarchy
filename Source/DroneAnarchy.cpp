@@ -249,9 +249,10 @@ void DroneAnarchy::HandleMouseMove(StringHash eventType, VariantMap &eventData)
         return;
     }
 
+    using namespace MouseMove;
 
-    int dx = eventData["DX"].GetInt();
-    int dy = eventData["DY"].GetInt();
+    int dx = eventData[P_DX].GetInt();
+    int dy = eventData[P_DY].GetInt();
 
     RotatePlayer(dx, dy);
 }
@@ -328,7 +329,6 @@ void DroneAnarchy::HandleFixedUpdate(StringHash eventType, VariantMap &eventData
 
 void DroneAnarchy::HandleUpdate(StringHash eventType, VariantMap &eventData)
 {
-    JoystickUpdate( joydirection_ );
 
     if(onQuit_)
     {
@@ -337,6 +337,10 @@ void DroneAnarchy::HandleUpdate(StringHash eventType, VariantMap &eventData)
     else if(playerDestroyed_ && gameState_ == GS_INGAME)
     {
         InitiateGameOver();
+    }
+    else if(gameState_ == GS_INGAME)
+    {
+        JoystickUpdate(joydirection_);
     }
 }
 
@@ -970,10 +974,10 @@ void DroneAnarchy::CreateGameControllers()
     {
         myjoystick_ = new virtualController();  // make a controller
         myjoystick_->load_user_settings( GetSubsystem<ResourceCache>() );
-        SubscribeToEvent("JoystickButtonDown", HANDLER(DroneAnarchy, HandleButtonDown));
-        SubscribeToEvent("JoystickButtonUp", HANDLER(DroneAnarchy, HandleButtonUp ));
+        SubscribeToEvent(E_JOYSTICKBUTTONDOWN, HANDLER(DroneAnarchy, HandleButtonDown));
+        SubscribeToEvent(E_JOYSTICKBUTTONUP, HANDLER(DroneAnarchy, HandleButtonUp ));
         if ( myjoystick_->button(DA_HAT_UP) > -1 ) // xbox uses both dpad and hat, (and analoge)!
-            SubscribeToEvent("JoystickHatMove", HANDLER(DroneAnarchy, HandleHatMove) );
+            SubscribeToEvent(E_JOYSTICKHATMOVE, HANDLER(DroneAnarchy, HandleHatMove) );
     }
 }
 

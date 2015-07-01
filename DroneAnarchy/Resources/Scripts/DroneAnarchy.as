@@ -488,6 +488,10 @@ void HandleUpdate(StringHash eventType, VariantMap& eventData)
 	{
 		InitiateGameOver();
 	}
+	else if(gameState_ == GS_INGAME)
+	{
+		joystickUpdate(joydirection_);
+	}
 }
 
 void InitiateGameOver()
