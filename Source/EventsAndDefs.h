@@ -22,8 +22,8 @@
 
 
 
-#ifndef CUSTOMEVENTS_H
-#define CUSTOMEVENTS_H
+#ifndef EVENTS_AND_DEFS_H
+#define EVENTS_AND_DEFS_H
 
 #include <Urho3D/Core/Object.h>
 
@@ -74,4 +74,4 @@ EVENT(E_ACTIVATEWEAPON, ActivateWeapon)
 
 }
 
-#endif // CUSTOMEVENTS_H
+#endif // EVENTS_AND_DEFS_H
