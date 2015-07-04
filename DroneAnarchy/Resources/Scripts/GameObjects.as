@@ -22,6 +22,191 @@ const int DRONE_COLLISION_LAYER = 3;
 const int FLOOR_COLLISION_LAYER = 5;
 const int SCORE_ADDITION_RATE = 1;
 
+
+
+///Bullet Base Class
+abstract class BulletObjectBase : ScriptObject
+{
+	float termTime_;
+	float termTimeCounter_;
+	BulletObjectType bulletObjectType_;
+	float damagePoint_;
+	
+	
+	void DelayedStart()
+	{
+		SubscribeToEvent(node, "NodeCollision", "HandleNodeCollision");
+		Initialise();
+	}
+	
+	void Initialise(){}
+	
+	
+	void FixedUpdate(float timestep)
+	{
+		termTimeCounter_ += timestep;
+		
+		if(termTimeCounter_ >= termTime_)
+		{
+			Destroy();
+		}
+	}
+	
+	
+	void HandleNodeCollision(StringHash eventType, VariantMap& eventData)
+	{
+		Node@ otherNode = eventData["OtherNode"].GetPtr();
+		DroneObjectBase@ droneObj = cast<DroneObjectBase>(otherNode.scriptObject);
+		
+		
+		if(droneObj !is null)
+		{
+			droneObj.OnHit(damagePoint_);
+		}
+		
+		Destroy();
+	}
+	
+	void Destroy()
+	{
+		node.Remove();
+	}
+	
+}
+
+///Low Level Bullet Object
+class LowLevelBullet : BulletObjectBase
+{
+	LowLevelBullet()
+	{
+		bulletObjectType_ = BOT_LOW;
+		termTime_ = 1;
+		termTimeCounter_ = 0;
+		damagePoint_ = 1;
+	}
+	
+	void Initialise()
+	{
+		BillboardSet@ bbSet = node.CreateComponent("BillboardSet");
+		bbSet.numBillboards = 1;
+		bbSet.material = cache.GetResource("Material", "Resources/Materials/bullet_particle.xml");
+		
+		ParticleEmitter@ pEmitter = node.CreateComponent("ParticleEmitter");
+		pEmitter.effect = cache.GetResource("ParticleEffect", "Resources/Particles/bullet_particle.xml");
+		pEmitter.enabled = true;
+		
+		
+		RigidBody@ objBody = node.CreateComponent("RigidBody");
+		objBody.mass = 1.0f;
+		objBody.trigger = true;
+		objBody.useGravity = false;
+		objBody.ccdRadius = 0.05;
+		objBody.ccdMotionThreshold = 0.15f;
+		objBody.SetCollisionLayerAndMask(BULLET_COLLISION_LAYER, DRONE_COLLISION_LAYER | FLOOR_COLLISION_LAYER);
+		
+		CollisionShape@ objShape = node.CreateComponent("CollisionShape");
+		objShape.SetSphere(0.3f);
+		objBody.linearVelocity = node.rotation * Vector3(0,0,70);
+	}
+
+}
+
+
+
+///Weapon Base Class
+abstract class WeaponObjectBase
+{
+	Node@ refNode_;
+	
+	WeaponObjectBase(Node@ refNode)
+	{
+		refNode_ = refNode;
+	}
+	void Fire(){}
+}
+
+
+///Ordinary Weapon
+class OrdinaryWeapon : WeaponObjectBase
+{
+	void Fire()
+	{	
+		SpawnBullet(true);
+		SpawnBullet(false);
+		VariantMap eventData;
+		eventData["SoundNode"] = refNode_;
+		eventData["SoundName"] = "Resources/Sounds/boom1.wav";
+		SendEvent("SoundGenerated", eventData);
+	}
+	
+	OrdinaryWeapon(Node@ refNode)
+	{
+		super(refNode);
+	}
+
+	void SpawnBullet(bool first)
+	{
+		Node@ bulletNode = refNode_.scene.CreateChild();
+		bulletNode.worldPosition = refNode_.worldPosition;
+		bulletNode.rotation = refNode_.worldRotation;
+		
+		float xOffSet = 0.3f * (first ? 1 : -1);
+		bulletNode.Translate(Vector3(xOffSet,-0.2,0));
+		
+		bulletNode.CreateScriptObject(scriptFile, "LowLevelBullet");
+	}
+}
+
+
+
+
+///Explosion Object Base
+abstract class ExplosionObjectBase : ScriptObject
+{
+	float duration_;
+	
+	void DelayedStart()
+	{
+		Initialise();
+	}
+	
+	void Initialise(){}
+}
+
+///Explosion Object
+class SimpleExplosion : ExplosionObjectBase 
+{
+	
+	SimpleExplosion()
+	{
+		duration_ = 0.78f;
+	}
+	
+	void FixedUpdate(float timestep)
+	{
+		duration_ -= timestep;
+		if(duration_ < 0.0f)
+		{
+			node.Remove();
+		}
+	}
+	
+	void Initialise()
+	{
+		ParticleEmitter@ pEmitter = node.CreateComponent("ParticleEmitter");
+		pEmitter.effect = cache.GetResource("ParticleEffect", "Resources/Particles/explosion.xml");
+		pEmitter.enabled = true;
+		
+		VariantMap eventData;
+		eventData["SoundNode"] = node;
+		eventData["SoundName"] = "Resources/Sounds/explosion.ogg";
+		SendEvent("SoundGenerated", eventData);
+	}
+	
+	
+}
+
+
 ///Player Object
 
 class PlayerObject : ScriptObject
@@ -283,184 +468,3 @@ class LowLevelDrone : DroneObjectBase
 	
 	
 }
-
-
-///Bullet Base Class
-abstract class BulletObjectBase : ScriptObject
-{
-	float termTime_;
-	float termTimeCounter_;
-	BulletObjectType bulletObjectType_;
-	float damagePoint_;
-	
-	
-	void DelayedStart()
-	{
-		SubscribeToEvent(node, "NodeCollision", "HandleNodeCollision");
-		Initialise();
-	}
-	
-	void Initialise(){}
-	
-	
-	void FixedUpdate(float timestep)
-	{
-		termTimeCounter_ += timestep;
-		
-		if(termTimeCounter_ >= termTime_)
-		{
-			Destroy();
-		}
-	}
-	
-	
-	void HandleNodeCollision(StringHash eventType, VariantMap& eventData)
-	{
-		Node@ otherNode = eventData["OtherNode"].GetPtr();
-		DroneObjectBase@ droneObj = cast<DroneObjectBase>(otherNode.scriptObject);
-		
-		
-		if(droneObj !is null)
-		{
-			droneObj.OnHit(damagePoint_);
-		}
-		
-		Destroy();
-	}
-	
-	void Destroy()
-	{
-		node.Remove();
-	}
-	
-}
-
-///Low Level Bullet Object
-class LowLevelBullet : BulletObjectBase
-{
-	LowLevelBullet()
-	{
-		bulletObjectType_ = BOT_LOW;
-		termTime_ = 1;
-		termTimeCounter_ = 0;
-		damagePoint_ = 1;
-	}
-	
-	void Initialise()
-	{
-		BillboardSet@ bbSet = node.CreateComponent("BillboardSet");
-		bbSet.numBillboards = 1;
-		bbSet.material = cache.GetResource("Material", "Resources/Materials/bullet_particle.xml");
-		
-		ParticleEmitter@ pEmitter = node.CreateComponent("ParticleEmitter");
-		pEmitter.effect = cache.GetResource("ParticleEffect", "Resources/Particles/bullet_particle.xml");
-		pEmitter.enabled = true;
-		
-		
-		RigidBody@ objBody = node.CreateComponent("RigidBody");
-		objBody.mass = 1.0f;
-		objBody.trigger = true;
-		objBody.useGravity = false;
-		objBody.ccdRadius = 0.05;
-		objBody.ccdMotionThreshold = 0.15f;
-		objBody.SetCollisionLayerAndMask(BULLET_COLLISION_LAYER, DRONE_COLLISION_LAYER | FLOOR_COLLISION_LAYER);
-		
-		CollisionShape@ objShape = node.CreateComponent("CollisionShape");
-		objShape.SetSphere(0.3f);
-		objBody.linearVelocity = node.rotation * Vector3(0,0,70);
-	}
-
-}
-
-///Explosion Object Base
-abstract class ExplosionObjectBase : ScriptObject
-{
-	float duration_;
-	
-	void DelayedStart()
-	{
-		Initialise();
-	}
-	
-	void Initialise(){}
-}
-
-///Explosion Object
-class SimpleExplosion : ExplosionObjectBase 
-{
-	
-	SimpleExplosion()
-	{
-		duration_ = 0.78f;
-	}
-	
-	void FixedUpdate(float timestep)
-	{
-		duration_ -= timestep;
-		if(duration_ < 0.0f)
-		{
-			node.Remove();
-		}
-	}
-	
-	void Initialise()
-	{
-		ParticleEmitter@ pEmitter = node.CreateComponent("ParticleEmitter");
-		pEmitter.effect = cache.GetResource("ParticleEffect", "Resources/Particles/explosion.xml");
-		pEmitter.enabled = true;
-		
-		VariantMap eventData;
-		eventData["SoundNode"] = node;
-		eventData["SoundName"] = "Resources/Sounds/explosion.ogg";
-		SendEvent("SoundGenerated", eventData);
-	}
-	
-	
-}
-
-
-
-///Weapon Base Class
-abstract class WeaponObjectBase
-{
-	Node@ refNode_;
-	
-	WeaponObjectBase(Node@ refNode)
-	{
-		refNode_ = refNode;
-	}
-	void Fire(){}
-}
-
-
-///Ordinary Weapon
-class OrdinaryWeapon : WeaponObjectBase
-{
-	void Fire()
-	{	
-		SpawnBullet(true);
-		SpawnBullet(false);
-		VariantMap eventData;
-		eventData["SoundNode"] = refNode_;
-		eventData["SoundName"] = "Resources/Sounds/boom1.wav";
-		SendEvent("SoundGenerated", eventData);
-	}
-	
-	OrdinaryWeapon(Node@ refNode)
-	{
-		super(refNode);
-	}
-
-	void SpawnBullet(bool first)
-	{
-		Node@ bulletNode = refNode_.scene.CreateChild();
-		bulletNode.worldPosition = refNode_.worldPosition;
-		bulletNode.rotation = refNode_.worldRotation;
-		
-		float xOffSet = 0.3f * (first ? 1 : -1);
-		bulletNode.Translate(Vector3(xOffSet,-0.2,0));
-		
-		bulletNode.CreateScriptObject(scriptFile, "LowLevelBullet");
-	}
-}
-
