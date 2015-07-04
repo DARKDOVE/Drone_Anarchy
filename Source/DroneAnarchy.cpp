@@ -742,7 +742,7 @@ void DroneAnarchy::CreateHUD()
     healthFillSprite_->SetSize(256, 25);
     healthFillSprite_->SetHotSpot(128, 25);
     healthFillSprite_->SetOpacity(0.5f);
-    healthFillSprite_->SetImageRect(IntRect(0,0,512,64));
+    healthFillSprite_->SetImageRect(IntRect(512,0,1024,64));
     healthFillSprite_->SetBlendMode(BLEND_ALPHA);
 
 

@@ -201,7 +201,7 @@ void CreateHUD()
 	healthFillSprite_.SetAlignment(HA_CENTER, VA_CENTER);
 	healthFillSprite_.SetSize(256, 25);
 	healthFillSprite_.SetHotSpot(128, 25);
-	healthFillSprite_.imageRect = IntRect(0,0,512,64);
+	healthFillSprite_.imageRect = IntRect(512,0,1024,64);
 	healthFillSprite_.opacity = 0.5f;
 	healthFillSprite_.blendMode = BLEND_ALPHA;
 	
