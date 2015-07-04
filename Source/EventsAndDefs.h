@@ -27,7 +27,11 @@
 
 #include <Urho3D/Core/Object.h>
 
-
+//Definitions
+const int BULLET_COLLISION_LAYER = 1;
+const int PLAYER_COLLISION_LAYER = 2;
+const int DRONE_COLLISION_LAYER = 3;
+const int FLOOR_COLLISION_LAYER = 5;
 
 //Custom Events
 EVENT(E_PLAYERHIT, PlayerHit)
