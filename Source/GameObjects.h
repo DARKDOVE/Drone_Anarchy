@@ -26,80 +26,198 @@
 
 using namespace Urho3D;
 
-class PlayerObject : public LogicComponent
+//Drone Types Enum
+enum DroneType
 {
-    OBJECT(PlayerObject)
+    DT_NORMAL_DRONE,
+    DT_ALPHA_DRONE,
+    DT_SUPREME_DRONE,
+    DT_TOKEN_DRONE
+};
+
+//Bullet Type Enum
+enum BulletObjectType
+{
+    BOT_LOW,
+    BOT_NORMAL,
+    BOT_POWERFUL
+};
+
+
+//Bullet Object Base
+class BulletObjectBase : public LogicComponent
+{
+
+    OBJECT(BulletObjectBase);
 
 public:
-    PlayerObject(Context* context);
-    void OnHit();
+    BulletObjectBase(Context* context);
+    void DelayedStart();
+    virtual void Initialise(){}
+    void FixedUpdate(float timestep);
+    void HandleNodeCollision(StringHash eventType, VariantMap& eventData);
 
+protected:
+    void Destroy();
+
+    float termTime_;
+    float termTimeCounter_;
+    BulletObjectType bulletObjectType_;
+    float damagePoint_;
+
+};
+
+
+//Low Level Bullet Object
+class LowLevelBullet : public BulletObjectBase
+{
+    OBJECT(LowLevelBullet);
+
+public:
+    LowLevelBullet(Context* context);
 
 private:
-    float maximumHealth_;
-    float currentHealth_;
-    float healthDeductionRate_;
+    void Initialise();
+
 };
 
 
 
-class DroneObject : public LogicComponent
+
+//Weapon Base Class
+class WeaponObjectBase : public Object
 {
-    OBJECT(DroneObject)
+    OBJECT(WeaponObjectBase);
 
 public:
-    DroneObject(Context* context);
-    void OnHit();
+    WeaponObjectBase(Context *context, Node* refNode);
+    virtual void Fire(){}
+
+    Node* refNode_;
+};
+
+
+//Ordinary Weapon
+class OrdinaryWeapon : public WeaponObjectBase
+{
+    OBJECT(OrdinaryWeapon);
+
+public:
+    OrdinaryWeapon(Context* context,Node* refNode);
+    void Fire();
+    void SpawnBullet(bool first);
+};
+
+
+
+
+// Explosion Object base
+
+class ExplosionObjectBase : public LogicComponent
+{
+    OBJECT(ExplosionObjectBase);
+
+public:
+    ExplosionObjectBase(Context* context);
     void DelayedStart();
-    void FixedUpdate(float timeStep);
-    void HandleNodeCollision(StringHash eventType, VariantMap& eventData);
+
+protected:
+    virtual void Initialise(){}
+
+    float duration_;
+};
+
+
+//Simple Explosion Object
+class SimpleExplosion : public ExplosionObjectBase
+{
+
+    OBJECT(SimpleExplosion);
+
+public:
+    SimpleExplosion(Context* context);
+    void FixedUpdate(float timestep);
 
 private:
+    void Initialise();
+
+
+};
+
+
+class PlayerObject : public LogicComponent
+{
+    OBJECT(PlayerObject);
+
+public:
+    PlayerObject(Context* context);
+    void OnHit(float damagePoint);
+    void DelayedStart();
+
+    void HandleActivateWeapon(StringHash eventType, VariantMap& eventData);
+    void HandlePlayerRotation(StringHash eventType, VariantMap& eventData);
+
+private:
+    void Initialise();
+    void SetWeapon(WeaponObjectBase* weapon);
+
+    float maximumHealth_;
+    float currentHealth_;
+    WeaponObjectBase* weapon_;
+
+
+
+};
+
+class DroneObjectBase : public LogicComponent
+{
+  OBJECT(DroneObjectBase);
+
+public:
+    DroneObjectBase(Context* context);
+    virtual void Initialise() = 0;
+    DroneType GetType(){return droneType_;}
+    void OnHit(float damagePoint);
+    void DelayedStart();
+    void FixedUpdate(float timeStep);
+    virtual void HandleNodeCollision(StringHash eventType, VariantMap& eventData){}
+
+protected:
+    virtual void OnDestroyed(){}
     void Destroy();
-    void SetupNodeAnimation();
-    void Attack();
+    virtual void Attack() {}
 
 
     float currentHealthLevel_;
     float attackTime_;
     float attackTimer_;
+    DroneType droneType_;
 
     bool hasAttacked_;
 };
 
 
-
-class BulletObject : public LogicComponent
+///Low Level Drone Object
+class LowLevelDrone : public DroneObjectBase
 {
-    OBJECT(BulletObject)
+
+    OBJECT(LowLevelDrone);
 
 public:
-    BulletObject(Context* context);
-    void Start();
-    void FixedUpdate(float timeStep);
+    LowLevelDrone(Context* context);
+    void DelayedStart();
     void HandleNodeCollision(StringHash eventType, VariantMap& eventData);
 
-
 private:
+    void SetupNodeAnimation();
+    void Attack();
+    void Initialise();
+    void OnDestroyed();
+    void SpawnExplosion();
 
-    void Destroy();
+    int dronePoint_;
+    int damagePoint_;
 
-    float termTime_;
-    float termTimeCounter_;
-
-};
-
-
-class ExplosionObject : public LogicComponent
-{
-    OBJECT(ExplosionObject)
-
-public:
-    ExplosionObject(Context* context);
-    void FixedUpdate(float timeStep);
-
-private:
-    float duration_;
 
 };
 

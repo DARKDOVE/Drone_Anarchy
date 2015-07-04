@@ -78,7 +78,7 @@
 #include <Urho3D/UI/UI.h>
 #include <Urho3D/Core/Variant.h>
 
-#include "CustomEvents.h"
+#include "EventsAndDefs.h"
 #include "InputController.h"
 #include "DroneAnarchy.h"
 
@@ -87,6 +87,7 @@
     #include <Urho3D/Script/Script.h>
     #include <Urho3D/Script/ScriptFile.h>
 #else
+    #include <Urho3D/Scene/LogicComponent.h>
     #include "GameObjects.h"
 #endif
 
@@ -123,9 +124,9 @@ DroneAnarchy::DroneAnarchy(Urho3D::Context *context) : Application(context)
     context_->RegisterSubsystem(new Script(context_));
 #else
     context_->RegisterFactory<PlayerObject>();
-    context_->RegisterFactory<DroneObject>();
-    context_->RegisterFactory<BulletObject>();
-    context_->RegisterFactory<ExplosionObject>();
+    context_->RegisterFactory<LowLevelDrone>();
+    context_->RegisterFactory<LowLevelBullet>();
+    context_->RegisterFactory<SimpleExplosion>();
 #endif
 
 
@@ -586,14 +587,13 @@ void DroneAnarchy::CleanupScene()
     PODVector< Node * >  scriptedNodes;
     scene_->GetChildrenWithComponent<ScriptInstance>(scriptedNodes);
 
-    String scriptClassName = String::EMPTY;
     for(int i = 0; i < scriptedNodes.Size(); i++)
     {
         scriptedNodes[i]->Remove();
     }
 #else
     PODVector<Node*> bulletNodes;
-    scene_->GetChildrenWithComponent<BulletObject>(bulletNodes);
+    scene_->GetChildrenWithComponent<LowLevelBullet>(bulletNodes);
 
     for(int i=0; i<bulletNodes.Size();i++)
     {
@@ -601,7 +601,7 @@ void DroneAnarchy::CleanupScene()
     }
 
     PODVector<Node*> explosionNodes;
-    scene_->GetChildrenWithComponent<BulletObject>(explosionNodes);
+    scene_->GetChildrenWithComponent<SimpleExplosion>(explosionNodes);
 
     for(int i=0; i<explosionNodes.Size();i++)
     {
@@ -609,10 +609,6 @@ void DroneAnarchy::CleanupScene()
     }
 
 #endif
-
-
-
-
 
     //Hide the enemy counter and player score texts
     enemyCountText_->SetText(String::EMPTY);
@@ -633,7 +629,7 @@ void DroneAnarchy::SpawnDrone()
     ResourceCache* cache = GetSubsystem<ResourceCache>();
     sInstance->CreateObject(cache->GetResource<ScriptFile>("Resources/Scripts/GameObjects.as"),"LowLevelDrone");
 #else
-    droneNode->CreateComponent<DroneObject>();
+    droneNode->CreateComponent<LowLevelDrone>();
 #endif
 
     float nodeYaw = Random(360);
