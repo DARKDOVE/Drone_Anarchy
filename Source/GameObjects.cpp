@@ -381,7 +381,7 @@ void BulletObjectBase::HandleNodeCollision(StringHash eventType, VariantMap& eve
     using namespace NodeCollision;
 
     Node* otherNode = static_cast<Node*>(eventData[P_OTHERNODE].GetPtr());
-    DroneObjectBase* droneObj = static_cast<DroneObjectBase*>(otherNode->GetComponent<LowLevelDrone>());
+    DroneObjectBase* droneObj = otherNode->GetDerivedComponent<DroneObjectBase>();
 
     if(droneObj != NULL)
     {
