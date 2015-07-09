@@ -175,7 +175,6 @@ class DroneObjectBase : public LogicComponent
 
 public:
     DroneObjectBase(Context* context);
-    virtual void Initialise() = 0;
     DroneType GetType(){return droneType_;}
     void OnHit(float damagePoint);
     void DelayedStart();
@@ -183,6 +182,7 @@ public:
     virtual void HandleNodeCollision(StringHash eventType, VariantMap& eventData){}
 
 protected:
+    virtual void Initialise() = 0;
     virtual void OnDestroyed(){}
     void Destroy();
     virtual void Attack() {}
@@ -208,10 +208,12 @@ public:
     void DelayedStart();
     void HandleNodeCollision(StringHash eventType, VariantMap& eventData);
 
+protected:
+    virtual void Initialise();
+
 private:
     void SetupNodeAnimation();
     void Attack();
-    void Initialise();
     void OnDestroyed();
     void SpawnExplosion();
 
