@@ -260,6 +260,7 @@ void LowLevelDrone::Attack()
 void LowLevelDrone::Initialise()
 {
     Node* droneNode = GetNode();
+    droneNode->SetScale(3.0f);
     ResourceCache* cache = GetSubsystem<ResourceCache>();
 
     AnimatedModel* droneBody = droneNode->CreateComponent<AnimatedModel>();

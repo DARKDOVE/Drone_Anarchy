@@ -709,7 +709,6 @@ void UpdateScoreDisplay()
 void SpawnDrone()
 {
 	Node@ droneNode = scene_.CreateChild();
-	droneNode.SetScale(3.0f);
 	
 	droneNode.CreateScriptObject(scriptFile,"LowLevelDrone");
 	

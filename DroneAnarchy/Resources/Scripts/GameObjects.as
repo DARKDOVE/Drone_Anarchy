@@ -430,6 +430,7 @@ class LowLevelDrone : DroneObjectBase
 	
 	void Initialise()
 	{
+		node.SetScale(3.0f);
 		AnimatedModel@ droneBody = node.CreateComponent("AnimatedModel");
 		droneBody.model = cache.GetResource("Model", "Resources/Models/drone_body.mdl");
 		droneBody.material = cache.GetResource("Material", "Resources/Materials/drone_body.xml");

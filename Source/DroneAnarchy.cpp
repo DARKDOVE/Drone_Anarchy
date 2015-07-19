@@ -622,7 +622,6 @@ void DroneAnarchy::SpawnDrone()
 {
 
     Node* droneNode = droneRootNode_->CreateChild();
-    droneNode->SetScale(3.0f);
 
 #ifdef USE_SCRIPT_OBJECT
     ScriptInstance* sInstance = droneNode->CreateComponent<ScriptInstance>();
