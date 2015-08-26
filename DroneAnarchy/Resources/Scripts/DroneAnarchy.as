@@ -74,7 +74,7 @@ void Start()
 	
 	
 	CreateValueAnimation();
-	CreateInterface();
+	LoadDisplayInterface();
 	
 	//This is to prevent the pause that occurs in loading a resource for the first time
 	LoadBackgroundResources();
@@ -159,135 +159,26 @@ void CreatePlayer()
 
 }
 
-void CreateInterface()
+
+void LoadDisplayInterface()
 {
-	CreateHUD();
-	CreateEnemyCounterUI();
-	CreatePlayerScoreUI();
-	CreateDisplayTexts();
-}
-
-
-void CreateHUD()
-{
-	Sprite@ hudSprite = ui.root.CreateChild("Sprite");
+	UIElement@ displayRoot = ui.root.CreateChild("UIElement");
 	
-	hudSprite.texture = cache.GetResource("Texture2D", "Resources/Textures/hud.png");
-	hudSprite.SetAlignment(HA_CENTER, VA_BOTTOM);
-	hudSprite.SetSize(512, 256);
-	hudSprite.SetHotSpot(256, 256);
-	hudSprite.blendMode = BLEND_ALPHA;
-	hudSprite.priority = 3;
+	displayRoot.LoadXML(cache.GetFile("UI/ScreenDisplay.xml"));
 	
-	Sprite@ hudSpriteBG = ui.root.CreateChild("Sprite");
-	hudSpriteBG.texture = cache.GetResource("Texture2D", "Resources/Textures/hud_bg.png");
-	hudSpriteBG.SetAlignment(HA_CENTER, VA_BOTTOM);
-	hudSpriteBG.SetSize(512, 256);
-	hudSpriteBG.SetHotSpot(256, 256);
-	hudSpriteBG.opacity = 0.6f;
-	hudSpriteBG.blendMode = BLEND_ALPHA;
-	hudSpriteBG.priority = -3;
+	//Load the various UI Elements
+	healthFillSprite_ = displayRoot.GetChild("HealthFill", true);
+	radarScreenBase_ = displayRoot.GetChild("RadarScreenBase");
 	
-	Sprite@ healthBaseSprite = ui.root.CreateChild("Sprite");
-	healthBaseSprite.texture = cache.GetResource("Texture2D", "Resources/Textures/health_bg.png");
-	healthBaseSprite.SetAlignment(HA_CENTER, VA_BOTTOM);
-	healthBaseSprite.SetSize(512,128);
-	healthBaseSprite.SetHotSpot(256,64);
-	healthBaseSprite.blendMode = BLEND_ALPHA;
-	healthBaseSprite.priority = 1;
-	healthBaseSprite.opacity = 0.9f;
+	targetSprite_ = displayRoot.GetChild("Target");
 	
-	healthFillSprite_ = healthBaseSprite.CreateChild("Sprite");
-	healthFillSprite_.texture = cache.GetResource("Texture2D", "Resources/Textures/health_bar_green.png");
-	healthFillSprite_.SetAlignment(HA_CENTER, VA_CENTER);
-	healthFillSprite_.SetSize(256, 25);
-	healthFillSprite_.SetHotSpot(128, 25);
-	healthFillSprite_.imageRect = IntRect(512,0,1024,64);
-	healthFillSprite_.opacity = 0.5f;
-	healthFillSprite_.blendMode = BLEND_ALPHA;
-	
-	radarScreenBase_ = ui.root.CreateChild("Sprite");
-	radarScreenBase_.texture = cache.GetResource("Texture2D", "Resources/Textures/radar_screen_base_.png");
-	radarScreenBase_.SetSize(128, 128);
-	radarScreenBase_.SetAlignment(HA_CENTER, VA_BOTTOM);
-	radarScreenBase_.SetHotSpot(64, 64);
-	radarScreenBase_.position = Vector2(0, -99);
-	radarScreenBase_.opacity = 0.9f;
-	radarScreenBase_.priority = 2;
-	radarScreenBase_.color = Color(0.0, 0.4, 0.3,0.7);
+	enemyCounterText_ = displayRoot.GetChild("EnemyCounter");
+	playerScoreText_ = displayRoot.GetChild("PlayerScore");
 	
 	
-	Sprite@ radarScreen = ui.root.CreateChild("Sprite");
-	radarScreen.texture = cache.GetResource("Texture2D", "Resources/Textures/radar_screen.png");
-	radarScreen.SetSize(128, 128);
-	radarScreen.SetAlignment(HA_CENTER, VA_BOTTOM);
-	radarScreen.SetHotSpot(64, 64);
-	radarScreen.position = Vector2(0, -99);
-	radarScreen.blendMode = BLEND_ALPHA;
-	radarScreen.priority = 4;
-	
-	targetSprite_ = ui.root.CreateChild("Sprite");
-	targetSprite_.texture = cache.GetResource("Texture2D","Resources/Textures/target.png");
-	targetSprite_.SetSize(70,70);
-	targetSprite_.SetAlignment(HA_CENTER, VA_CENTER);
-	targetSprite_.SetHotSpot(35,35);
-	targetSprite_.blendMode = BLEND_ALPHA;
-	targetSprite_.opacity = 0.6f;
-	targetSprite_.visible = false;
-	
-}
-
-void CreateEnemyCounterUI()
-{
-	enemyCounterText_ = ui.root.CreateChild("Text");
-	enemyCounterText_.SetFont(cache.GetResource("Font", "Resources/Fonts/segment7standard.otf"),15);
-	enemyCounterText_.SetAlignment(HA_CENTER, VA_BOTTOM);
-	
-	enemyCounterText_.color = Color(0.7f, 0.0f, 0.0f);
-	enemyCounterText_.position = IntVector2(-140,-72);
-	enemyCounterText_.priority = 1;
-	
-	enemyCounterText_.textEffect = TE_SHADOW;
-}
-
-void CreatePlayerScoreUI()
-{
-	playerScoreText_ = ui.root.CreateChild("Text");
-	playerScoreText_.SetFont(cache.GetResource("Font", "Resources/Fonts/segment7standard.otf"),15);
-	playerScoreText_.SetAlignment(HA_CENTER, VA_BOTTOM);
-	
-	playerScoreText_.color = Color(0.0f, 0.9f, 0.2f);
-	playerScoreText_.position = IntVector2(140,-72);
-	playerScoreText_.priority = 1;
-	
-	playerScoreText_.textEffect = TE_SHADOW;
-	
-}
-
-void CreateDisplayTexts()
-{
-
-	statusText_ = ui.root.CreateChild("Text");
-	statusText_.SetFont(cache.GetResource("Font", "Resources/Fonts/gtw.ttf"),70);
-	statusText_.SetAlignment(HA_CENTER, VA_TOP);
-	statusText_.color = Color(0.2f, 0.8f, 1.0f);
-	statusText_.priority = 1;
-	statusText_.textEffect = TE_SHADOW;
-
-	playerScoreMessageText_ = ui.root.CreateChild("Text");
-	playerScoreMessageText_.SetFont(cache.GetResource("Font", "Resources/Fonts/gtw.ttf"),50);
-	playerScoreMessageText_.SetAlignment(HA_CENTER, VA_TOP);
-	playerScoreMessageText_.position = IntVector2(0,150);
-	playerScoreMessageText_.color = Color(0.2f, 0.8f, 1.0f);
-	playerScoreMessageText_.textEffect = TE_SHADOW;
-	
-	
-	optionsInfoText_ = ui.root.CreateChild("Text");
-	optionsInfoText_.SetFont(cache.GetResource("Font", "Resources/Fonts/gtw.ttf"),20);
-	optionsInfoText_.SetAlignment(HA_CENTER, VA_CENTER);
-	optionsInfoText_.position = IntVector2(0,50);
-	optionsInfoText_.color = Color(0.2f, 0.8f, 1.0f);
-	optionsInfoText_.textEffect = TE_SHADOW;
+	statusText_ = displayRoot.GetChild("StatusText");
+	playerScoreMessageText_ = displayRoot.GetChild("ScoreMessage");
+	optionsInfoText_ = displayRoot.GetChild("OptionInfo");
 }
 
 void StartCounterToGame()
