@@ -84,6 +84,7 @@ private:
     void LoadBackgroundResources();
 
     void LoadDisplayInterface();
+    void LoadAttributeAnimations();
 
     void CreateScene();
     void CreateDebugHud();
@@ -137,7 +138,8 @@ private:
     SharedPtr<Sprite> radarScreenBase_;
     SharedPtr<Sprite> targetSprite_;
 
-    SharedPtr<ValueAnimation> valAnim_;
+    SharedPtr<ValueAnimation> textAnimation_;
+    SharedPtr<ValueAnimation> damageAnimation_;
 
     SharedPtr<Text> enemyCountText_;
     SharedPtr<Text> playerScoreText_;

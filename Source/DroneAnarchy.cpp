@@ -72,6 +72,7 @@
 #include <Urho3D/Physics/PhysicsWorld.h>
 #include <Urho3D/Physics/PhysicsEvents.h>
 #include <Urho3D/IO/FileSystem.h>
+#include <Urho3D/Scene/ValueAnimation.h>
 
 #include <Urho3D/Core/CoreEvents.h>
 
@@ -160,12 +161,15 @@ void DroneAnarchy::Start()
 
     CreateGameControllers();
     CreateDebugHud();
-    CreateValueAnimation();
 
+    CreateDebugHud();
     LoadDisplayInterface();
 
     //This is to prevent the pause that occurs in loading a resource for the first time
     LoadBackgroundResources();
+
+    //Load Attribute animation files from disk
+    LoadAttributeAnimations();
 
     CreateScene();
 
@@ -362,7 +366,7 @@ void DroneAnarchy::HandlePlayerHit(StringHash eventType, VariantMap &eventData)
     UpdateHealthTexture(playerHealthFraction);
 
     //Show Warning
-    radarScreenBase_->SetAttributeAnimation("Color", valAnim_, WM_ONCE);
+    radarScreenBase_->SetAttributeAnimation("Color", damageAnimation_, WM_ONCE);
     PlaySoundFX(cameraNode_,"Resources/Sounds/boom5.ogg");
 
     if(playerHealthFraction == 0)
@@ -530,22 +534,19 @@ void DroneAnarchy::StartGame()
     StartCounterToGame();
 }
 
+
+
+void DroneAnarchy::LoadAttributeAnimations()
+{
+    ResourceCache* cache = GetSubsystem<ResourceCache>();
+    textAnimation_ = cache->GetResource<ValueAnimation>("Resources/AttributeAnimations/GameStartCounterAnimation.xml");
+    damageAnimation_ = cache->GetResource<ValueAnimation>("Resources/AttributeAnimations/DamageWarningAnimation.xml");
+}
+
+
 void DroneAnarchy::StartCounterToGame()
 {
-    ValueAnimation* textAnimation = new ValueAnimation(context_);
-
-    textAnimation->SetKeyFrame(0.0f, "5");
-    textAnimation->SetKeyFrame(1.0f, "4");
-    textAnimation->SetKeyFrame(2.0f, "3");
-    textAnimation->SetKeyFrame(3.0f, "2");
-    textAnimation->SetKeyFrame(4.0f, "1");
-    textAnimation->SetKeyFrame(5.0f, "PLAY");
-    textAnimation->SetKeyFrame(6.0f, "");
-
-    //Trigger  CountFinished event at the end of the animation
-    textAnimation->SetEventFrame(6.0f,E_COUNTFINISHED);
-
-    statusText_->SetAttributeAnimation("Text", textAnimation,WM_ONCE);
+    statusText_->SetAttributeAnimation("Text", textAnimation_,WM_ONCE);
 }
 
 
@@ -721,6 +722,7 @@ void DroneAnarchy::LoadDisplayInterface()
 
 
 
+
 void DroneAnarchy::CreateDebugHud()
 {
     ResourceCache* cache = GetSubsystem<ResourceCache>();
@@ -741,14 +743,6 @@ void DroneAnarchy::SetWindowTitleAndIcon()
     Image* icon = cache->GetResource<Image>("Resources/Textures/drone_anarchy_icon.png");
     graphics->SetWindowIcon(icon);
     graphics->SetWindowTitle("Drone Anarchy");
-}
-
-void DroneAnarchy::CreateValueAnimation()
-{
-    valAnim_ = new ValueAnimation(context_);
-    valAnim_->SetKeyFrame(0.0f, Color(0.0, 0.4, 0.3, 0.7));
-    valAnim_->SetKeyFrame(0.3, Color(0.3,0.0,0.0));
-    valAnim_->SetKeyFrame(1.0f, Color(0.0, 0.4, 0.3, 0.7));
 }
 
 void DroneAnarchy::CreateAudioSystem()
