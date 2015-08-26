@@ -83,11 +83,7 @@ private:
     //This is to prevent the pause that occurs in loading a resource for the first time
     void LoadBackgroundResources();
 
-    void CreateInterface();
-    void CreateHUD();
-    void CreateEnemyCountUI();
-    void CreatePlayerScoreUI();
-    void CreateDisplayTexts();
+    void LoadDisplayInterface();
 
     void CreateScene();
     void CreateDebugHud();

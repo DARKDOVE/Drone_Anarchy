@@ -161,7 +161,8 @@ void DroneAnarchy::Start()
     CreateGameControllers();
     CreateDebugHud();
     CreateValueAnimation();
-    CreateInterface();
+
+    LoadDisplayInterface();
 
     //This is to prevent the pause that occurs in loading a resource for the first time
     LoadBackgroundResources();
@@ -694,142 +695,26 @@ void DroneAnarchy::UpdateScoreDisplay()
 }
 
 
-void DroneAnarchy::CreateInterface()
+void DroneAnarchy::LoadDisplayInterface()
 {
-    CreateHUD();
-    CreateEnemyCountUI();
-    CreatePlayerScoreUI();
-    CreateDisplayTexts();
-}
-
-void DroneAnarchy::CreateHUD()
-{
-    UI* ui = GetSubsystem<UI>();
     ResourceCache* cache = GetSubsystem<ResourceCache>();
+    UIElement* displayRoot = GetSubsystem<UI>()->GetRoot();
+    displayRoot->LoadXML(cache->GetFile("UI/ScreenDisplay.xml"));
 
-    Sprite* hudSprite = ui->GetRoot()->CreateChild<Sprite>();
-    hudSprite->SetTexture(cache->GetResource<Texture2D>("Resources/Textures/hud.png"));
-    hudSprite->SetAlignment(HA_CENTER, VA_BOTTOM);
-    hudSprite->SetSize(512, 256);
-    hudSprite->SetHotSpot(256, 256);
-    hudSprite->SetBlendMode(BLEND_ALPHA);
-    hudSprite->SetPriority(3);
+    //Load the various UI Elements
+    healthFillSprite_ = displayRoot->GetChild("HealthFill", true);
+    radarScreenBase_ = displayRoot->GetChild("RadarScreenBase");
 
-    Sprite* hudSpriteBG = ui->GetRoot()->CreateChild<Sprite>();
-    hudSpriteBG->SetTexture(cache->GetResource<Texture2D>("Resources/Textures/hud_bg.png"));
-    hudSpriteBG->SetAlignment(HA_CENTER, VA_BOTTOM);
-    hudSpriteBG->SetSize(512, 256);
-    hudSpriteBG->SetHotSpot(256, 256);
-    hudSpriteBG->SetOpacity(0.6f);
-    hudSpriteBG->SetBlendMode(BLEND_ALPHA);
-    hudSpriteBG->SetPriority(-3);
+    targetSprite_ = displayRoot->GetChild("Target");
+
+    enemyCounterText_ = displayRoot->GetChild("EnemyCounter");
+    playerScoreText_ = displayRoot->GetChild("PlayerScore");
 
 
-    Sprite* healthBaseSprite = ui->GetRoot()->CreateChild<Sprite>();
-    healthBaseSprite->SetTexture(cache->GetResource<Texture2D>("Resources/Textures/health_bg.png"));
-    healthBaseSprite->SetAlignment(HA_CENTER, VA_BOTTOM);
-    healthBaseSprite->SetSize(512, 128);
-    healthBaseSprite->SetHotSpot(256, 64);
-    healthBaseSprite->SetOpacity(0.9f);
-    healthBaseSprite->SetBlendMode(BLEND_ALPHA);
-    healthBaseSprite->SetPriority(1);
+    statusText_ = displayRoot->GetChild("StatusText");
+    playerScoreMessageText_ = displayRoot->GetChild("ScoreMessage");
+    optionsInfoText_ = displayRoot->GetChild("OptionInfo");
 
-
-    healthFillSprite_ = healthBaseSprite->CreateChild<Sprite>();
-    healthFillSprite_->SetTexture(cache->GetResource<Texture2D>("Resources/Textures/health_bar_green.png"));
-    healthFillSprite_->SetAlignment(HA_CENTER, VA_CENTER);
-    healthFillSprite_->SetSize(256, 25);
-    healthFillSprite_->SetHotSpot(128, 25);
-    healthFillSprite_->SetOpacity(0.5f);
-    healthFillSprite_->SetImageRect(IntRect(512,0,1024,64));
-    healthFillSprite_->SetBlendMode(BLEND_ALPHA);
-
-
-    radarScreenBase_ = ui->GetRoot()->CreateChild<Sprite>();
-    radarScreenBase_->SetTexture(cache->GetResource<Texture2D>("Resources/Textures/radar_screen_base_.png"));
-    radarScreenBase_->SetAlignment(HA_CENTER, VA_BOTTOM);
-    radarScreenBase_->SetSize(128, 128);
-    radarScreenBase_->SetHotSpot(64, 64);
-    radarScreenBase_->SetOpacity(0.9f);
-    radarScreenBase_->SetPosition(Vector2(0, -99));
-    radarScreenBase_->SetPriority(2);
-    radarScreenBase_->SetColor(Color(0.0, 0.4, 0.3, 0.7));
-
-
-    Sprite* scopeScreen = ui->GetRoot()->CreateChild<Sprite>();
-    scopeScreen->SetTexture(cache->GetResource<Texture2D>("Resources/Textures/radar_screen.png"));
-    scopeScreen->SetSize(128, 128);
-    scopeScreen->SetAlignment(HA_CENTER, VA_BOTTOM);
-    scopeScreen->SetHotSpot(64, 64);
-    scopeScreen->SetPosition(Vector2(0, -99));
-    scopeScreen->SetBlendMode(BLEND_ALPHA);
-    scopeScreen->SetPriority(4);
-
-    targetSprite_ = ui->GetRoot()->CreateChild<Sprite>();
-    targetSprite_->SetTexture(cache->GetResource<Texture2D>("Resources/Textures/target.png"));
-    targetSprite_->SetSize(70, 70);
-    targetSprite_->SetAlignment(HA_CENTER, VA_CENTER);
-    targetSprite_->SetHotSpot(35, 35);
-    targetSprite_->SetBlendMode(BLEND_ALPHA);
-    targetSprite_->SetOpacity(0.6f);
-    targetSprite_->SetVisible(false);
-
-
-}
-
-void DroneAnarchy::CreateEnemyCountUI()
-{
-    UI* ui = GetSubsystem<UI>();
-    ResourceCache* cache = GetSubsystem<ResourceCache>();
-
-    enemyCountText_ = ui->GetRoot()->CreateChild<Text>();
-    enemyCountText_->SetFont(cache->GetResource<Font>("Resources/Fonts/segment7standard.otf"),15);
-    enemyCountText_->SetAlignment(HA_CENTER, VA_BOTTOM);
-
-    enemyCountText_->SetColor(Color(0.7f, 0.0f, 0.0f));
-    enemyCountText_->SetPosition(IntVector2(-140,-72));
-    enemyCountText_->SetPriority(1);
-}
-
-void DroneAnarchy::CreatePlayerScoreUI()
-{
-    UI* ui = GetSubsystem<UI>();
-    ResourceCache* cache = GetSubsystem<ResourceCache>();
-
-    playerScoreText_ = ui->GetRoot()->CreateChild<Text>();
-    playerScoreText_->SetFont(cache->GetResource<Font>("Resources/Fonts/segment7standard.otf"),15);
-    playerScoreText_->SetAlignment(HA_CENTER, VA_BOTTOM);
-
-    playerScoreText_->SetColor(Color(0.0f, 0.9f, 0.2f));
-    playerScoreText_->SetPosition(IntVector2(140,-72));
-    playerScoreText_->SetPriority(1);
-}
-
-void DroneAnarchy::CreateDisplayTexts()
-{
-    UI* ui = GetSubsystem<UI>();
-    ResourceCache* cache = GetSubsystem<ResourceCache>();
-    statusText_ = ui->GetRoot()->CreateChild<Text>();
-    statusText_->SetFont(cache->GetResource<Font>("Resources/Fonts/gtw.ttf"),70);
-    statusText_->SetAlignment(HA_CENTER, VA_TOP);
-    statusText_->SetColor(Color(0.2f, 0.8f, 1.0f));
-    statusText_->SetPriority(1);
-    statusText_->SetTextEffect(TE_SHADOW);
-
-    playerScoreMessageText_ =  ui->GetRoot()->CreateChild<Text>();
-    playerScoreMessageText_->SetFont(cache->GetResource<Font>("Resources/Fonts/gtw.ttf"),50);
-    playerScoreMessageText_->SetAlignment(HA_CENTER, VA_TOP);
-    playerScoreMessageText_->SetPosition(0, 150);
-    playerScoreMessageText_->SetColor(Color(0.2f, 0.8f, 1.0f));
-    playerScoreMessageText_->SetTextEffect(TE_SHADOW);
-
-
-    optionsInfoText_ =  ui->GetRoot()->CreateChild<Text>();
-    optionsInfoText_->SetFont(cache->GetResource<Font>("Resources/Fonts/gtw.ttf"),20);
-    optionsInfoText_->SetAlignment(HA_CENTER, VA_CENTER);
-    optionsInfoText_->SetPosition(0,50);
-    optionsInfoText_->SetColor(Color(0.2f, 0.8f, 1.0f));
-    optionsInfoText_->SetTextEffect(TE_SHADOW);
 }
 
 
