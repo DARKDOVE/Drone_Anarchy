@@ -699,21 +699,23 @@ void DroneAnarchy::LoadDisplayInterface()
 {
     ResourceCache* cache = GetSubsystem<ResourceCache>();
     UIElement* displayRoot = GetSubsystem<UI>()->GetRoot();
-    displayRoot->LoadXML(cache->GetFile("UI/ScreenDisplay.xml"));
+
+    XMLFile* file = cache->GetResource<XMLFile>("Resources/UI/ScreenDisplay.xml");
+    displayRoot->LoadXML(file->GetRoot());
 
     //Load the various UI Elements
-    healthFillSprite_ = displayRoot->GetChild("HealthFill", true);
-    radarScreenBase_ = displayRoot->GetChild("RadarScreenBase");
+    healthFillSprite_ = dynamic_cast<Sprite*>(displayRoot->GetChild(String("HealthFill"), true)) ;
+    radarScreenBase_ = dynamic_cast<Sprite*>(displayRoot->GetChild(String("RadarScreenBase")));
 
-    targetSprite_ = displayRoot->GetChild("Target");
+    targetSprite_ = dynamic_cast<Sprite*>(displayRoot->GetChild(String("Target")));
 
-    enemyCounterText_ = displayRoot->GetChild("EnemyCounter");
-    playerScoreText_ = displayRoot->GetChild("PlayerScore");
+    enemyCountText_ = dynamic_cast<Text*>(displayRoot->GetChild(String("EnemyCounter")));
+    playerScoreText_ = dynamic_cast<Text*>(displayRoot->GetChild(String("PlayerScore")));
 
 
-    statusText_ = displayRoot->GetChild("StatusText");
-    playerScoreMessageText_ = displayRoot->GetChild("ScoreMessage");
-    optionsInfoText_ = displayRoot->GetChild("OptionInfo");
+    statusText_ = dynamic_cast<Text*>(displayRoot->GetChild(String("StatusText")));
+    playerScoreMessageText_ = dynamic_cast<Text*>(displayRoot->GetChild(String("ScoreMessage")));
+    optionsInfoText_ = dynamic_cast<Text*>(displayRoot->GetChild(String("OptionInfo")));
 
 }
 
