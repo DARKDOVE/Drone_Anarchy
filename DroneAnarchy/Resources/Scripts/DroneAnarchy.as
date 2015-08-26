@@ -10,6 +10,7 @@ enum GameState
 
 
 
+
 const uint MAX_DRONE_COUNT = 15;
 
 const float EASY_PHASE = 0;
