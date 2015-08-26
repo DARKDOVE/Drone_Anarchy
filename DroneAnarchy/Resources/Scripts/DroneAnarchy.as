@@ -167,7 +167,7 @@ void LoadDisplayInterface()
 {
 	UIElement@ displayRoot = ui.root.CreateChild("UIElement");
 	
-	displayRoot.LoadXML(cache.GetFile("UI/ScreenDisplay.xml"));
+	displayRoot.LoadXML(cache.GetFile("Resources/UI/ScreenDisplay.xml"));
 	
 	//Load the various UI Elements
 	healthFillSprite_ = displayRoot.GetChild("HealthFill", true);
@@ -186,8 +186,8 @@ void LoadDisplayInterface()
 
 void LoadAttributeAnimations()
 {
-	textAnimation_ = cache.GetResource("ValueAnimation", "AttributeAnimations/GameStartCounterAnimation.xml");
-	damageAnimation_ = cache.GetResource("ValueAnimation", "AttributeAnimations/DamageWarningAnimation.xml");
+	textAnimation_ = cache.GetResource("ValueAnimation", "Resources/AttributeAnimations/GameStartCounterAnimation.xml");
+	damageAnimation_ = cache.GetResource("ValueAnimation", "Resources/AttributeAnimations/DamageWarningAnimation.xml");
 }
 
 
