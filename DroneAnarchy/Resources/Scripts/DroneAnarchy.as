@@ -45,7 +45,10 @@ Node@ playerNode_;
 
 Viewport@ viewport_;
 SoundSource@ backgroundMusicSource_;
-ValueAnimation@ valAnim_;
+
+
+ValueAnimation@ damageAnimation_;
+ValueAnimation@ textAnimation_;
 
 Sprite@ radarScreenBase_;
 Sprite@ healthFillSprite_;
@@ -71,13 +74,13 @@ void Start()
 	
 	
 	CreateDebugHud();
-	
-	
-	CreateValueAnimation();
 	LoadDisplayInterface();
 	
 	//This is to prevent the pause that occurs in loading a resource for the first time
 	LoadBackgroundResources();
+	
+	//Load Attribute animation files from disk
+	LoadAttributeAnimations();
 	
 	CreateScene();
 	CreateCameraAndLight();
@@ -181,23 +184,21 @@ void LoadDisplayInterface()
 	optionsInfoText_ = displayRoot.GetChild("OptionInfo");
 }
 
+void LoadAttributeAnimations()
+{
+	textAnimation_ = cache.GetResource("ValueAnimation", "AttributeAnimations/GameStartCounterAnimation.xml");
+	damageAnimation_ = cache.GetResource("ValueAnimation", "AttributeAnimations/DamageWarningAnimation.xml");
+}
+
+
+
 void StartCounterToGame()
 {
-	ValueAnimation@ textAnimation = ValueAnimation();
-		
-	textAnimation.SetKeyFrame(0.0f, Variant("5"));
-	textAnimation.SetKeyFrame(1.0f, Variant("4"));
-	textAnimation.SetKeyFrame(2.0f, Variant("3"));
-	textAnimation.SetKeyFrame(3.0f, Variant("2"));
-	textAnimation.SetKeyFrame(4.0f, Variant("1"));
-	textAnimation.SetKeyFrame(5.0f, Variant("PLAY"));
-	textAnimation.SetKeyFrame(6.0f, Variant(""));
 	
-	//Trigger  CountFinished event at the end of the animation
-	textAnimation.SetEventFrame(6.0f, "CountFinished");
-
-	statusText_.SetAttributeAnimation("Text", textAnimation,WM_ONCE);
+	statusText_.SetAttributeAnimation("Text", textAnimation_,WM_ONCE);
 }
+
+
 
 void CreateAudioSystem()
 {
@@ -292,14 +293,6 @@ void PlayBackgroundMusic(String musicName)
     backgroundMusicSource_.Play(musicFile);
 }
 
-
-void CreateValueAnimation()
-{
-	valAnim_ = ValueAnimation();
-	valAnim_.SetKeyFrame(0, Variant(Color(0.0, 0.4, 0.3, 0.7)));
-	valAnim_.SetKeyFrame(0.3, Variant(Color(0.3,0.0,0.0)));
-	valAnim_.SetKeyFrame(1, Variant(Color(0.0, 0.4, 0.3, 0.7)));
-}
 
 void SubscribeToEvents()
 {
@@ -545,7 +538,7 @@ void HandlePlayerHit(StringHash eventType, VariantMap& eventData)
 	
 	
 	//Show Warning
-	radarScreenBase_.SetAttributeAnimation("Color", valAnim_, WM_ONCE);
+	radarScreenBase_.SetAttributeAnimation("Color", damageAnimation_, WM_ONCE);
 	PlaySoundFX(cameraNode_,"Resources/Sounds/boom5.ogg");
 	
 	if(playerHealthFraction == 0)

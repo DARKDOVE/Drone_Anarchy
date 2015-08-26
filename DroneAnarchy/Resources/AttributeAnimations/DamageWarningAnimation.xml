@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<valueanimation interpolationmethod="Linear">
+	<keyframe time="0" type="Color" value="0 0.4 0.3 0.7" />
+	<keyframe time="0.3" type="Color" value="0.3 0 0 1" />
+	<keyframe time="1" type="Color" value="0 0.4 0.3 0.7" />
+</valueanimation>
