@@ -147,7 +147,8 @@ void CreatePlayer()
 	cameraNode.CreateComponent("Camera");
 	cameraNode.Translate(Vector3(0,1.7,0));
 	
-	playerNode_.CreateScriptObject(scriptFile,"PlayerObject");
+	ScriptFile@ sFile = cache.GetResource("ScriptFile","Resources/Scripts/GameObjects.as");
+	playerNode_.CreateScriptObject(sFile,"PlayerObject");
 	
 	cameraNode.CreateComponent("SoundListener");
 	SetSoundListener(cameraNode);
@@ -710,7 +711,8 @@ void SpawnDrone()
 {
 	Node@ droneNode = scene_.CreateChild();
 	
-	droneNode.CreateScriptObject(scriptFile,"LowLevelDrone");
+	ScriptFile@ sFile = cache.GetResource("ScriptFile","Resources/Scripts/GameObjects.as");
+	droneNode.CreateScriptObject(sFile,"LowLevelDrone");
 	
 	float nodeYaw = Random(360);
 	droneNode.rotation = Quaternion(0,nodeYaw, 0);
