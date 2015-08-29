@@ -83,14 +83,8 @@
 #include "InputController.h"
 #include "DroneAnarchy.h"
 
-
-#ifdef USE_SCRIPT_OBJECT
-    #include <Urho3D/Script/Script.h>
-    #include <Urho3D/Script/ScriptFile.h>
-#else
-    #include <Urho3D/Scene/LogicComponent.h>
-    #include "GameObjects.h"
-#endif
+#include <Urho3D/Script/Script.h>
+#include <Urho3D/Script/ScriptFile.h>
 
 
 
@@ -120,15 +114,8 @@ DroneAnarchy::DroneAnarchy(Urho3D::Context *context) : Application(context)
     gameState_ = GS_OUTGAME;
     playerDestroyed_ = false;
 
-
-#ifdef USE_SCRIPT_OBJECT
     context_->RegisterSubsystem(new Script(context_));
-#else
-    context_->RegisterFactory<PlayerObject>();
-    context_->RegisterFactory<LowLevelDrone>();
-    context_->RegisterFactory<LowLevelBullet>();
-    context_->RegisterFactory<SimpleExplosion>();
-#endif
+
 
 
 }
@@ -468,13 +455,10 @@ void DroneAnarchy::CreatePlayer()
     cameraNode->CreateComponent<Camera>();
     cameraNode->Translate(Vector3(0,1.7,0));
 
-#ifdef USE_SCRIPT_OBJECT
     ResourceCache* cache = GetSubsystem<ResourceCache>();
     ScriptInstance* sInstance = playerNode_->CreateComponent<ScriptInstance>();
     sInstance->CreateObject(cache->GetResource<ScriptFile>("Resources/Scripts/GameObjects.as"),"PlayerObject");
-#else
-    playerNode_->CreateComponent<PlayerObject>();
-#endif
+
 
     cameraNode->CreateComponent<SoundListener>();
     SetSoundListener(cameraNode);
@@ -584,7 +568,6 @@ void DroneAnarchy::CleanupScene()
 
     droneRootNode_->RemoveAllChildren();
 
-#ifdef USE_SCRIPT_OBJECT
     //Cleanup any bullet still remaining in the scene
     PODVector< Node * >  scriptedNodes;
     scene_->GetChildrenWithComponent<ScriptInstance>(scriptedNodes);
@@ -593,24 +576,6 @@ void DroneAnarchy::CleanupScene()
     {
         scriptedNodes[i]->Remove();
     }
-#else
-    PODVector<Node*> bulletNodes;
-    scene_->GetChildrenWithComponent<LowLevelBullet>(bulletNodes);
-
-    for(int i=0; i<bulletNodes.Size();i++)
-    {
-        bulletNodes[i]->Remove();
-    }
-
-    PODVector<Node*> explosionNodes;
-    scene_->GetChildrenWithComponent<SimpleExplosion>(explosionNodes);
-
-    for(int i=0; i<explosionNodes.Size();i++)
-    {
-        explosionNodes[i]->Remove();
-    }
-
-#endif
 
     //Hide the enemy counter and player score texts
     enemyCountText_->SetText(String::EMPTY);
@@ -625,13 +590,10 @@ void DroneAnarchy::SpawnDrone()
 
     Node* droneNode = droneRootNode_->CreateChild();
 
-#ifdef USE_SCRIPT_OBJECT
     ResourceCache* cache = GetSubsystem<ResourceCache>();
     XMLFile* file = cache->GetResource<XMLFile>("Resources/Objects/LowLevelDrone.xml");
     droneNode->LoadXML(file->GetRoot());
-#else
-    droneNode->CreateComponent<LowLevelDrone>();
-#endif
+
 
     float nodeYaw = Random(360);
     droneNode->SetRotation( Quaternion(0,nodeYaw, 0));

@@ -25,9 +25,6 @@
 #ifndef __DRONEANARCHY_H_
 #define __DRONEANARCHY_H_
 
-//Comment out the line below to build using LogicComponent
-#define USE_SCRIPT_OBJECT
-
 
 enum GameState
 {
