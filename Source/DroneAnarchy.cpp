@@ -626,9 +626,9 @@ void DroneAnarchy::SpawnDrone()
     Node* droneNode = droneRootNode_->CreateChild();
 
 #ifdef USE_SCRIPT_OBJECT
-    ScriptInstance* sInstance = droneNode->CreateComponent<ScriptInstance>();
     ResourceCache* cache = GetSubsystem<ResourceCache>();
-    sInstance->CreateObject(cache->GetResource<ScriptFile>("Resources/Scripts/GameObjects.as"),"LowLevelDrone");
+    XMLFile* file = cache->GetResource<XMLFile>("Resources/Objects/LowLevelDrone.xml");
+    droneNode->LoadXML(file->GetRoot());
 #else
     droneNode->CreateComponent<LowLevelDrone>();
 #endif

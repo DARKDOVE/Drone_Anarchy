@@ -601,8 +601,8 @@ void SpawnDrone()
 {
 	Node@ droneNode = scene_.CreateChild();
 	
-	ScriptFile@ sFile = cache.GetResource("ScriptFile","Resources/Scripts/GameObjects.as");
-	droneNode.CreateScriptObject(sFile,"LowLevelDrone");
+	XMLFile@ file = cache.GetResource("XMLFile", "Resources/Objects/LowLevelDrone.xml");
+	droneNode.LoadXML(file.root);
 	
 	float nodeYaw = Random(360);
 	droneNode.rotation = Quaternion(0,nodeYaw, 0);

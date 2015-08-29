@@ -391,7 +391,6 @@ class LowLevelDrone : DroneObjectBase
 	{
 		
 		DroneObjectBase::DelayedStart();
-		SetupNodeAnimation();
 	}
 	
 	void SetupNodeAnimation()
@@ -431,25 +430,9 @@ class LowLevelDrone : DroneObjectBase
 	
 	void Initialise()
 	{
-		node.SetScale(3.0f);
-		AnimatedModel@ droneBody = node.CreateComponent("AnimatedModel");
-		droneBody.model = cache.GetResource("Model", "Resources/Models/drone_body.mdl");
-		droneBody.material = cache.GetResource("Material", "Resources/Materials/drone_body.xml");
-		
-		AnimatedModel@ droneArm = node.CreateComponent("AnimatedModel");
-		droneArm.model = cache.GetResource("Model", "Resources/Models/drone_arm.mdl");
-		droneArm.material = cache.GetResource("Material", "Resources/Materials/drone_arm.xml");
-		
-		RigidBody@ droneRB = node.CreateComponent("RigidBody");
-		droneRB.mass = 1.0f;
-		droneRB.SetCollisionLayerAndMask(DRONE_COLLISION_LAYER, BULLET_COLLISION_LAYER | PLAYER_COLLISION_LAYER | FLOOR_COLLISION_LAYER);
-		droneRB.kinematic = true;
-		
-		CollisionShape@ droneCS = node.CreateComponent("CollisionShape");
-		droneCS.SetSphere(0.3f);
-		
-		AnimationController@ animController = node.CreateComponent("AnimationController");
+		AnimationController@ animController = node.GetComponent("AnimationController");
 		animController.PlayExclusive("Resources/Models/open_arm.ani", 0, false);
+		SetupNodeAnimation();
 	}
 	
 	void OnDestroyed()
