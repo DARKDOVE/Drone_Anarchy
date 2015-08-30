@@ -412,37 +412,13 @@ void DroneAnarchy::HandleCountFinished(StringHash eventType, VariantMap &eventDa
 void DroneAnarchy::CreateScene()
 {
     ResourceCache* cache = GetSubsystem<ResourceCache>();
+    XMLFile* file = cache->GetResource<XMLFile>("Resources/Objects/Scene.xml");
 
     scene_ = new Scene(context_);
+    scene_->LoadXML(file->GetRoot());
     scene_->SetUpdateEnabled(false);
-    scene_->CreateComponent<Octree>();
-    scene_->CreateComponent<PhysicsWorld>();
 
     droneRootNode_ = scene_->CreateChild("DroneRootNode");
-
-    // Create a Zone component for ambient lighting & fog control
-    Node* zoneNode = scene_->CreateChild("ZoneNode");
-    Zone* zone = zoneNode->CreateComponent<Zone>();
-
-    zone->SetBoundingBox(BoundingBox(-1000.0f, 1000.0f));
-    zone->SetAmbientColor(Color(0.2f, 0.2f, 0.2f));
-    zone->SetFogColor(Color(0.5f, 0.5f, 1.0f));
-    zone->SetFogStart(5.0f);
-    zone->SetFogEnd(300.f);
-
-
-    //Create a plane
-    Node* planeNode = scene_->CreateChild("PlaneNode");
-    StaticModel* plane = planeNode->CreateComponent<StaticModel>();
-    plane->SetModel(cache->GetResource<Model>("Resources/Models/floor.mdl"));
-    plane->SetMaterial(cache->GetResource<Material>("Resources/Materials/floor.xml"));
-
-    //Add physics Components to the plane
-    RigidBody* planeRB = planeNode->CreateComponent<RigidBody>();
-    planeRB->SetCollisionLayerAndMask(FLOOR_COLLISION_LAYER, DRONE_COLLISION_LAYER | BULLET_COLLISION_LAYER);
-
-    CollisionShape* planeCS = planeNode->CreateComponent<CollisionShape>();
-    planeCS->SetTriangleMesh(cache->GetResource<Model>("Resources/Models/floor.mdl"));
 
 }
 

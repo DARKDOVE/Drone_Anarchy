@@ -257,35 +257,11 @@ void LoadBackgroundResources()
 
 void CreateScene()
 {
+	XMLFile@ file = cache.GetResource("XMLFile", "Resources/Objects/Scene.xml");
+	
 	scene_ = Scene();
+	scene_.LoadXML(file.root);
 	scene_.updateEnabled = false;
-	
-	scene_.CreateComponent("Octree");
-	scene_.CreateComponent("PhysicsWorld");
-	
-	// Create a Zone component for ambient lighting & fog control
-    Node@ zoneNode = scene_.CreateChild("Zone");
-    Zone@ zone = zoneNode.CreateComponent("Zone");
-    zone.boundingBox = BoundingBox(-1000.0f, 1000.0f);
-    zone.ambientColor = Color(0.2f, 0.2f, 0.2f);
-    zone.fogColor = Color(0.5f, 0.5f, 1.0f);
-    zone.fogStart = 5.0f;
-    zone.fogEnd = 300.0f;
-	
-	//Create a plane
-	Node@ planeNode = scene_.CreateChild("Plane");
-	StaticModel@ plane = planeNode.CreateComponent("StaticModel");
-	
-	plane.model = cache.GetResource("Model", "Resources/Models/floor.mdl");
-	plane.material = cache.GetResource("Material", "Resources/Materials/floor.xml");
-
-	
-	//Add physics Components to the plane
-	RigidBody@ planeBody = planeNode.CreateComponent("RigidBody");
-	planeBody.SetCollisionLayerAndMask(FLOOR_COLLISION_LAYER, DRONE_COLLISION_LAYER | BULLET_COLLISION_LAYER);
-	CollisionShape@ colShape = planeNode.CreateComponent("CollisionShape");
-	colShape.SetTriangleMesh(cache.GetResource("Model", "Resources/Models/floor.mdl"));
-	
 }
 
 void PlayBackgroundMusic(String musicName)
