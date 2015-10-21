@@ -72,11 +72,11 @@ Text@ optionsInfoText_;
 
 void Start()
 {
-	graphics.windowTitle = "Drone Anarchy";
-	
+
 	cache.AddResourceDir("DroneAnarchy");
 	
 	SetWindowTitleAndIcon();
+	
 	CreateGameControllers();   // in GameController.as
 	
 	
@@ -140,7 +140,13 @@ void CreateCameraAndLight()
 	
 	cameraNode_.CreateComponent("SoundListener");
 	
-	renderer.viewports[0] = Viewport(scene_, cameraNode_.GetComponent("Camera"));
+	Viewport@ viewPort =  Viewport(scene_, cameraNode_.GetComponent("Camera"));
+	
+	renderer.viewports[0] = viewPort;
+	
+	RenderPath@ rPath = viewPort.renderPath;
+	rPath.Append(cache.GetResource("XMLFile", "PostProcess/Blur.xml"));
+	rPath.SetEnabled("Blur",true);
 }
 
 
@@ -219,11 +225,13 @@ void CreateAudioSystem()
 	
 }
 
+
 void SetWindowTitleAndIcon()
 {
     graphics.windowIcon = cache.GetResource("Image","Resources/Textures/drone_anarchy_icon.png");
     graphics.windowTitle = "Drone Anarchy";
 }
+
 void SetSoundListener(Node@ listenerNode)
 {
 	if(listenerNode.GetComponent("SoundListener") is null)
@@ -373,6 +381,9 @@ void InitiateGameOver()
 	gameState_ = GS_OUTGAME;
 	
 	CleanupScene();
+	
+	renderer.viewports[0].renderPath.SetEnabled("Blur",true);
+	
 	PlayBackgroundMusic("Resources/Sounds/defeated.ogg");
 	
 	targetSprite_.visible = false;
@@ -571,6 +582,8 @@ void HandleCountFinished(StringHash eventType, VariantMap& eventData)
 	targetSprite_.visible = true;
 	enemyCounterText_.text = 0;
 	playerScoreText_.text = 0;
+	
+	renderer.viewports[0].renderPath.SetEnabled("Blur",false);
 }
 
 void UpdateScoreDisplay()

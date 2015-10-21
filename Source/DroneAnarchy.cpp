@@ -37,7 +37,7 @@
 #include <Urho3D/Engine/DebugHud.h>
 #include <Urho3D/Engine/Application.h>
 
-#include <Urho3D/Script/ScriptInstance.h>
+#include <Urho3D/AngelScript/ScriptInstance.h>
 #include <Urho3D/Graphics/Viewport.h>
 #include <Urho3D/Graphics/Renderer.h>
 #include <Urho3D/UI/Font.h>
@@ -66,6 +66,7 @@
 #include <Urho3D/Math/Color.h>
 #include <Urho3D/Graphics/BillboardSet.h>
 #include <Urho3D/Graphics/Camera.h>
+#include <Urho3D/Graphics/RenderPath.h>
 
 #include <Urho3D/Graphics/ParticleEffect.h>
 #include <Urho3D/Graphics/ParticleEmitter.h>
@@ -83,8 +84,8 @@
 #include "InputController.h"
 #include "DroneAnarchy.h"
 
-#include <Urho3D/Script/Script.h>
-#include <Urho3D/Script/ScriptFile.h>
+#include <Urho3D/AngelScript/Script.h>
+#include <Urho3D/AngelScript/ScriptFile.h>
 
 
 
@@ -405,6 +406,9 @@ void DroneAnarchy::HandleCountFinished(StringHash eventType, VariantMap &eventDa
     targetSprite_->SetVisible(true);
     enemyCountText_->SetText("0");
     playerScoreText_->SetText("0");
+
+    RenderPath* rPath = GetSubsystem<Renderer>()->GetViewport(0)->GetRenderPath();
+    rPath->SetEnabled("Blur",false);
 }
 
 
@@ -459,8 +463,15 @@ void DroneAnarchy::CreateCameraAndLight()
     cameraNode_->CreateComponent<SoundListener>();
 
     Renderer* renderer = GetSubsystem<Renderer>();
-    Viewport* viewport_ = new Viewport(context_, scene_, cameraNode_->GetComponent<Camera>());
-    renderer->SetViewport(0,viewport_);
+    ResourceCache* cache = GetSubsystem<ResourceCache>();
+
+    SharedPtr<Viewport> viewPort(new Viewport(context_, scene_, cameraNode_->GetComponent<Camera>()));
+
+    renderer->SetViewport(0, viewPort);
+
+    SharedPtr<RenderPath> rPath (viewPort->GetRenderPath());
+    rPath->Append(cache->GetResource<XMLFile>("PostProcess/Blur.xml"));
+    rPath->SetEnabled("Blur",true);
 }
 
 
@@ -517,6 +528,10 @@ void DroneAnarchy::InitiateGameOver()
     gameState_ = GS_OUTGAME;
 
     CleanupScene();
+
+    RenderPath* rPath = GetSubsystem<Renderer>()->GetViewport(0)->GetRenderPath();
+    rPath->SetEnabled("Blur",true);
+
     PlayBackgroundMusic("Resources/Sounds/Defeated.ogg");
 
     targetSprite_->SetVisible(false);
