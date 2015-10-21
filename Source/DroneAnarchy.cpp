@@ -713,7 +713,7 @@ void DroneAnarchy::PlaySoundFX(Node *soundNode, String soundName)
     SoundSource3D* source = soundNode->CreateComponent<SoundSource3D>();
     Sound* sound = cache->GetResource<Sound>( soundName);
 
-    source->SetDistanceAttenuation(2, 50, 1);
+    source->SetDistanceAttenuation(2, 120, 0.1);
     source->SetSoundType(SOUND_EFFECT);
     source->Play(sound);
     source->SetAutoRemove(true);
