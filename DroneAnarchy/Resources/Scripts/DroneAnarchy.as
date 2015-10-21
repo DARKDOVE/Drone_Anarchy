@@ -76,6 +76,7 @@ void Start()
 	
 	cache.AddResourceDir("DroneAnarchy");
 	
+	SetWindowTitleAndIcon();
 	CreateGameControllers();   // in GameController.as
 	
 	
@@ -218,6 +219,11 @@ void CreateAudioSystem()
 	
 }
 
+void SetWindowTitleAndIcon()
+{
+    graphics.windowIcon = cache.GetResource("Image","Resources/Textures/drone_anarchy_icon.png");
+    graphics.windowTitle = "Drone Anarchy";
+}
 void SetSoundListener(Node@ listenerNode)
 {
 	if(listenerNode.GetComponent("SoundListener") is null)
