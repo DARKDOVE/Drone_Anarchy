@@ -34,7 +34,7 @@ GAME PLAY
 
 NOTE
 -----
-- Urho3D v1.4 and upward is required
+- DroneAnarchy is constantly upgraded to and tested against the latest master repo of Urho3D
 
 - A method used to ensure better randomness of the Random() function involves tweaking
 the code of Urho3DPlayer by adding the following line in its Setup() function
