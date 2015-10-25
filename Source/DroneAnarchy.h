@@ -57,6 +57,7 @@ public:
 
     void HandleDroneDestroyed(StringHash eventType, VariantMap& eventData);
     void HandlePlayerHit(StringHash eventType, VariantMap& eventData);
+    void HandlePlayerHealthUpdate(StringHash eventType, VariantMap& eventData);
     void HandlePlayerDestroyed(StringHash eventType, VariantMap& eventData);
     void HandleDroneHit(StringHash eventType, VariantMap& eventData);
     void HandleSoundGenerated(StringHash eventType, VariantMap& eventData);

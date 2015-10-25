@@ -214,12 +214,20 @@ class PlayerObject : ScriptObject
 {
 	float maximumHealth_;
 	float currentHealth_;
+	float healthIncrement_;
+	float healthIncrementTime_;
+	float healthIncrementTimeCounter_;
 	WeaponObjectBase@ weapon_;
 	
 	
 	PlayerObject()
 	{
-		maximumHealth_ = currentHealth_ = 100;
+		maximumHealth_ = 100;
+		currentHealth_ = 0;
+		
+		healthIncrement_ = 1.0f;
+		healthIncrementTime_ = 10.0f;
+		healthIncrementTimeCounter_ = 0;
 	}
 	
 	void DelayedStart()
@@ -227,6 +235,7 @@ class PlayerObject : ScriptObject
 		SubscribeToEvent("ActivateWeapon", "HandleActivateWeapon");
 		SubscribeToEvent("PlayerRotation", "HandlePlayerRotation");
 		Initialise();
+		UpdateHealth(100);
 	}
 	
 	void Initialise()
@@ -245,7 +254,7 @@ class PlayerObject : ScriptObject
 		light.lightType = LIGHT_DIRECTIONAL;
 	}
 	
-	void HandleActivateWeapon(StringHash eventType, VariantMap& eventData)
+	void HandleActivateWeapon()
 	{
 		weapon_.Fire();
 	}
@@ -268,8 +277,10 @@ class PlayerObject : ScriptObject
 	
 	void OnHit(float damagePoint)
 	{
-		currentHealth_ -= damagePoint;
-		if(currentHealth_ < 0.0f )
+		SendEvent("PlayerHit");
+		UpdateHealth(-damagePoint);
+
+		if(currentHealth_ == 0 )
 		{
 			//if health is equal to or below zero notify that the player
 			//has been destroyed
@@ -288,11 +299,30 @@ class PlayerObject : ScriptObject
 			node.GetChild("CameraNode").GetChild("DirectionalLight").enabled = false;
 		}
 		
+	void UpdateHealth(float incrementValue)
+	{
+		if(currentHealth_ == maximumHealth_ && incrementValue > 0)
+		{
+			return;   //This is to avoid unnecessary sending of health update event when the health is full
+		}
+		
+		currentHealth_ += incrementValue;
+		
+		if(currentHealth_ < 0)
+		{
+			currentHealth_ = 0;
+		}
+		else if(currentHealth_ > maximumHealth_)
+		{
+			currentHealth_ = maximumHealth_;
+		}
+		
 		float healthFraction = currentHealth_ / maximumHealth_;
 		VariantMap eventData;
 		eventData["CurrentHealthFraction"] = healthFraction;
-		SendEvent("PlayerHit", eventData);
+		SendEvent("PlayerHealthUpdate", eventData);
 	}
+	
 	
 	void SetWeapon(WeaponObjectBase@ weapon)
 	{

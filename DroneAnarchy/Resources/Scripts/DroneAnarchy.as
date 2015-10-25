@@ -301,6 +301,7 @@ void SubscribeToEvents()
 	SubscribeToEvent("CountFinished", "HandleCountFinished");
 	SubscribeToEvent("SoundGenerated", "HandleSoundGenerated");
 	SubscribeToEvent("PlayerDestroyed", "HandlePlayerDestroyed");
+	SubscribeToEvent("PlayerHealthUpdate", "HandlePlayerHealthUpdate");
 	SubscribeToEvent(scene_.physicsWorld, "PhysicsPreStep", "HandleFixedUpdate");
 	
 }
@@ -525,25 +526,21 @@ int GetDroneCount()
 	return count;
 }
 
-void HandlePlayerHit(StringHash eventType, VariantMap& eventData)
+void HandlePlayerHealthUpdate(StringHash eventType, VariantMap& eventData)
 {
 	//Update Health
 	float playerHealthFraction = eventData["CurrentHealthFraction"].GetFloat();
 	
-	
 	int range = 512 - int( 512 * playerHealthFraction);
 	healthFillSprite_.imageRect = IntRect(range, 0, 512 + range, 64);
 	UpdateHealthTexture(playerHealthFraction);
-	
-	
+}
+
+void HandlePlayerHit()
+{
 	//Show Warning
 	radarScreenBase_.SetAttributeAnimation("Color", damageAnimation_, WM_ONCE);
 	PlaySoundFX(cameraNode_,"Resources/Sounds/boom5.ogg");
-	
-	if(playerHealthFraction == 0)
-	{
-		playerDestroyed_ = true;
-	}
 }
 
 
@@ -555,6 +552,7 @@ void HandleDroneDestroyed(StringHash eventType, VariantMap& eventData)
 
 void HandlePlayerDestroyed(StringHash eventType, VariantMap& eventData)
 {
+	playerDestroyed_ = true;
 	Vector3 camPosition = eventData["CamPosition"].GetVector3();
 	Quaternion camRotation = eventData["CamRotation"].GetQuaternion();
 	cameraNode_.worldRotation = camRotation;
@@ -566,15 +564,11 @@ void HandlePlayerDestroyed(StringHash eventType, VariantMap& eventData)
 	SetSoundListener(cameraNode_);
 }
 
-void HandleCountFinished(StringHash eventType, VariantMap& eventData)
+void HandleCountFinished()
 {
 	CreatePlayer();
 	
 	cameraNode_.GetChild("DirectionalLight").enabled = false;
-	
-	//The following two lines come into play when restarting the game
-	healthFillSprite_.imageRect = IntRect(0, 0, 512, 64);
-	UpdateHealthTexture(1);
 	
 	scene_.updateEnabled = true;
 	gameState_ = GS_INGAME;

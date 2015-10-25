@@ -36,6 +36,11 @@ const int FLOOR_COLLISION_LAYER = 5;
 //Custom Events
 EVENT(E_PLAYERHIT, PlayerHit)
 {
+
+}
+
+EVENT(E_PLAYERHEALTHUPDATE, PlayerHealthUpdate)
+{
     PARAM(P_CURRENTHEALTHFRACTION,CurrentHealthFraction );
 }
 

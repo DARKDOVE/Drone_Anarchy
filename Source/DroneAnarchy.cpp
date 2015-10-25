@@ -343,29 +343,29 @@ void DroneAnarchy::HandleDroneDestroyed(StringHash eventType, VariantMap &eventD
     UpdateScoreDisplay();
 }
 
-void DroneAnarchy::HandlePlayerHit(StringHash eventType, VariantMap &eventData)
+void DroneAnarchy::HandlePlayerHealthUpdate(StringHash eventType, VariantMap &eventData)
 {
-    using namespace PlayerHit;
+    using namespace PlayerHealthUpdate;
     //Update Health
     float playerHealthFraction = eventData[P_CURRENTHEALTHFRACTION].GetFloat();
 
     int range = 512 - ( 512 * playerHealthFraction);
     healthFillSprite_->SetImageRect(IntRect(range, 0, 512 + range, 64));
     UpdateHealthTexture(playerHealthFraction);
+}
 
+void DroneAnarchy::HandlePlayerHit(StringHash eventType, VariantMap& eventData)
+{
     //Show Warning
     radarScreenBase_->SetAttributeAnimation("Color", damageAnimation_, WM_ONCE);
     PlaySoundFX(cameraNode_,"Resources/Sounds/boom5.ogg");
-
-    if(playerHealthFraction == 0)
-    {
-        playerDestroyed_ = true;
-    }
 }
 
 void DroneAnarchy::HandlePlayerDestroyed(StringHash eventType, VariantMap &eventData)
 {
     using namespace PlayerDestroyed;
+
+    playerDestroyed_ = true;
 
     Vector3 camPosition = eventData[P_CAMPOSITION].GetVector3();
     Quaternion camRotation = eventData[P_CAMROTATION].GetQuaternion();
@@ -390,15 +390,11 @@ void DroneAnarchy::HandleSoundGenerated(StringHash eventType, VariantMap& eventD
 }
 
 
-void DroneAnarchy::HandleCountFinished(StringHash eventType, VariantMap &eventData)
+void DroneAnarchy::HandleCountFinished(StringHash eventType, VariantMap& eventData)
 {
     CreatePlayer();
 
     cameraNode_->GetChild("DirectionalLight")->SetEnabled(false);
-
-    //The following two lines come into play when restarting the game
-    healthFillSprite_->SetImageRect(IntRect(0, 0, 512, 64));
-    UpdateHealthTexture(1);
 
     scene_->SetUpdateEnabled(true);
     gameState_ = GS_INGAME;
@@ -785,6 +781,7 @@ void DroneAnarchy::SubscribeToEvents()
 
     SubscribeToEvent(E_DRONEDESTROYED, HANDLER(DroneAnarchy, HandleDroneDestroyed));
     SubscribeToEvent(E_PLAYERHIT, HANDLER(DroneAnarchy, HandlePlayerHit));
+    SubscribeToEvent(E_PLAYERHEALTHUPDATE, HANDLER(DroneAnarchy, HandlePlayerHealthUpdate));
     SubscribeToEvent(E_PLAYERDESTROYED, HANDLER(DroneAnarchy, HandlePlayerDestroyed));
     SubscribeToEvent(E_COUNTFINISHED, HANDLER(DroneAnarchy, HandleCountFinished));
     SubscribeToEvent(E_SOUNDGENERATED, HANDLER(DroneAnarchy, HandleSoundGenerated));
