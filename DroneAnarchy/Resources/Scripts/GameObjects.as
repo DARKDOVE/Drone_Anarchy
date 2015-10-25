@@ -299,6 +299,22 @@ class PlayerObject : ScriptObject
 			node.GetChild("CameraNode").GetChild("DirectionalLight").enabled = false;
 		}
 		
+	}
+	
+	
+	void FixedUpdate(float timeStep)
+	{
+		healthIncrementTimeCounter_ += timeStep;
+		
+		if(healthIncrementTimeCounter_ >= healthIncrementTime_)
+		{
+			healthIncrementTimeCounter_ = 0;
+
+			UpdateHealth(healthIncrement_);	
+		}
+	}
+	
+	
 	void UpdateHealth(float incrementValue)
 	{
 		if(currentHealth_ == maximumHealth_ && incrementValue > 0)
@@ -322,6 +338,7 @@ class PlayerObject : ScriptObject
 		eventData["CurrentHealthFraction"] = healthFraction;
 		SendEvent("PlayerHealthUpdate", eventData);
 	}
+	
 	
 	
 	void SetWeapon(WeaponObjectBase@ weapon)
