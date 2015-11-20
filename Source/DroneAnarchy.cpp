@@ -773,34 +773,34 @@ void DroneAnarchy::LoadBackgroundResources()
 
 void DroneAnarchy::SubscribeToEvents()
 {
-    SubscribeToEvent(E_KEYDOWN, HANDLER(DroneAnarchy, HandleKeyDown));
-    SubscribeToEvent(E_MOUSEMOVE,HANDLER(DroneAnarchy,HandleMouseMove));
-    SubscribeToEvent(E_MOUSEBUTTONDOWN, HANDLER(DroneAnarchy,HandleMouseClick));
-    SubscribeToEvent(E_UPDATE, HANDLER(DroneAnarchy, HandleUpdate));
-    SubscribeToEvent((Object*)scene_->GetComponent<PhysicsWorld>(),E_PHYSICSPRESTEP,HANDLER(DroneAnarchy,HandleFixedUpdate));
+    SubscribeToEvent(E_KEYDOWN, URHO3D_HANDLER(DroneAnarchy, HandleKeyDown));
+    SubscribeToEvent(E_MOUSEMOVE,URHO3D_HANDLER(DroneAnarchy,HandleMouseMove));
+    SubscribeToEvent(E_MOUSEBUTTONDOWN, URHO3D_HANDLER(DroneAnarchy,HandleMouseClick));
+    SubscribeToEvent(E_UPDATE, URHO3D_HANDLER(DroneAnarchy, HandleUpdate));
+    SubscribeToEvent((Object*)scene_->GetComponent<PhysicsWorld>(),E_PHYSICSPRESTEP,URHO3D_HANDLER(DroneAnarchy,HandleFixedUpdate));
 
-    SubscribeToEvent(E_DRONEDESTROYED, HANDLER(DroneAnarchy, HandleDroneDestroyed));
-    SubscribeToEvent(E_PLAYERHIT, HANDLER(DroneAnarchy, HandlePlayerHit));
-    SubscribeToEvent(E_PLAYERHEALTHUPDATE, HANDLER(DroneAnarchy, HandlePlayerHealthUpdate));
-    SubscribeToEvent(E_PLAYERDESTROYED, HANDLER(DroneAnarchy, HandlePlayerDestroyed));
-    SubscribeToEvent(E_COUNTFINISHED, HANDLER(DroneAnarchy, HandleCountFinished));
-    SubscribeToEvent(E_SOUNDGENERATED, HANDLER(DroneAnarchy, HandleSoundGenerated));
+    SubscribeToEvent(E_DRONEDESTROYED, URHO3D_HANDLER(DroneAnarchy, HandleDroneDestroyed));
+    SubscribeToEvent(E_PLAYERHIT, URHO3D_HANDLER(DroneAnarchy, HandlePlayerHit));
+    SubscribeToEvent(E_PLAYERHEALTHUPDATE, URHO3D_HANDLER(DroneAnarchy, HandlePlayerHealthUpdate));
+    SubscribeToEvent(E_PLAYERDESTROYED, URHO3D_HANDLER(DroneAnarchy, HandlePlayerDestroyed));
+    SubscribeToEvent(E_COUNTFINISHED, URHO3D_HANDLER(DroneAnarchy, HandleCountFinished));
+    SubscribeToEvent(E_SOUNDGENERATED, URHO3D_HANDLER(DroneAnarchy, HandleSoundGenerated));
 
 }
 
 
 // look for a config file to normalize the controller button functions.
-// and set up the event handlers in case 1 joystick is connected
+// and set up the event URHO3D_HANDLERs in case 1 joystick is connected
 void DroneAnarchy::CreateGameControllers()
 {
     if ( GetSubsystem<Input>()->GetNumJoysticks() > 0 )  // is there a game controller plugged in?
     {
         myjoystick_ = new virtualController();  // make a controller
         myjoystick_->load_user_settings( GetSubsystem<ResourceCache>() );
-        SubscribeToEvent(E_JOYSTICKBUTTONDOWN, HANDLER(DroneAnarchy, HandleButtonDown));
-        SubscribeToEvent(E_JOYSTICKBUTTONUP, HANDLER(DroneAnarchy, HandleButtonUp ));
+        SubscribeToEvent(E_JOYSTICKBUTTONDOWN, URHO3D_HANDLER(DroneAnarchy, HandleButtonDown));
+        SubscribeToEvent(E_JOYSTICKBUTTONUP, URHO3D_HANDLER(DroneAnarchy, HandleButtonUp ));
         if ( myjoystick_->button(DA_HAT_UP) > -1 ) // xbox uses both dpad and hat, (and analoge)!
-            SubscribeToEvent(E_JOYSTICKHATMOVE, HANDLER(DroneAnarchy, HandleHatMove) );
+            SubscribeToEvent(E_JOYSTICKHATMOVE, URHO3D_HANDLER(DroneAnarchy, HandleHatMove) );
     }
 }
 
@@ -972,5 +972,5 @@ void DroneAnarchy::HandleButtonUp(StringHash eventType, VariantMap& eventData)
 }
 
 
-DEFINE_APPLICATION_MAIN(DroneAnarchy)
+URHO3D_DEFINE_APPLICATION_MAIN(DroneAnarchy)
 
