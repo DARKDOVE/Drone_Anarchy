@@ -39,7 +39,8 @@ using namespace Urho3D;
 class DroneAnarchy : public Application
 {
 
-    OBJECT(DroneAnarchy,Application);
+    URHO3D_OBJECT(DroneAnarchy,Application);
+
 
 public:
     DroneAnarchy(Context* context);
