@@ -299,6 +299,8 @@ class PlayerObject : ScriptObject
 			node.GetChild("CameraNode").GetChild("DirectionalLight").enabled = false;
 		}
 		
+		healthIncrementTimeCounter_ = 0;
+		
 	}
 	
 	
