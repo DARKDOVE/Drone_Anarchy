@@ -7,6 +7,14 @@ enum DroneType
 	DT_TOKEN_DRONE
 }
 
+//Weapon Type
+const int ORDINARY_WEAPON = 1;
+const int CLASSIC_WEAPON = 2;
+const int ENHANCED_WEAPON = 3;
+const int ADVANCED_WEAPON = 4;
+
+
+
 //Bullet Type Enum
 enum BulletObjectType
 {
@@ -14,6 +22,7 @@ enum BulletObjectType
 	BOT_NORMAL,
 	BOT_POWERFUL
 }
+
 
 //Bullet Physics Mask
 const int BULLET_COLLISION_LAYER = 1;
@@ -23,9 +32,9 @@ const int FLOOR_COLLISION_LAYER = 5;
 const int SCORE_ADDITION_RATE = 1;
 
 
-
+//-----------------------------------------------BULLET OBJECT--------------------------------------------------------------------------------
 ///Bullet Base Class
-abstract class BulletObjectBase : ScriptObject
+abstract class Bullet : ScriptObject
 {
 	float termTime_;
 	float termTimeCounter_;
@@ -56,7 +65,7 @@ abstract class BulletObjectBase : ScriptObject
 	void HandleNodeCollision(StringHash eventType, VariantMap& eventData)
 	{
 		Node@ otherNode = eventData["OtherNode"].GetPtr();
-		DroneObjectBase@ droneObj = cast<DroneObjectBase>(otherNode.scriptObject);
+		Drone@ droneObj = cast<Drone>(otherNode.scriptObject);
 		
 		
 		if(droneObj !is null)
@@ -75,7 +84,7 @@ abstract class BulletObjectBase : ScriptObject
 }
 
 ///Low Level Bullet Object
-class LowLevelBullet : BulletObjectBase
+class LowLevelBullet : Bullet
 {
 	LowLevelBullet()
 	{
@@ -113,12 +122,18 @@ class LowLevelBullet : BulletObjectBase
 
 
 
+
+
+
+
+//-----------------------------------------------WEAPON OBJECT--------------------------------------------------------------------------------
+
 ///Weapon Base Class
-abstract class WeaponObjectBase
+abstract class Weapon
 {
 	Node@ refNode_;
 	
-	WeaponObjectBase(Node@ refNode)
+	Weapon(Node@ refNode)
 	{
 		refNode_ = refNode;
 	}
@@ -127,7 +142,7 @@ abstract class WeaponObjectBase
 
 
 ///Ordinary Weapon
-class OrdinaryWeapon : WeaponObjectBase
+class OrdinaryWeapon : Weapon
 {
 	void Fire()
 	{	
@@ -159,6 +174,12 @@ class OrdinaryWeapon : WeaponObjectBase
 }
 
 
+
+
+
+
+
+//-----------------------------------------------EXPLOSION OBJECT--------------------------------------------------------------------------------
 
 
 ///Explosion Object Base
@@ -208,6 +229,16 @@ class SimpleExplosion : ExplosionObjectBase
 }
 
 
+
+
+
+
+
+
+
+//-----------------------------------------------PLAYER OBJECT--------------------------------------------------------------------------------
+
+
 ///Player Object
 
 class PlayerObject : ScriptObject
@@ -217,7 +248,7 @@ class PlayerObject : ScriptObject
 	float healthIncrement_;
 	float healthIncrementTime_;
 	float healthIncrementTimeCounter_;
-	WeaponObjectBase@ weapon_;
+	Weapon@ weapon_;
 	
 	
 	PlayerObject()
@@ -343,15 +374,23 @@ class PlayerObject : ScriptObject
 	
 	
 	
-	void SetWeapon(WeaponObjectBase@ weapon)
+	void SetWeapon(Weapon@ weapon)
 	{
 		weapon_ = weapon;
 	}
 }
 
 
+
+
+
+
+
+//-----------------------------------------------DRONE OBJECT--------------------------------------------------------------------------------
+
+
 ///Drone Base Class
-abstract class DroneObjectBase : ScriptObject
+abstract class Drone : ScriptObject
 {
 	float currentHealthLevel_;
 	float attackTime_;
@@ -418,7 +457,7 @@ abstract class DroneObjectBase : ScriptObject
 
 
 ///Low Level Drone Object
-class LowLevelDrone : DroneObjectBase
+class LowLevelDrone : Drone
 {
 	int dronePoint_;
 	int damagePoint_;
@@ -439,7 +478,7 @@ class LowLevelDrone : DroneObjectBase
 	void DelayedStart()
 	{
 		
-		DroneObjectBase::DelayedStart();
+		Drone::DelayedStart();
 	}
 	
 	void SetupNodeAnimation()
