@@ -1,8 +1,4 @@
-//#include "InputController.as"
 #include "LevelManager.as"
-
-
-
 
 LevelManager@ levelManager_;
 Scene@ scene_;
@@ -13,21 +9,12 @@ void Start()
 	
 	SetWindowTitleAndIcon();
 	
-	//CreateGameControllers();   // in GameController.as
 	
 	
 	CreateDebugHud();
-	//LoadDisplayInterface();
-	
-	//This is to prevent the pause that occurs in loading a resource for the first time
-	//LoadBackgroundResources();
-	
-	//Load Attribute animation files from disk
-	//LoadAttributeAnimations();
 	
 	SubscribeToEvents();
 	CreateLevel();
-	//CreateCameraAndLight();
 	
 }
 
@@ -101,14 +88,6 @@ void HandleUpdate(StringHash eventType, VariantMap& eventData)
 		levelManager_.HandleLevelEvent(eventData);
 		
 	}
-	// else if(playerDestroyed_ && gameState_ == GS_INGAME)
-	// {
-		// InitiateGameOver();
-	// }
-	// else if(gameState_ == GS_INGAME)
-	// {
-		// joystickUpdate(joydirection_);
-	// }
 }
 
 void HandleMouseMove(StringHash eventType, VariantMap& eventData)
