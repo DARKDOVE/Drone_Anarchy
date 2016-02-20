@@ -56,6 +56,7 @@ void SubscribeToEvents()
 	SubscribeToEvent("Update", "HandleUpdate");
 	SubscribeToEvent("MouseMove", "HandleMouseMove");
 	SubscribeToEvent("MouseButtonDown", "HandleMouseClick");
+	SubscribeToEvent("SoundFinished", "HandleSoundFinished");
 }
 
 
@@ -103,6 +104,10 @@ void HandleMouseClick(StringHash eventType, VariantMap& eventData)
 	levelManager_.HandleLevelEvent(eventData);
 }
 
-
+void HandleSoundFinished(StringHash eventType, VariantMap& eventData)
+{
+	eventData["ID"] = EVT_SOUNDFINISH;
+	levelManager_.HandleLevelEvent(eventData);
+}
 
 

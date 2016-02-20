@@ -3,6 +3,7 @@ const int EVT_UPDATE = 1;
 const int EVT_KEYDOWN = 2;
 const int EVT_MOUSECLICK = 3;
 const int EVT_MOUSEMOVE = 4;
+const int EVT_SOUNDFINISH = 5;
 
 	
 //Bullet Physics Mask
@@ -516,6 +517,9 @@ class LevelOneManager : LevelManager
 		case EVT_MOUSECLICK:
 			HandleMouseClick(eventData);
 			break;	
+		case EVT_SOUNDFINISH:
+			HandleSoundFinish(eventData);
+			break;	
 		}
 	}
 	
@@ -590,7 +594,13 @@ class LevelOneManager : LevelManager
 		}
 	}
 	
-
+	
+	void HandleSoundFinish(VariantMap& eventData)
+	{	
+		Node@ soundNode = eventData["Node"].GetPtr();
+		soundNode.RemoveComponent("SoundSource3D");
+	}
+	
 
 	void PlayBackgroundMusic(String musicName)
 	{
@@ -612,7 +622,6 @@ class LevelOneManager : LevelManager
 		source.SetDistanceAttenuation(0.2, 120, 0.1);
 		source.soundType = SOUND_EFFECT;
 		source.Play(sound);
-		source.autoRemove = true;
 	}
 	
 	
