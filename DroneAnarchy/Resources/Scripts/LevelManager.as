@@ -338,7 +338,6 @@ class LevelOneManager : LevelManager
 
 		PlayBackgroundMusic("Resources/Sounds/cyber_dance.ogg");
 		StartCounterToGame();
-		//HandleCountFinished();
 	}
 
 	
