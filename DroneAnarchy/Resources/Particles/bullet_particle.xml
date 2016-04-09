@@ -1,5 +1,5 @@
 <particleemitter>
-	<material name="DroneAnarchy/Resources/Materials/bullet_particle.xml" />
+	<material name="Resources/Materials/bullet_particle.xml" />
 	<updateinvisible enable="true" />
 	<relative enable="false" />
 	<scaled enable="false" />
