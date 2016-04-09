@@ -8,9 +8,7 @@ void Start()
 {
 	
 	SetWindowTitleAndIcon();
-	
-	
-	
+
 	CreateDebugHud();
 	
 	SubscribeToEvents();
