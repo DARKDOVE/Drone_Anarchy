@@ -55,6 +55,14 @@ void SubscribeToEvents()
 	SubscribeToEvent("MouseMove", "HandleMouseMove");
 	SubscribeToEvent("MouseButtonDown", "HandleMouseClick");
 	SubscribeToEvent("SoundFinished", "HandleSoundFinished");
+	
+	if ( input.numJoysticks > 0 )  // is there a game controller plugged in?
+	{
+	   SubscribeToEvent("JoystickButtonDown", "HandleJoystickButtonDown");
+	   SubscribeToEvent("JoystickButtonUp", "HandleJoystickButtonUp");
+	   SubscribeToEvent("JoystickHatMove", "HandleHatMove");
+	}
+	
 }
 
 
@@ -106,6 +114,24 @@ void HandleSoundFinished(StringHash eventType, VariantMap& eventData)
 {
 	eventData["ID"] = EVT_SOUNDFINISH;
 	levelManager_.HandleLevelEvent(eventData);
+}
+
+void HandleJoystickButtonDown(StringHash eventType, VariantMap& eventData)
+{
+	eventData["ID"] = EVT_JOYSTICK_BUTTONDOWN;
+	levelManager_.HandleJoystickButtonDown(eventData);
+}
+
+void HandleJoystickButtonUp(StringHash eventType, VariantMap& eventData)
+{
+	eventData["ID"] = EVT_JOYSTICK_BUTTONUP;
+	levelManager_.HandleJoystickButtonUp(eventData);
+}
+
+void HandleHatMove(StringHash eventType, VariantMap& eventData)
+{
+	eventData["ID"] = EVT_JOYSTICK_HATMOVE;
+	levelManager_.HandleHatMove(eventData);
 }
 
 
