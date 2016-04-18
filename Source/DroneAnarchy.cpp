@@ -58,7 +58,6 @@
 
 DroneAnarchy::DroneAnarchy(Urho3D::Context *context) : Application(context)
 {
-    onQuit_ = false;
 
     context_->RegisterSubsystem(new Script(context_));
     context->RegisterFactory<LevelManager>();
@@ -109,9 +108,7 @@ void DroneAnarchy::HandleKeyDown(Urho3D::StringHash eventType, Urho3D::VariantMa
     using namespace Urho3D::KeyDown;
     int key = eventData["key"].GetInt();
 
-    if(key == KEY_ESC)
-        onQuit_ = true;
-    else if(key == KEY_F2)
+    if(key == KEY_F2)
         GetSubsystem<DebugHud>()->ToggleAll();
     else
     {
@@ -137,8 +134,12 @@ void DroneAnarchy::HandleMouseClick(StringHash eventType, VariantMap &eventData)
 
 void DroneAnarchy::HandleUpdate(StringHash eventType, VariantMap &eventData)
 {
+    int statusId = GetGlobalVar("STATUS_ID").GetInt();
 
-    if(onQuit_)
+    //Quickly reset the status variable to normal
+    SetGlobalVar("STATUS_ID",LSTATUS_NORMAL);
+
+    if(statusId == LSTATUS_QUIT)
     {
         engine_->Exit();
     }

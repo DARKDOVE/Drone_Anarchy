@@ -27,6 +27,11 @@
 
 #include <Urho3D/Core/Object.h>
 
+//Level Status
+const int LSTATUS_NORMAL = 0;
+const int LSTATUS_QUIT = 1;
+const int LSTATUS_SUSPEND = 2;
+
 //Definitions
 const int BULLET_COLLISION_LAYER = 1;
 const int PLAYER_COLLISION_LAYER = 2;

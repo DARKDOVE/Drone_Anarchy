@@ -1,5 +1,12 @@
 #include "InputController.as"
-//Level Controller
+
+//Level Status
+const int LSTATUS_NORMAL = 0;
+const int LSTATUS_QUIT = 1;
+const int LSTATUS_SUSPEND = 2;
+
+
+//Level Manager Events
 const int EVT_UPDATE = 1;
 const int EVT_KEYDOWN = 2;
 const int EVT_MOUSECLICK = 3;
@@ -561,7 +568,9 @@ class LevelOneManager : LevelManager
 	{
 		int key = eventData["key"].GetInt();	
 		
-		if(levelState_ == LS_OUTGAME)
+		if(key == KEY_ESC)
+			globalVars["STATUS_ID"] = LSTATUS_QUIT;
+		else if(levelState_ == LS_OUTGAME)
 		{
 			HandleKeyOnOutGame(key);
 		}
@@ -904,7 +913,7 @@ class LevelOneManager : LevelManager
 		// select/back exits always
 		if( jsButton == myjoystick_.button(CONTROLLER_BUTTON_BACK) ) 
 		{
-			onQuit_ = true;
+			globalVars["STATUS_ID"] = LSTATUS_QUIT;
 		}
 
 		// start in game pauses, unpauses

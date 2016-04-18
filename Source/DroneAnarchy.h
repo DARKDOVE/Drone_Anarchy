@@ -58,9 +58,6 @@ private:
     void CreateLevel();
     void CreateDebugHud();
 
-
-    bool onQuit_;
-
     SharedPtr<Scene> scene_;
     WeakPtr<LevelManager> levelManager_;
 

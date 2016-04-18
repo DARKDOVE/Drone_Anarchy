@@ -2,7 +2,6 @@
 
 LevelManager@ levelManager_;
 Scene@ scene_;
-bool onQuit_ = false;
 
 void Start()
 {
@@ -70,9 +69,7 @@ void HandleKeyDown(StringHash eventType, VariantMap& eventData)
 {
 	int key = eventData["key"].GetInt();
 	
-	if(key == KEY_ESC)
-		onQuit_ = true;
-	else if(key == KEY_F2)
+	if(key == KEY_F2)
 		debugHud.ToggleAll();
 	else 
 	{
@@ -85,7 +82,12 @@ void HandleKeyDown(StringHash eventType, VariantMap& eventData)
 
 void HandleUpdate(StringHash eventType, VariantMap& eventData)
 {
-	if(onQuit_)
+	int statusId = globalVars["STATUS_ID"].GetInt();
+	
+	//Quickly reset the status variable to normal
+    globalVars["STATUS_ID"] = LSTATUS_NORMAL;
+	
+	if(statusId == LSTATUS_QUIT)
 	{
 		engine.Exit();
 	}
