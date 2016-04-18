@@ -25,15 +25,6 @@
 #ifndef __DRONEANARCHY_H_
 #define __DRONEANARCHY_H_
 
-
-enum GameState
-{
-    GS_INGAME = 101,
-    GS_OUTGAME,
-    GS_PAUSED
-};
-
-
 using namespace Urho3D;
 
 class DroneAnarchy : public Application
@@ -53,101 +44,25 @@ public:
     void HandleKeyDown(StringHash eventType,VariantMap& eventData);
     void HandleMouseMove(StringHash eventType, VariantMap& eventData);
     void HandleMouseClick(StringHash eventType, VariantMap& eventData);
-    void HandleFixedUpdate(StringHash eventType, VariantMap& eventData);
     void HandleUpdate(StringHash eventType, VariantMap& eventData);
-
-    void HandleDroneDestroyed(StringHash eventType, VariantMap& eventData);
-    void HandlePlayerHit(StringHash eventType, VariantMap& eventData);
-    void HandlePlayerHealthUpdate(StringHash eventType, VariantMap& eventData);
-    void HandlePlayerDestroyed(StringHash eventType, VariantMap& eventData);
-    void HandleDroneHit(StringHash eventType, VariantMap& eventData);
-    void HandleSoundGenerated(StringHash eventType, VariantMap& eventData);
-    void HandleCountFinished(StringHash eventType, VariantMap& eventData);
-
+    void HandleSoundFinished(StringHash eventType, VariantMap& eventData);
+    void HandleJoystickButtonDown(StringHash eventType, VariantMap& eventData);
+    void HandleJoystickButtonUp(StringHash eventType, VariantMap& eventData);
     void HandleHatMove(StringHash eventType, VariantMap& eventData);
-    void HandleButtonDown(StringHash eventType, VariantMap& eventData);
-    void HandleButtonUp(StringHash eventType, VariantMap& eventData);
 
 
 private:
 
-
-    void StartGame();
-    void PauseGame();
-    void StartCounterToGame();
-    void InitiateGameOver();
-    void CleanupScene();
     void SubscribeToEvents();
     void SetWindowTitleAndIcon();
-    //This is to prevent the pause that occurs in loading a resource for the first time
-    void LoadBackgroundResources();
-
-    void LoadDisplayInterface();
-    void LoadAttributeAnimations();
-
-    void CreateScene();
+    void CreateLevel();
     void CreateDebugHud();
-    void CreatePlayer();
-    void CreateCameraAndLight();
-    void CreateValueAnimation();
-    void CreateAudioSystem();
-    Sprite* CreateDroneSprite();
 
-    void SetSoundListener(Node* listenerNode);
-    void SetViewportCamera(Node* cameraNode);
-
-    void RotatePlayer(int dx, int dy);
-    void Fire();
-    void PlaySoundFX(Node* soundNode, String soundName);
-    void PlayBackgroundMusic(String musicName);
-
-    void SpawnDrone();
-    void SpawnBullet(bool first);
-    void SpawnExplosion(Vector3 position);
-
-    void UpdateDroneSprites();
-    void UpdateHealthTexture(float healthFraction);
-    void UpdateScoreDisplay();
-
-    void HandleKeyOnOutGame(int key);
-    void HandleKeyOnInGame(int key);
-
-    void CreateGameControllers();
-    void JoystickUpdate ( int position );
-
-
-    float spriteUpdateCounter_;
-    float droneSpawnCounter_;
-    float gamePhaseCounter_;
-
-    int playerScore_;
 
     bool onQuit_;
-    bool playerDestroyed_;
-
-    GameState gameState_;
-    int joydirection_ ;
 
     SharedPtr<Scene> scene_;
-    SharedPtr<Node> cameraNode_;
-    SharedPtr<Node> droneRootNode_;
-    SharedPtr<Node> playerNode_;
-
-    SharedPtr<Sprite> healthFillSprite_;
-    SharedPtr<Sprite> radarScreenBase_;
-    SharedPtr<Sprite> targetSprite_;
-
-    SharedPtr<ValueAnimation> textAnimation_;
-    SharedPtr<ValueAnimation> damageAnimation_;
-
-    SharedPtr<Text> enemyCountText_;
-    SharedPtr<Text> playerScoreText_;
-
-    SharedPtr<Text> statusText_;
-    SharedPtr<Text> playerScoreMessageText_;
-    SharedPtr<Text> optionsInfoText_;
-    SharedPtr<SoundSource> backgroundMusicSource_;
-    virtualController *myjoystick_;
+    WeakPtr<LevelManager> levelManager_;
 
 };
 

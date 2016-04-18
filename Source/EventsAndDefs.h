@@ -33,6 +33,16 @@ const int PLAYER_COLLISION_LAYER = 2;
 const int DRONE_COLLISION_LAYER = 3;
 const int FLOOR_COLLISION_LAYER = 5;
 
+//Level Manager Event IDs
+const int EVT_UPDATE = 1;
+const int EVT_KEYDOWN = 2;
+const int EVT_MOUSECLICK = 3;
+const int EVT_MOUSEMOVE = 4;
+const int EVT_SOUNDFINISH = 5;
+const int EVT_JOYSTICK_BUTTONDOWN = 6;
+const int EVT_JOYSTICK_BUTTONUP = 7;
+const int EVT_JOYSTICK_HATMOVE = 8;
+
 //Custom Events
 URHO3D_EVENT(E_PLAYERHIT, PlayerHit)
 {
