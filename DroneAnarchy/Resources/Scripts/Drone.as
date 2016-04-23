@@ -98,7 +98,7 @@ class LowLevelDrone : Drone
 		ValueAnimation@ valAnim = ValueAnimation();
 		
 		valAnim.SetKeyFrame(0.0f, Variant(node.position));
-		valAnim.SetKeyFrame(90.0f, Variant(node.rotation * Vector3(0,0,-35)));
+		valAnim.SetKeyFrame(90.0f, Variant(node.rotation * Vector3(0,7,-35)));
 		node.SetAttributeAnimation("Position", valAnim);
 	}
 	
