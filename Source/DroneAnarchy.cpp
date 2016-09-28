@@ -60,7 +60,7 @@ DroneAnarchy::DroneAnarchy(Urho3D::Context *context) : Application(context)
 {
 
     context_->RegisterSubsystem(new Script(context_));
-    context->RegisterFactory<LevelManager>();
+    context_->RegisterFactory<LevelManager>();
 
 }
 
