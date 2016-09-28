@@ -568,7 +568,7 @@ class LevelOneManager : LevelManager
 	{
 		int key = eventData["key"].GetInt();	
 		
-		if(key == KEY_ESC)
+		if(key == KEY_ESCAPE)
 			globalVars["STATUS_ID"] = LSTATUS_QUIT;
 		else if(levelState_ == LS_OUTGAME)
 		{
