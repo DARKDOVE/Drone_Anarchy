@@ -32,9 +32,6 @@ enum LevelState
 }
 
 
-//===NOTE
-//Add support for Game Controller
-
 abstract class LevelManager : ScriptObject
 {
 	protected bool isInitialised = false;
