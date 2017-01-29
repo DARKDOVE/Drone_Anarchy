@@ -667,7 +667,7 @@ class LevelOneManager : LevelManager
 		
 		float nodeYaw = Random(360);
 		droneNode.rotation = Quaternion(0,nodeYaw, 0);
-		droneNode.Translate(Vector3(0,7,40));
+		droneNode.Translate(Vector3(0,5,40));
 		droneNode.vars["Sprite"] = CreateDroneSprite(NORMAL_DRONE_SPRITE);
 	}
 

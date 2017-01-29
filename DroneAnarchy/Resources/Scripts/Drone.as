@@ -98,7 +98,7 @@ class LowLevelDrone : Drone
 		ValueAnimation@ valAnim = ValueAnimation();
 		
 		valAnim.SetKeyFrame(0.0f, Variant(node.position));
-		valAnim.SetKeyFrame(90.0f, Variant(node.rotation * Vector3(0,7,-35)));
+		valAnim.SetKeyFrame(90.0f, Variant(node.rotation * Vector3(0,5,-35)));
 		node.SetAttributeAnimation("Position", valAnim);
 	}
 	
@@ -124,7 +124,7 @@ class LowLevelDrone : Drone
 		RigidBody@ objectBody = node.GetComponent("RigidBody");
 		objectBody.kinematic = false;
 				
-		objectBody.linearVelocity = node.rotation * Vector3(0,-15, -35);
+		objectBody.linearVelocity = node.rotation * Vector3(0,-25, -35);
 		hasAttacked_ = true;
 	}
 	
