@@ -348,6 +348,8 @@ class LevelOneManager : LevelManager
 		ScriptFile@ sFile = cache.GetResource("ScriptFile","Resources/Scripts/GameObjects.as");
 		playerNode_.CreateScriptObject(sFile,"PlayerObject");
 		
+		playerNode_.AddTag("player");
+
 		cameraNode.CreateComponent("SoundListener");
 		SetSoundListener(cameraNode);
 		
@@ -707,8 +709,7 @@ class LevelOneManager : LevelManager
 	
 	void UpdateDroneSprites()
 	{
-		Array<Node@> scriptNodes = scene.GetChildrenWithScript(true);
-		int count = 0;
+		Array<Node@> scriptNodes = scene.GetChildrenWithTag("drone",true);
 		
 		for(uint i=0; i < scriptNodes.length ; i++)
 		{
@@ -719,12 +720,11 @@ class LevelOneManager : LevelManager
 			{
 				Vector3 relativePos = droneNode.worldPosition - playerNode_.worldPosition ;
 				nodeSprite.position = Vector2(relativePos.x, -(relativePos.z))* SCENE_TO_UI_SCALE;
-				count += 1;
 			}
 		
 		}
 		
-		enemyCounterText_.text = count;
+		enemyCounterText_.text = scriptNodes.length;;
 		
 	}
 	
@@ -772,22 +772,8 @@ class LevelOneManager : LevelManager
 	
 	int GetDroneCount()
 	{
-		Array<Node@> scriptNodes = scene.GetChildrenWithScript(true);
-		int count = 0;
-		
-		for(uint i=0; i < scriptNodes.length ; i++)
-		{
-			Node@ droneNode = scriptNodes[i];
-			Sprite@ nodeSprite = droneNode.vars["Sprite"].GetPtr();
-			
-			if(nodeSprite !is null)
-			{
-				count += 1;
-			}
-
-		}
-		
-		return count;
+		Array<Node@> scriptNodes = scene.GetChildrenWithTag("drone",true);
+		return scriptNodes.length;
 	}
 
 	
