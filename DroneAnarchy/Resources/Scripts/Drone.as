@@ -93,7 +93,7 @@ class LowLevelDrone : Drone
 		float nodeYaw = Random(360);
 		Quaternion rot = Quaternion(0,nodeYaw, 0);
 		
-		node.SetTransform(rot * Vector3(0,3,40), rot);
+		node.SetTransform(rot * Vector3(0,4,40), rot);
 		//node.rotation = Quaternion(0,nodeYaw, 0);
 		//node.Translate(Vector3(0,7,40));
 	}
@@ -110,7 +110,7 @@ class LowLevelDrone : Drone
 		ValueAnimation@ valAnim = ValueAnimation();
 		
 		valAnim.SetKeyFrame(0.0f, Variant(node.position));
-		valAnim.SetKeyFrame(90.0f, Variant(node.rotation * Vector3(0,5,-35)));
+		valAnim.SetKeyFrame(20.0f, Variant(node.rotation * Vector3(0,4,-35)));
 		node.SetAttributeAnimation("Position", valAnim);
 	}
 	
