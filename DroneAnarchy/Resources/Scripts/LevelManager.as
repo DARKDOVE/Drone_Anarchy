@@ -665,9 +665,6 @@ class LevelOneManager : LevelManager
 		XMLFile@ file = cache.GetResource("XMLFile", "Resources/Objects/LowLevelDrone.xml");
 		droneNode.LoadXML(file.root);
 		
-		float nodeYaw = Random(360);
-		droneNode.rotation = Quaternion(0,nodeYaw, 0);
-		droneNode.Translate(Vector3(0,5,40));
 		droneNode.vars["Sprite"] = CreateDroneSprite(NORMAL_DRONE_SPRITE);
 	}
 

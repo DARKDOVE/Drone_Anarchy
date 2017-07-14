@@ -19,6 +19,8 @@ abstract class Drone : ScriptObject
 		}
 	}
 	
+	void Start(){}
+	
 	void DelayedStart()
 	{
 		SubscribeToEvent(node, "NodeCollision", "HandleNodeCollision");
@@ -84,6 +86,16 @@ class LowLevelDrone : Drone
 		dronePoint_ = 2;
 		damagePoint_ = 2;
 		
+	}
+	
+	void Start()
+	{
+		float nodeYaw = Random(360);
+		Quaternion rot = Quaternion(0,nodeYaw, 0);
+		
+		node.SetTransform(rot * Vector3(0,3,40), rot);
+		//node.rotation = Quaternion(0,nodeYaw, 0);
+		//node.Translate(Vector3(0,7,40));
 	}
 	
 	
