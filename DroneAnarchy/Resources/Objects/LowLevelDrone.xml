@@ -2,7 +2,7 @@
 <node id="7">
 	<attribute name="Is Enabled" value="true" />
 	<attribute name="Name" value="" />
-		<attribute name="Tags">
+	<attribute name="Tags">
 		<string value="drone" />
 		<string value="low_level_drone" />
 		<string value="enemy" />
