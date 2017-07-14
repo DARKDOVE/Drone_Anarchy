@@ -5,8 +5,6 @@
 abstract class Drone : ScriptObject
 {
 	float currentHealthLevel_;
-	float attackTime_;
-	float attackTimer_;
 	DroneType droneType_;
 	
 	bool hasAttacked_;
@@ -42,14 +40,6 @@ abstract class Drone : ScriptObject
 			OnDestroyed();
 			Destroy();
 		}
-		else if(!hasAttacked_)
-		{
-			attackTimer_ += timestep;
-			if(attackTimer_ >= attackTime_)
-			{
-				Attack();
-			}
-		}
 		
 	}
 	
@@ -80,8 +70,6 @@ class LowLevelDrone : Drone
 	{
 		droneType_ = DT_NORMAL_DRONE;
 		currentHealthLevel_ = 6;
-		attackTime_ = 37;
-		attackTimer_ = 0;
 		hasAttacked_ = false;
 		dronePoint_ = 2;
 		damagePoint_ = 2;
@@ -104,7 +92,26 @@ class LowLevelDrone : Drone
 		
 		Drone::DelayedStart();
 	}
-	
+
+	void FixedUpdate(float timestep)
+	{
+		Drone::FixedUpdate(timestep);
+
+		
+		if(!hasAttacked_ && currentHealthLevel_ > 0)
+		{
+			Vector3 playerPos = Vector3(0,0,0); //used 0, 0, 0 as temprorary player position
+			Vector3 dronePos = node.worldPosition;
+
+			if((dronePos - playerPos).lengthSquared <= 50.0f)
+			{
+				Attack();			
+			}
+		}
+
+		
+	}
+
 	void SetupNodeAnimation()
 	{
 		ValueAnimation@ valAnim = ValueAnimation();

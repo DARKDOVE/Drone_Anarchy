@@ -2,7 +2,7 @@
 <node id="7">
 	<attribute name="Is Enabled" value="true" />
 	<attribute name="Name" value="" />
-	<attribute name="Tags">
+		<attribute name="Tags">
 		<string value="drone" />
 		<string value="low_level_drone" />
 		<string value="enemy" />
@@ -58,50 +58,8 @@
 		<attribute name="Script File" value="ScriptFile;Resources/Scripts/GameObjects.as" />
 		<attribute name="Class Name" value="LowLevelDrone" />
 		<attribute name="currentHealthLevel_" value="6" />
-		<attribute name="attackTime_" value="37" />
-		<attribute name="attackTimer_" value="0" />
 		<attribute name="hasAttacked_" value="false" />
 		<attribute name="dronePoint_" value="2" />
 		<attribute name="damagePoint_" value="2" />
 	</component>
-	<node id="16777216">
-		<attribute name="Is Enabled" value="true" />
-		<attribute name="Name" value="Root_Bone" />
-		<attribute name="Position" value="0 0 -0" />
-		<attribute name="Rotation" value="0 -0 -0.707107 0.707107" />
-		<attribute name="Scale" value="1 1 1" />
-		<attribute name="Variables" />
-		<node id="16777217">
-			<attribute name="Is Enabled" value="true" />
-			<attribute name="Name" value="Arm_Bone_L" />
-			<attribute name="Position" value="0 -0.000538751 -0" />
-			<attribute name="Rotation" value="0.707107 -0 -0 0.707107" />
-			<attribute name="Scale" value="1 1 1" />
-			<attribute name="Variables" />
-			<node id="16777218">
-				<attribute name="Is Enabled" value="true" />
-				<attribute name="Name" value="Arm_Bone_Tip_L" />
-				<attribute name="Position" value="-9.38627e-012 0.0201699 -0" />
-				<attribute name="Rotation" value="1 -0 -0 0" />
-				<attribute name="Scale" value="1 1 1" />
-				<attribute name="Variables" />
-			</node>
-		</node>
-		<node id="16777219">
-			<attribute name="Is Enabled" value="true" />
-			<attribute name="Name" value="Arm_Bone_R" />
-			<attribute name="Position" value="2.38419e-007 -0.000538751 -0" />
-			<attribute name="Rotation" value="0.707107 -0 -0 -0.707107" />
-			<attribute name="Scale" value="1 1 1" />
-			<attribute name="Variables" />
-			<node id="16777220">
-				<attribute name="Is Enabled" value="true" />
-				<attribute name="Name" value="Arm_Bone_Tip_R" />
-				<attribute name="Position" value="9.38627e-012 0.0201697 -0" />
-				<attribute name="Rotation" value="1 -0 -0 0" />
-				<attribute name="Scale" value="1 1 1" />
-				<attribute name="Variables" />
-			</node>
-		</node>
-	</node>
 </node>
