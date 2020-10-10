@@ -1,4 +1,0 @@
-<material>
-    <technique name="Techniques/DiffLitParticleAlpha.xml" />
-    <texture unit="diffuse" name="Resources/Textures/explosion.png" />
-</material>

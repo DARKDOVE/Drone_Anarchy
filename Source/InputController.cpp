@@ -108,9 +108,9 @@ void virtualController::make_2in1()
 // read settings out of a user prepared configuration file
 void virtualController::load_user_settings(  ResourceCache* rcache )
 {
-    if ( !rcache->Exists ("Resources/Settings/dajoystick.xml") ) return; // no file, no error in console
+    if ( !rcache->Exists ("Settings/dajoystick.xml") ) return; // no file, no error in console
 
-    XMLFile* ujoy = rcache->GetResource<XMLFile>("Resources/Settings/dajoystick.xml");
+    XMLFile* ujoy = rcache->GetResource<XMLFile>("Settings/dajoystick.xml");
     if ( ujoy != NULL )
     {
         clearAll();	// start clean

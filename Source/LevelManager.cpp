@@ -38,7 +38,7 @@ void LevelManager::Initialise()
     instance_ = GetNode()->CreateComponent<ScriptInstance>();
 
     ResourceCache* cache = GetSubsystem<ResourceCache>();
-    instance_->CreateObject(cache->GetResource<ScriptFile>("Resources/Scripts/LevelManager.as"),"LevelOneManager");
+    instance_->CreateObject(cache->GetResource<ScriptFile>("Scripts/LevelManager.as"),"LevelOneManager");
     instance_->Execute("void Initialise()");
     hasScriptObject = true;
 }

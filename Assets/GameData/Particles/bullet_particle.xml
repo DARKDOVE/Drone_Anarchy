@@ -1,0 +1,16 @@
+<particleemitter>
+	<material name="Materials/bullet_particle.xml" />
+	<updateinvisible enable="true" />
+	<relative enable="false" />
+	<scaled enable="false" />
+	<sorted enable="false" />
+	<emittertype value="sphere" />
+	<emissionrate min="100" max="100" />
+	<numparticles value="1000" />
+	<particlesize min="0.3 0.3" max="0.3 0.3" />
+	<timetolive min="0.4" max="0.4" />
+	<velocity min="0.0" max="0.0" />
+	<colorfade color="0.1 0.1 0.2 1" time="0.0" />
+    <colorfade color="0 0 0 1" time="0.2" />
+	<sizedelta add="0.5" mul="0.5" />
+</particleemitter>

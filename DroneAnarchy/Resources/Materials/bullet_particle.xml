@@ -1,4 +1,0 @@
-<material>
-    <technique name="Techniques/DiffVColAddAlpha.xml" />
-    <texture unit="diffuse" name="Resources/Textures/ball_sphere.png" />
-</material>

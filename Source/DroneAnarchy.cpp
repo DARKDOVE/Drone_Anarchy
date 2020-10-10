@@ -70,7 +70,9 @@ void DroneAnarchy::Setup()
 {
     srand(time(NULL) % 1000);
 
-    engineParameters_[EP_RESOURCE_PATHS] = "Assets/CoreData;Assets/GameData;";
+    engineParameters_[EP_RESOURCE_PREFIX_PATHS] = GetSubsystem<FileSystem>()->GetCurrentDir() + "Assets";
+    
+    engineParameters_[EP_RESOURCE_PATHS] = "CoreData;GameData;";
     engineParameters_[EP_WINDOW_RESIZABLE] = true;
     engineParameters_[EP_FULL_SCREEN] = false;
 
@@ -180,7 +182,7 @@ void DroneAnarchy::HandleHatMove(StringHash eventType, VariantMap &eventData)
 void DroneAnarchy::CreateLevel()
 {
     ResourceCache* cache = GetSubsystem<ResourceCache>();
-    XMLFile* file = cache->GetResource<XMLFile>("Resources/Objects/Scene.xml");
+    XMLFile* file = cache->GetResource<XMLFile>("Objects/Scene.xml");
 
     scene_ = new Scene(context_);
     scene_->LoadXML(file->GetRoot());
@@ -209,7 +211,7 @@ void DroneAnarchy::SetWindowTitleAndIcon()
 {
     ResourceCache* cache = GetSubsystem<ResourceCache>();
     Graphics* graphics = GetSubsystem<Graphics>();
-    Image* icon = cache->GetResource<Image>("Resources/Textures/drone_anarchy_icon.png");
+    Image* icon = cache->GetResource<Image>("Textures/drone_anarchy_icon.png");
     graphics->SetWindowIcon(icon);
     graphics->SetWindowTitle("Drone Anarchy");
 }

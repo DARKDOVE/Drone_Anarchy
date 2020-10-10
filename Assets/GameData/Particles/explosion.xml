@@ -1,0 +1,63 @@
+<particleemitter>
+	<material name="Materials/explosion.xml" />
+	<updateinvisible enable="true" />
+	<relative enable="false" />
+	<scaled enable="false" />
+	<sorted enable="false" />
+	<emittertype value="sphere" />
+	<emissionrate min="0.5" max="0.5" />
+	<rotationspeed min="100" max="160" />
+	<numparticles value="5" />
+	<particlesize min="2 2" max="2 2" />
+	<timetolive min="0.78" max="0.78" />
+	<velocity min="0.0" max="0.0" />
+	<texanim uv="0 0 0.125 0.125" time="0" />
+	<texanim uv="0.125 0 0.25 0.125" time="0.0166667" />
+	<texanim uv="0.25 0 0.375 0.125" time="0.0333333" />
+	<texanim uv="0.375 0 0.5 0.125" time="0.05" />
+	<texanim uv="0.5 0 0.625 0.125" time="0.0666667" />
+	<texanim uv="0.625 0 0.75 0.125" time="0.0833333" />
+	<texanim uv="0.75 0 0.875 0.125" time="0.1" />
+	<texanim uv="0.875 0 1 0.125" time="0.116667" />
+	<texanim uv="0 0.125 0.125 0.25" time="0.133333" />
+	<texanim uv="0.125 0.125 0.25 0.25" time="0.15" />
+	<texanim uv="0.25 0.125 0.375 0.25" time="0.166667" />
+	<texanim uv="0.375 0.125 0.5 0.25" time="0.183333" />
+	<texanim uv="0.5 0.125 0.625 0.25" time="0.2" />
+	<texanim uv="0.625 0.125 0.75 0.25" time="0.216667" />
+	<texanim uv="0.75 0.125 0.875 0.25" time="0.233333" />
+	<texanim uv="0.875 0.125 1 0.25" time="0.25" />
+	<texanim uv="0 0.25 0.125 0.375" time="0.266667" />
+	<texanim uv="0.125 0.25 0.25 0.375" time="0.283333" />
+	<texanim uv="0.25 0.25 0.375 0.375" time="0.3" />
+	<texanim uv="0.375 0.25 0.5 0.375" time="0.316667" />
+	<texanim uv="0.5 0.25 0.625 0.375" time="0.333333" />
+	<texanim uv="0.625 0.25 0.75 0.375" time="0.35" />
+	<texanim uv="0.75 0.25 0.875 0.375" time="0.366667" />
+	<texanim uv="0.875 0.25 1 0.375" time="0.383333" />
+	<texanim uv="0 0.375 0.125 0.5" time="0.4" />
+	<texanim uv="0.125 0.375 0.25 0.5" time="0.416667" />
+	<texanim uv="0.25 0.375 0.375 0.5" time="0.433333" />
+	<texanim uv="0.375 0.375 0.5 0.5" time="0.45" />
+	<texanim uv="0.5 0.375 0.625 0.5" time="0.466667" />
+	<texanim uv="0.625 0.375 0.75 0.5" time="0.483333" />
+	<texanim uv="0.75 0.375 0.875 0.5" time="0.5" />
+	<texanim uv="0.875 0.375 1 0.5" time="0.516667" />
+	<texanim uv="0 0.5 0.125 0.625" time="0.533333" />
+	<texanim uv="0.125 0.5 0.25 0.625" time="0.55" />
+	<texanim uv="0.25 0.5 0.375 0.625" time="0.566667" />
+	<texanim uv="0.375 0.5 0.5 0.625" time="0.583333" />
+	<texanim uv="0.5 0.5 0.625 0.625" time="0.6" />
+	<texanim uv="0.625 0.5 0.75 0.625" time="0.616667" />
+	<texanim uv="0.75 0.5 0.875 0.625" time="0.633333" />
+	<texanim uv="0.875 0.5 1 0.625" time="0.65" />
+	<texanim uv="0 0.625 0.125 0.75" time="0.666667" />
+	<texanim uv="0.125 0.625 0.25 0.75" time="0.683333" />
+	<texanim uv="0.25 0.625 0.375 0.75" time="0.7" />
+	<texanim uv="0.375 0.625 0.5 0.75" time="0.716667" />
+	<texanim uv="0.5 0.625 0.625 0.75" time="0.733333" />
+	<texanim uv="0.625 0.625 0.75 0.75" time="0.75" />
+	<texanim uv="0.75 0.625 0.875 0.75" time="0.766667" />
+	<texanim uv="0.875 0.625 1 0.75" time="0.783333" />
+
+</particleemitter>
