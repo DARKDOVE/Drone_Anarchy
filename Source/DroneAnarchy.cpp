@@ -28,6 +28,7 @@
 #include <Urho3D/Resource/XMLFile.h>
 #include <Urho3D/Resource/ResourceCache.h>
 #include <Urho3D/Engine/Engine.h>
+#include <Urho3D/Engine/EngineDefs.h>
 #include <Urho3D/Engine/DebugHud.h>
 #include <Urho3D/Engine/Application.h>
 
@@ -69,9 +70,9 @@ void DroneAnarchy::Setup()
 {
     srand(time(NULL) % 1000);
 
-    engineParameters_["ResourcePaths"] = "CoreData;Data;DroneAnarchy";
-    engineParameters_["WindowResizable"] = true;
-    engineParameters_["FullScreen"] = false;
+    engineParameters_[EP_RESOURCE_PATHS] = "Assets/CoreData;Assets/GameData;";
+    engineParameters_[EP_WINDOW_RESIZABLE] = true;
+    engineParameters_[EP_FULL_SCREEN] = false;
 
     FileSystem* filesystem = GetSubsystem<FileSystem>();
     String dirName = filesystem->GetCurrentDir() + "AppLog";
