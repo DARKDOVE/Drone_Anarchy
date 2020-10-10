@@ -73,8 +73,7 @@ void DroneAnarchy::Setup()
     engineParameters_[EP_RESOURCE_PREFIX_PATHS] = GetSubsystem<FileSystem>()->GetCurrentDir() + "Assets";
     
     engineParameters_[EP_RESOURCE_PATHS] = "CoreData;GameData;";
-    engineParameters_[EP_WINDOW_RESIZABLE] = true;
-    engineParameters_[EP_FULL_SCREEN] = false;
+    engineParameters_[EP_FULL_SCREEN] = true;
 
     FileSystem* filesystem = GetSubsystem<FileSystem>();
     String dirName = filesystem->GetCurrentDir() + "AppLog";
