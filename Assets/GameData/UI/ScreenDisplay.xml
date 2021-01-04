@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <element>
-	<attribute name="Size" value="1366 705" />
 	<element type="Sprite">
 		<attribute name="Name" value="Hud" />
 		<attribute name="Size" value="512 256" />
