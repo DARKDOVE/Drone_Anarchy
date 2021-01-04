@@ -50,6 +50,12 @@ public:
     void HandleJoystickButtonUp(StringHash eventType, VariantMap& eventData);
     void HandleHatMove(StringHash eventType, VariantMap& eventData);
 
+    /// Handle request for mouse mode on web platform.
+    void HandleMouseModeRequest(StringHash eventType, VariantMap& eventData);
+    /// Handle request for mouse mode change on web platform.
+    void HandleMouseModeChange(StringHash eventType, VariantMap& eventData);
+    /// Initialize mouse mode on non-web platform.
+    void InitMouseMode(MouseMode mode);
 
 #ifdef __EMSCRIPTEN__
     void HandleWebResized();
@@ -67,6 +73,8 @@ private:
     SharedPtr<Scene> scene_;
     WeakPtr<LevelManager> levelManager_;
 
+    /// Mouse mode option to use in the sample.
+    MouseMode useMouseMode_;
 };
 
 

@@ -89,7 +89,12 @@ void DroneAnarchy::Setup()
     engineParameters_[EP_RESOURCE_PATHS] = "CoreData;GameData;GameLogic";
 
 
+#ifdef __EMSCRIPTEN__
+    engineParameters_[EP_FULL_SCREEN] = false;
+    engineParameters_[EP_HEADLESS] = false;
+#else
     engineParameters_[EP_FULL_SCREEN] = true;
+#endif
 
     FileSystem* filesystem = GetSubsystem<FileSystem>();
     String dirName = filesystem->GetCurrentDir() + "AppLog";
@@ -114,6 +119,8 @@ void DroneAnarchy::Start()
 
     SubscribeToEvents();
 
+    // Set the mouse mode to use in the sample
+    InitMouseMode(MM_RELATIVE);
 
 }
 
@@ -250,6 +257,47 @@ void DroneAnarchy::SubscribeToEvents()
 
 }
 
+void DroneAnarchy::InitMouseMode(MouseMode mode)
+{
+    useMouseMode_ = mode;
+
+    Input* input = GetSubsystem<Input>();
+
+    if (GetPlatform() != "Web")
+    {
+        if (useMouseMode_ == MM_FREE)
+            input->SetMouseVisible(true);
+
+        if (useMouseMode_ != MM_ABSOLUTE)
+        {
+            input->SetMouseMode(useMouseMode_);
+        }
+    }
+    else
+    {
+        input->SetMouseVisible(true);
+        SubscribeToEvent(E_MOUSEBUTTONDOWN, URHO3D_HANDLER(DroneAnarchy, HandleMouseModeRequest));
+        SubscribeToEvent(E_MOUSEMODECHANGED, URHO3D_HANDLER(DroneAnarchy, HandleMouseModeChange));
+    }
+}
+
+// If the user clicks the canvas, attempt to switch to relative mouse mode on web platform
+void DroneAnarchy::HandleMouseModeRequest(StringHash /*eventType*/, VariantMap& eventData)
+{
+    Input* input = GetSubsystem<Input>();
+    if (useMouseMode_ == MM_ABSOLUTE)
+        input->SetMouseVisible(false);
+    else if (useMouseMode_ == MM_FREE)
+        input->SetMouseVisible(true);
+    input->SetMouseMode(useMouseMode_);
+}
+
+void DroneAnarchy::HandleMouseModeChange(StringHash /*eventType*/, VariantMap& eventData)
+{
+    Input* input = GetSubsystem<Input>();
+    bool mouseLocked = eventData[MouseModeChanged::P_MOUSELOCKED].GetBool();
+    input->SetMouseVisible(!mouseLocked);
+}
 
 
 #ifdef __EMSCRIPTEN__
