@@ -10,7 +10,7 @@ To Run As Scripts
 --------------------------
 On the command line call up `Urho3DPlayer` as shown below
 ```
-Urho3DPlayer Scripts/DroneAnarchy.as -pp path-to-Assets-folder -p CoreData;GameData
+Urho3DPlayer Scripts/DroneAnarchy.as -pp path-to-Assets-folder -p CoreData;GameData;GameLogic
 ```
 where `path-to-Assets-folder` is the path to the `Assets` folder
 
