@@ -15,6 +15,7 @@ const int EVT_SOUNDFINISH = 5;
 const int EVT_JOYSTICK_BUTTONDOWN = 6;
 const int EVT_JOYSTICK_BUTTONUP = 7;
 const int EVT_JOYSTICK_HATMOVE = 8;
+const int EVT_WEB_WINDOW_RESIZED = 9;
 
 	
 //Bullet Physics Mask
@@ -114,9 +115,9 @@ abstract class LevelManager : ScriptObject
 		case EVT_MOUSEMOVE:
 			HandleMouseMove(eventData);
 			break;
-		case EVT_MOUSECLICK:
-			HandleMouseClick(eventData);
-			break;	
+		// case EVT_MOUSECLICK:
+		// 	HandleMouseClick(eventData);
+		// 	break;	
 		case EVT_SOUNDFINISH:
 			HandleSoundFinish(eventData);
 			break;	
@@ -128,18 +129,22 @@ abstract class LevelManager : ScriptObject
 			break;		
 		case EVT_JOYSTICK_HATMOVE:
 			HandleHatMove(eventData);
-			break;	
+			break;		
+		case EVT_WEB_WINDOW_RESIZED:
+			HandleWebWindowResized(eventData);
+			break;
 		}
 	}
 	
 	void HandleUpdate(VariantMap& eventData){}
 	void HandleKeyDown(VariantMap& eventData){}
 	void HandleMouseMove(VariantMap& eventData){}
-	void HandleMouseClick(VariantMap& eventData){}
+	//void HandleMouseClick(VariantMap& eventData){}
 	void HandleSoundFinish(VariantMap& eventData){}
 	void HandleJoystickButtonDown(VariantMap& eventData){}
 	void HandleJoystickButtonUp(VariantMap& eventData){}
 	void HandleHatMove(VariantMap& eventData){}
+    void HandleWebWindowResized(VariantMap& eventData){}
 	
 	
 	protected void SetViewportCamera(Camera@ viewCamera)
@@ -226,6 +231,8 @@ class LevelOneManager : LevelManager
 	Text@ statusText_;
 	Text@ playerScoreMessageText_;
 	Text@ optionsInfoText_;
+
+    UIElement@ displayRoot_;
 	
 	virtualController@ myjoystick_ = virtualController();
 	void Activate()
@@ -259,23 +266,28 @@ class LevelOneManager : LevelManager
 	
 	void LoadDisplayInterface()
 	{
-		UIElement@ displayRoot = ui.root.CreateChild("UIElement");
+		displayRoot_ = ui.root.CreateChild("UIElement");
 		
-		displayRoot.LoadXML(cache.GetFile("UI/ScreenDisplay.xml"));
+		displayRoot_.LoadXML(cache.GetFile("UI/ScreenDisplay.xml"));
 		
 		//Load the various UI Elements
-		healthFillSprite_ = displayRoot.GetChild("HealthFill", true);
-		radarScreenBase_ = displayRoot.GetChild("RadarScreenBase");
+		healthFillSprite_ = displayRoot_.GetChild("HealthFill", true);
+		radarScreenBase_ = displayRoot_.GetChild("RadarScreenBase");
 		
-		targetSprite_ = displayRoot.GetChild("Target");
+		targetSprite_ = displayRoot_.GetChild("Target");
 		
-		enemyCounterText_ = displayRoot.GetChild("EnemyCounter");
-		playerScoreText_ = displayRoot.GetChild("PlayerScore");
+		enemyCounterText_ = displayRoot_.GetChild("EnemyCounter");
+		playerScoreText_ = displayRoot_.GetChild("PlayerScore");
 		
 		
-		statusText_ = displayRoot.GetChild("StatusText");
-		playerScoreMessageText_ = displayRoot.GetChild("ScoreMessage");
-		optionsInfoText_ = displayRoot.GetChild("OptionInfo");
+		statusText_ = displayRoot_.GetChild("StatusText");
+		playerScoreMessageText_ = displayRoot_.GetChild("ScoreMessage");
+		optionsInfoText_ = displayRoot_.GetChild("OptionInfo");
+
+        IntVector2 rect = graphics.size;
+		displayRoot_.SetSize(rect.x, rect.y);
+
+
 	}
 	
 	
@@ -330,10 +342,13 @@ class LevelOneManager : LevelManager
 		SetViewportCamera(cameraNode_.GetComponent("Camera"));
 		
 		Viewport@ viewPort = renderer.viewports[0];
-		
-		RenderPath@ rPath = viewPort.renderPath;
-		rPath.Append(cache.GetResource("XMLFile", "PostProcess/Blur.xml"));
-		rPath.SetEnabled("Blur",true);
+
+		if (GetPlatform() != "Web")
+        {
+            RenderPath@ rPath = viewPort.renderPath;
+            rPath.Append(cache.GetResource("XMLFile", "PostProcess/Blur.xml"));
+            rPath.SetEnabled("Blur",true);
+        }
 	}
 	
 	
@@ -402,7 +417,10 @@ class LevelOneManager : LevelManager
 		
 		CleanupScene();
 		
-		renderer.viewports[0].renderPath.SetEnabled("Blur",true);
+		if (GetPlatform() != "Web")
+        {
+		    renderer.viewports[0].renderPath.SetEnabled("Blur",true);
+        }
 		
 		PlayBackgroundMusic("Sounds/defeated.ogg");
 		
@@ -468,7 +486,10 @@ class LevelOneManager : LevelManager
 		enemyCounterText_.text = 0;
 		playerScoreText_.text = 0;
 		
-		renderer.viewports[0].renderPath.SetEnabled("Blur",false);
+		if (GetPlatform() != "Web")
+        {
+		    renderer.viewports[0].renderPath.SetEnabled("Blur",false);
+        }
 	}
 	
 	
@@ -559,6 +580,7 @@ class LevelOneManager : LevelManager
         }
 		else if(levelState_ == LS_INGAME)
 		{
+            HandleMouseClick();
 			joystickUpdate(joydirection_);
 		}
 	}
@@ -577,6 +599,12 @@ class LevelOneManager : LevelManager
 		{
 			HandleKeyOnInGame(key);
 		}
+	}
+	
+	void HandleWebWindowResized(VariantMap& eventData)
+	{
+		IntVector2 rect = eventData["CurrentWebWindowSize"].GetIntVector2();	
+		displayRoot_.SetSize(rect.x, rect.y);
 	}
 	
 	
@@ -612,16 +640,16 @@ class LevelOneManager : LevelManager
 	
 	
 	
-	void HandleMouseClick(VariantMap& eventData)
+	void HandleMouseClick()
 	{
 		if(levelState_ != LS_INGAME)
 		{
 			return;
 		}
 		
-		int mouseButton = eventData["Button"].GetInt();
+		//int mouseButton = eventData["Button"].GetInt();
 		
-		if(mouseButton == MOUSEB_LEFT)
+		if(input.mouseButtonPress[MOUSEB_LEFT])
 		{
 			Fire();
 		}
