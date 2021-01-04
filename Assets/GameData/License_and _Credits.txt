@@ -110,6 +110,12 @@ FONTS
 }
 
 
+<pdark.ttf (Perfect Dark)>
+{
+	by Ænigma
+    obtained from dafont.com
+    designated "100% free"
+}
 
 
 **************************************************************

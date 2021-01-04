@@ -126,7 +126,7 @@
 		<attribute name="Top Right Color" value="0.2 0.8 1 1" />
 		<attribute name="Bottom Left Color" value="0.2 0.8 1 1" />
 		<attribute name="Bottom Right Color" value="0.2 0.8 1 1" />
-		<attribute name="Font" value="Font;Fonts/gtw.ttf" />
+		<attribute name="Font" value="Font;Fonts/pdark.ttf" />
 		<attribute name="Font Size" value="70" />
 		<attribute name="Text Effect" value="Shadow" />
 	</element>
@@ -139,7 +139,7 @@
 		<attribute name="Top Right Color" value="0.2 0.8 1 1" />
 		<attribute name="Bottom Left Color" value="0.2 0.8 1 1" />
 		<attribute name="Bottom Right Color" value="0.2 0.8 1 1" />
-		<attribute name="Font" value="Font;Fonts/gtw.ttf" />
+		<attribute name="Font" value="Font;Fonts/pdark.ttf" />
 		<attribute name="Font Size" value="50" />
 		<attribute name="Text Effect" value="Shadow" />
 	</element>
@@ -153,7 +153,7 @@
 		<attribute name="Top Right Color" value="0.2 0.8 1 1" />
 		<attribute name="Bottom Left Color" value="0.2 0.8 1 1" />
 		<attribute name="Bottom Right Color" value="0.2 0.8 1 1" />
-		<attribute name="Font" value="Font;Fonts/gtw.ttf" />
+		<attribute name="Font" value="Font;Fonts/pdark.ttf" />
 		<attribute name="Font Size" value="20" />
 		<attribute name="Text Effect" value="Shadow" />
 	</element>
