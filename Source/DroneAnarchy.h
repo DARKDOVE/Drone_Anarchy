@@ -51,6 +51,12 @@ public:
     void HandleHatMove(StringHash eventType, VariantMap& eventData);
 
 
+#ifdef __EMSCRIPTEN__
+    void HandleWebResized();
+#endif
+
+
+
 private:
 
     void SubscribeToEvents();

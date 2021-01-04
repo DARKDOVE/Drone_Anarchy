@@ -48,6 +48,9 @@ const int EVT_JOYSTICK_BUTTONDOWN = 6;
 const int EVT_JOYSTICK_BUTTONUP = 7;
 const int EVT_JOYSTICK_HATMOVE = 8;
 
+//Application Event IDs
+const int EVT_WEB_WINDOW_RESIZED = 9;
+
 //Custom Events
 URHO3D_EVENT(E_PLAYERHIT, PlayerHit)
 {

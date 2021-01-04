@@ -57,11 +57,25 @@
 #include "EventsAndDefs.h"
 #include "DroneAnarchy.h"
 
-DroneAnarchy::DroneAnarchy(Urho3D::Context *context) : Application(context)
+
+#ifdef __EMSCRIPTEN__
+
+#include <emscripten/emscripten.h>
+#include <emscripten/bind.h>
+
+static DroneAnarchy *webInstance;
+
+#endif
+
+DroneAnarchy::DroneAnarchy(Urho3D::Context *context) : Application(context), useMouseMode_(MM_ABSOLUTE)
 {
 
     context_->RegisterSubsystem(new Script(context_));
     context_->RegisterFactory<LevelManager>();
+
+#ifdef __EMSCRIPTEN__
+    webInstance = this;
+#endif
 
 }
 
@@ -235,6 +249,38 @@ void DroneAnarchy::SubscribeToEvents()
     }
 
 }
+
+
+
+#ifdef __EMSCRIPTEN__
+
+void DroneAnarchy::HandleWebResized()
+{
+    IntVector2 rect = GetSubsystem<Graphics>()->GetSize();
+
+    VariantMap eventData;
+    eventData["ID"] = EVT_WEB_WINDOW_RESIZED;
+    eventData["CurrentWebWindowSize"] = rect;
+    
+    levelManager_->HandleLevelEvent(eventData);
+}
+
+static void WebWindowResized()
+{
+    if (webInstance)
+    {
+        webInstance->HandleWebResized();
+    }
+}
+
+using namespace emscripten;
+
+EMSCRIPTEN_BINDINGS(WebPlayer) {
+    function("WebWindowResized", &WebWindowResized);
+}
+
+
+#endif
 
 
 URHO3D_DEFINE_APPLICATION_MAIN(DroneAnarchy)
