@@ -213,6 +213,8 @@ class LevelOneManager : LevelManager
 
 	LevelState levelState_ = LS_OUTGAME;
 
+    bool isWeb_ = GetPlatform() == "Web";
+
 	Node@ cameraNode_;
 	Node@ playerNode_;
 
@@ -340,10 +342,8 @@ class LevelOneManager : LevelManager
 		cameraNode_.CreateComponent("SoundListener");
 		
 		SetViewportCamera(cameraNode_.GetComponent("Camera"));
-		
-		Viewport@ viewPort = renderer.viewports[0];
 
-		if (GetPlatform() != "Web")
+		if ( !isWeb_ )
         {
             RenderPath@ rPath = viewPort.renderPath;
             rPath.Append(cache.GetResource("XMLFile", "PostProcess/Blur.xml"));
@@ -417,7 +417,7 @@ class LevelOneManager : LevelManager
 		
 		CleanupScene();
 		
-		if (GetPlatform() != "Web")
+		if ( !isWeb_ )
         {
 		    renderer.viewports[0].renderPath.SetEnabled("Blur",true);
         }
@@ -486,7 +486,7 @@ class LevelOneManager : LevelManager
 		enemyCounterText_.text = 0;
 		playerScoreText_.text = 0;
 		
-		if (GetPlatform() != "Web")
+		if ( !isWeb_ )
         {
 		    renderer.viewports[0].renderPath.SetEnabled("Blur",false);
         }
