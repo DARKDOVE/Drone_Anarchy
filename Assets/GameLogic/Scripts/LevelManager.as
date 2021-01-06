@@ -620,7 +620,7 @@ class LevelOneManager : LevelManager
 	{
 		if(key == KEY_P)
 		{
-			PauseGame();
+			ToggleGamePause();
 		}
 	}
 	
@@ -777,7 +777,7 @@ class LevelOneManager : LevelManager
 	}
 	
 	
-	void PauseGame()
+	void ToggleGamePause()
 	{
 		scene.updateEnabled = !scene.updateEnabled;
 		
@@ -927,7 +927,7 @@ class LevelOneManager : LevelManager
 		// start in game pauses, unpauses
 		if( jsButton == myjoystick_.button(CONTROLLER_BUTTON_START) && (levelState_ == LS_INGAME || levelState_ == LS_PAUSED) ) 
 		{
-			PauseGame();
+			ToggleGamePause();
 		}
 
 		//  fire only in game
