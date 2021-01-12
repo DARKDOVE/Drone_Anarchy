@@ -42,6 +42,7 @@ public:
         void Activate();
         void Deactivate();
         void HandleLevelEvent(VariantMap& eventData);
+        void StartOrResumeLevel();
 
 private:
         bool hasScriptObject;

@@ -5,16 +5,24 @@ Scene@ scene_;
 
 void Start()
 {
-	
+	SetupAudioGain();
+    
 	SetWindowTitleAndIcon();
 
 	CreateDebugHud();
 	
 	SubscribeToEvents();
 	CreateLevel();
+
 	
 }
 
+void SetupAudioGain()
+{
+    audio.masterGain[SOUND_MASTER] = 0.75;
+    audio.masterGain[SOUND_MUSIC] = 0.13;
+    audio.masterGain[SOUND_EFFECT] = 0.5;
+}
 
 void CreateDebugHud()
 {

@@ -29,7 +29,8 @@ enum LevelState
 {
 	LS_INGAME = 101,
 	LS_OUTGAME,
-	LS_PAUSED
+	LS_PAUSED,
+    LS_FIRSTRUN
 }
 
 
@@ -65,7 +66,6 @@ abstract class LevelManager : ScriptObject
 			return;
 		}
 		CreateAudioSystem();
-		SetupLevel();
 		isInitialised = true;
 	}
 	
@@ -155,9 +155,6 @@ abstract class LevelManager : ScriptObject
 	
 	private void CreateAudioSystem()
 	{
-		audio.masterGain[SOUND_MASTER] = 0.75;
-		audio.masterGain[SOUND_MUSIC] = 0.13;
-		audio.masterGain[SOUND_EFFECT] = 0.5;
 		
 		Node@ backgroundMusicNode = scene.CreateChild();
 		backgroundMusicSource_ = backgroundMusicNode.CreateComponent("SoundSource");
@@ -211,14 +208,14 @@ class LevelOneManager : LevelManager
 
 	String optionsMessage_ = "<SPACE> To Replay | <ESC> To Quit";
 
-	LevelState levelState_ = LS_OUTGAME;
+	LevelState levelState_ = LS_FIRSTRUN;
 
     bool isWeb_ = GetPlatform() == "Web";
 
 	Node@ cameraNode_;
 	Node@ playerNode_;
 
-	Viewport@ viewport_;
+	Viewport@ viewport_ = renderer.viewports[0];
 
 
 	ValueAnimation@ damageAnimation_;
@@ -234,6 +231,9 @@ class LevelOneManager : LevelManager
 	Text@ playerScoreMessageText_;
 	Text@ optionsInfoText_;
 
+    Sound@ backgroundMusic_ = cache.GetResource("Sound","Sounds/cyber_dance.ogg");
+    Sound@ defeatMusic_ = cache.GetResource("Sound","Sounds/defeated.ogg");
+
     UIElement@ displayRoot_;
 	
 	virtualController@ myjoystick_ = virtualController();
@@ -245,9 +245,51 @@ class LevelOneManager : LevelManager
 	void Deactivate()
 	{
 		LevelManager::Deactivate();
-		scene.updateEnabled = false;
+
+        if( levelState_ == LS_INGAME )
+        {
+            ToggleGamePause();
+        }
+        else
+        {
+		    scene.updateEnabled = false;
+        }
+
+        if( displayRoot_ !is null )
+        {
+            displayRoot_.visible = false;
+        }
+
+        backgroundMusicSource_.Stop();
 	}
 	
+
+    void StartOrResumeLevel()
+    {
+        if( levelState_ == LS_FIRSTRUN )
+        {
+            levelState_ = LS_OUTGAME;
+
+		    SetupLevel();
+        }
+        else
+        {
+            Activate();
+            renderer.viewports[0] = viewport_;
+
+            if(levelState_ != LS_PAUSED)
+            {
+		        scene.updateEnabled =  true;
+            }
+
+            if( displayRoot_ !is null )
+            {
+                displayRoot_.visible = true;
+            }
+            
+        }
+    }
+
 	void SetupLevel()
 	{
 		LoadDisplayInterface();
@@ -341,11 +383,13 @@ class LevelOneManager : LevelManager
 		
 		cameraNode_.CreateComponent("SoundListener");
 		
-		SetViewportCamera(cameraNode_.GetComponent("Camera"));
+        viewport_ = Viewport(scene, cameraNode_.GetComponent("Camera"));
+
+        renderer.viewports[0] = viewport_;
 
 		if ( !isWeb_ )
         {
-            RenderPath@ rPath = viewPort.renderPath;
+            RenderPath@ rPath = viewport_.renderPath;
             rPath.Append(cache.GetResource("XMLFile", "PostProcess/Blur.xml"));
             rPath.SetEnabled("Blur",true);
         }
@@ -356,19 +400,19 @@ class LevelOneManager : LevelManager
 	{
 		
 		playerNode_ = scene.CreateChild("PlayerNode");
-		Node@ cameraNode = playerNode_.CreateChild("CameraNode");
-		cameraNode.CreateComponent("Camera");
-		cameraNode.Translate(Vector3(0,1.7,0));
+		Node@ playerCameraNode = playerNode_.CreateChild("CameraNode");
+		playerCameraNode.CreateComponent("Camera");
+		playerCameraNode.Translate(Vector3(0,1.7,0));
 		
 		ScriptFile@ sFile = cache.GetResource("ScriptFile","Scripts/GameObjects.as");
 		playerNode_.CreateScriptObject(sFile,"PlayerObject");
 		
 		playerNode_.AddTag("player");
 
-		cameraNode.CreateComponent("SoundListener");
-		SetSoundListener(cameraNode);
-		
-		SetViewportCamera(cameraNode.GetComponent("Camera") );
+		playerCameraNode.CreateComponent("SoundListener");
+		SetSoundListener(playerCameraNode);
+
+        viewport_.camera =  playerCameraNode.GetComponent("Camera") ;
 		
 		playerDestroyed_ = false;
 
@@ -405,7 +449,7 @@ class LevelOneManager : LevelManager
 		
 		SetSoundListener(cameraNode_);
 
-		PlayBackgroundMusic("Sounds/cyber_dance.ogg");
+		PlayBackgroundMusic();
 		StartCounterToGame();
 	}
 
@@ -422,7 +466,7 @@ class LevelOneManager : LevelManager
 		    renderer.viewports[0].renderPath.SetEnabled("Blur",true);
         }
 		
-		PlayBackgroundMusic("Sounds/defeated.ogg");
+		PlayDefeatMusic();
 		
 		targetSprite_.visible = false;
 		statusText_.text = "YOU FAILED";
@@ -589,7 +633,9 @@ class LevelOneManager : LevelManager
 	{
 		int key = eventData["Key"].GetInt();	
 		
-		if(key == KEY_ESCAPE)
+        //only handle escape key for non web platforms since
+        //for web platform escape key will trigger losing pointer lock
+		if(key == KEY_ESCAPE && !isWeb_)
 			globalVars["STATUS_ID"] = LSTATUS_QUIT;
 		else if(levelState_ == LS_OUTGAME)
 		{
@@ -663,16 +709,30 @@ class LevelOneManager : LevelManager
 	}
 	
 
-	void PlayBackgroundMusic(String musicName)
+	void PlayBackgroundMusic()
 	{
-		Sound@ musicFile = cache.GetResource("Sound",musicName);
-		
-		if(musicFile is null)
+		if(backgroundMusic_ is null)
 			return;
 			
-		musicFile.looped = true;
-		backgroundMusicSource_.Play(musicFile);
+		backgroundMusic_.looped = true;
+		backgroundMusicSource_.Play(backgroundMusic_);
 	}
+
+
+	void PlayDefeatMusic()
+	{
+		if(defeatMusic_ is null)
+			return;
+			
+		defeatMusic_.looped = true;
+		backgroundMusicSource_.Play(defeatMusic_);
+	}
+
+
+    void StopBackgroundMusic()
+    {
+        backgroundMusicSource_.Stop();
+    }
 	
 	
 	void PlaySoundFX(Node@ soundNode, String soundName )

@@ -74,3 +74,11 @@ void LevelManager::HandleLevelEvent(VariantMap &eventData)
     parameters.Push(eventData);
     instance_->Execute("void HandleLevelEvent(VariantMap& eventData)",parameters);
 }
+
+void LevelManager::StartOrResumeLevel()
+{
+    if(!hasScriptObject)
+        return;
+
+    instance_->Execute("void StartOrResumeLevel()");
+}

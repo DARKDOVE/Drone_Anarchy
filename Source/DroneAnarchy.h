@@ -45,6 +45,7 @@ public:
     void HandleMouseMove(StringHash eventType, VariantMap& eventData);
     void HandleMouseClick(StringHash eventType, VariantMap& eventData);
     void HandleUpdate(StringHash eventType, VariantMap& eventData);
+    void HandleIntroSceneUpdate( VariantMap& eventData);
     void HandleSoundFinished(StringHash eventType, VariantMap& eventData);
     void HandleJoystickButtonDown(StringHash eventType, VariantMap& eventData);
     void HandleJoystickButtonUp(StringHash eventType, VariantMap& eventData);
@@ -58,23 +59,37 @@ public:
     void InitMouseMode(MouseMode mode);
 
 #ifdef __EMSCRIPTEN__
+    void PonterLockAcquired();
+    void PointerLockLost();
     void HandleWebResized();
 #endif
-
-
 
 private:
 
     void SubscribeToEvents();
     void SetWindowTitleAndIcon();
     void CreateLevel();
+    void CreateIntroScene();
+    void CreateIntroUI();
     void CreateDebugHud();
+    void SetupAudioGain();
+    void UpdateIntroUIDimension();
 
-    SharedPtr<Scene> scene_;
+    
+    bool hasPointerLock_;
+
+    SharedPtr<Scene> levelScene_;
+    SharedPtr<Scene> introScene_;
+    SharedPtr<Viewport> introViewport_;
+    SharedPtr<Camera> introCamera_;
+    SharedPtr<Node> introDroneNode_;
+    SharedPtr<UIElement> introUI_;
+
     WeakPtr<LevelManager> levelManager_;
 
     /// Mouse mode option to use in the sample.
     MouseMode useMouseMode_;
+    bool showingIntroScene_;
 };
 
 

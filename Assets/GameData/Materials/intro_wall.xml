@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<material>
+	<technique name="Techniques/DiffNormal.xml" quality="1"/>
+	<texture unit="diffuse" name="Textures/pattern41_d.jpg" />
+	<texture unit="normal" name="Textures/pattern41_n.jpg" />
+	<texture unit="specular" name="Textures/pattern41_s.jpg" />
+	<parameter name="MatDiffColor" value="0.6 0.6 0.6 1" />
+	<parameter name="MatSpecColor" value="0.4 0.4 0.4 10" />
+	<parameter name="UOffset" value="0.8 0 0 0" />
+	<parameter name="VOffset" value="0 0.8 0 0" />
+	<cull value="none" />
+	<shadowcull value="none" />
+</material>
