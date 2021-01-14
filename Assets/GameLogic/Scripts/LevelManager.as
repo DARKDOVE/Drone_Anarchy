@@ -281,6 +281,10 @@ class LevelOneManager : LevelManager
             {
 		        scene.updateEnabled =  true;
             }
+            else
+            {
+                PlayBackgroundMusic();
+            }
 
             if( displayRoot_ !is null )
             {
