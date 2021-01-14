@@ -574,6 +574,11 @@ void DroneAnarchy::HandleWebResized()
 
 void DroneAnarchy::PonterLockAcquired()
 {
+    if(hasPointerLock_)
+    {
+        return;
+    }
+
     hasPointerLock_ = true;
     showingIntroScene_ = false;
     introScene_->GetComponent<SoundSource>()->Stop();
@@ -584,6 +589,11 @@ void DroneAnarchy::PonterLockAcquired()
 
 void DroneAnarchy::PointerLockLost()
 {
+    if(!hasPointerLock_)
+    {
+        return;
+    }
+    
     hasPointerLock_ = false;
     showingIntroScene_ = true;
 

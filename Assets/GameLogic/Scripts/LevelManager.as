@@ -53,7 +53,8 @@ enum LevelState
 	LS_INGAME = 101,
 	LS_OUTGAME,
 	LS_PAUSED,
-    LS_FIRSTRUN
+    LS_FIRSTRUN,
+    LS_COUNTDOWN
 }
 
 
@@ -219,6 +220,7 @@ class LevelOneManager : LevelManager
 	float spriteUpdateCounter_ = 0.0f;
 	float droneSpawnCounter_ = 0.0f;
 	float gamePhaseCounter_ = 0.0f;
+    float tempCounterSpeed_ = 0.0f;
 	
 	
 	bool playerDestroyed_ = false;
@@ -269,6 +271,11 @@ class LevelOneManager : LevelManager
         {
             ToggleGamePause();
         }
+        else if( levelState_ == LS_COUNTDOWN)
+        {
+            tempCounterSpeed_ = statusText_.GetAttributeAnimationSpeed("Text");
+            statusText_.SetAttributeAnimationSpeed("Text", 0.0f);
+        }
         else
         {
 		    scene.updateEnabled = false;
@@ -296,12 +303,15 @@ class LevelOneManager : LevelManager
             Activate();
             renderer.viewports[0] = viewport_;
 
-            if(levelState_ != LS_PAUSED)
+            if( levelState_ == LS_OUTGAME)
             {
-		        scene.updateEnabled =  true;
+                PlayDefeatMusic();
             }
             else
             {
+                if(levelState_ == LS_COUNTDOWN)
+                    statusText_.SetAttributeAnimationSpeed("Text", tempCounterSpeed_);
+
                 PlayBackgroundMusic();
             }
 
@@ -469,6 +479,7 @@ class LevelOneManager : LevelManager
 	
 	void StartCounterToGame()
 	{
+        levelState_ = LS_COUNTDOWN;
 		statusText_.SetAttributeAnimation("Text", textAnimation_,WM_ONCE);
 	}
 	
