@@ -60,6 +60,6 @@
 		<attribute name="currentHealthLevel_" value="6" />
 		<attribute name="hasAttacked_" value="false" />
 		<attribute name="dronePoint_" value="2" />
-		<attribute name="damagePoint_" value="2" />
+		<attribute name="damagePoint_" value="5" />
 	</component>
 </node>

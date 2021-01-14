@@ -205,8 +205,8 @@ class LevelOneManager : LevelManager
 	float EASY_PHASE = 0;
 	float MODERATE_PHASE = 60;
 	float CRITICAL_PHASE = 120;
-	float EASY_PHASE_RATE = 5;
-	float MODERATE_PHASE_RATE = 3;
+	float EASY_PHASE_RATE = 3.5;
+	float MODERATE_PHASE_RATE = 2.5;
 	float CRITICAL_PHASE_RATE = 1;
 	float SCENE_TO_UI_SCALE = 1.6f;
 	float SPRITE_UPDATE_TIME = 0.04f;
