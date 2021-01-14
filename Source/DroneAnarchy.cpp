@@ -129,6 +129,10 @@ void DroneAnarchy::Start()
     hasPointerLock_ = true;
 #endif
 
+    auto* cache = GetSubsystem<ResourceCache>();
+    cache->BackgroundLoadResource<Sound>("Sounds/through_space_(modified).ogg");
+    cache->BackgroundLoadResource<Sound>("Sounds/cyber_dance.ogg");
+
     SetRandomSeed(rand());
 
     SetupAudioGain();
