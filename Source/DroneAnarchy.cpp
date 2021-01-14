@@ -584,7 +584,14 @@ void DroneAnarchy::PointerLockLost()
 {
     hasPointerLock_ = false;
     showingIntroScene_ = true;
-    introScene_->GetComponent<SoundSource>()->Start();
+
+    auto *cache = GetSubsystem<ResourceCache>();
+
+    auto* music = cache->GetResource<Sound>("Sounds/through_space_(modified).ogg");
+    // Set the song to loop
+    music->SetLooped(true);
+
+    introScene_->GetComponent<SoundSource>()->Play(music);
     introScene_->SetUpdateEnabled( true );
     introUI_->SetVisible(true);
     auto* renderer = GetSubsystem<Renderer>();
