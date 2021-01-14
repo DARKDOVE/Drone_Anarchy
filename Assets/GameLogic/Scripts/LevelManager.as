@@ -320,6 +320,7 @@ class LevelOneManager : LevelManager
 		LoadAttributeAnimations();
 		CreateGameControllers();
 		SetupScene();
+        CreateSkyBox();
 		CreateCameraAndLight();
 		SubscribeToEvents();
 		StartGame();
@@ -330,6 +331,15 @@ class LevelOneManager : LevelManager
 		scene.updateEnabled = false;
 	}
 
+    private void CreateSkyBox()
+    {
+            
+        Node@ skyNode = scene.CreateChild("Sky");
+        Skybox@ skybox = skyNode.CreateComponent("Skybox");
+
+        skybox.model = cache.GetResource("Model", "Models/box.mdl");
+        skybox.material = cache.GetResource("Material", "Materials/level_one_sky_box.xml");
+    }
 	
 	void LoadDisplayInterface()
 	{

@@ -277,6 +277,15 @@ Modified By BlueMagnificent BlueMagnificent.com
 License: Creative Commons Public Domain (http://creativecommons.org/publicdomain/zero/1.0/)
 
 
+
+miramar_bk.jpg, miramar_ft.jpg, miramar_rt.jpg, miramar_dn.jpg, miramar_lf.jpg, miramar_up.jpg
+===============================================================================================
+By Jockum Skoglund aka hipshot
+hipshot@zfight.com
+www.zfight.com
+Stockholm, 2005 08 25
+
+
 **************************************************************
 **************************************************************
 MISC
@@ -284,8 +293,8 @@ MISC
 **************************************************************
 
 
-Blur.xml
-==========
+Blur.xml, box.mdl
+=================
 Obtained from Urho3D Source Repository (https://urho3d.github.io/)
 
 
