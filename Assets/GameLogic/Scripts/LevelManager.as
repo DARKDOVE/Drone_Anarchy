@@ -114,10 +114,7 @@ abstract class LevelManager : ScriptObject
 			break;
 		case EVT_MOUSEMOVE:
 			HandleMouseMove(eventData);
-			break;
-		// case EVT_MOUSECLICK:
-		// 	HandleMouseClick(eventData);
-		// 	break;	
+			break;	
 		case EVT_SOUNDFINISH:
 			HandleSoundFinish(eventData);
 			break;	
@@ -139,7 +136,6 @@ abstract class LevelManager : ScriptObject
 	void HandleUpdate(VariantMap& eventData){}
 	void HandleKeyDown(VariantMap& eventData){}
 	void HandleMouseMove(VariantMap& eventData){}
-	//void HandleMouseClick(VariantMap& eventData){}
 	void HandleSoundFinish(VariantMap& eventData){}
 	void HandleJoystickButtonDown(VariantMap& eventData){}
 	void HandleJoystickButtonUp(VariantMap& eventData){}
