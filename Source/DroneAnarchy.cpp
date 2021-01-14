@@ -229,8 +229,6 @@ void DroneAnarchy::HandleMouseClick(StringHash eventType, VariantMap &eventData)
 
 #endif
     
-    eventData["ID"] = EVT_MOUSECLICK;
-    levelManager_->HandleLevelEvent(eventData);
 }
 
 
