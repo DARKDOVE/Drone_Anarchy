@@ -18,12 +18,16 @@ Also, obviously, you would need a WASM build of Urho3D (you can build from sourc
 This [half-baked makefile](wasm-build-assets/makefile-web.example) can be of help in setting up makefile for WASM build.
 
 
-GAME PLAY
+Game Play
 ------------
 - Move mouse to rotate
 - Click to Shoot
 - KEY P to toggle Pause
 - ESC To Quit
+
+Credits
+--------
+- Joystick integration by [Jim](https://discourse.urho3d.io/u/jimmarlowe/summary)
 
 ToDO
 ------
