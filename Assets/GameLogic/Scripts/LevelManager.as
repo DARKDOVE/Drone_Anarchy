@@ -447,8 +447,7 @@ class LevelOneManager : LevelManager
 		playerCameraNode.CreateComponent("Camera");
 		playerCameraNode.Translate(Vector3(0,1.7,0));
 		
-		ScriptFile@ sFile = cache.GetResource("ScriptFile","Scripts/GameObjects.as");
-		playerNode_.CreateScriptObject(sFile,"PlayerObject");
+		playerNode_.CreateScriptObject("Scripts/GameObjects.as","PlayerObject");
 		
 		playerNode_.AddTag("player");
 

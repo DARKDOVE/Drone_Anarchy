@@ -63,8 +63,7 @@ class OrdinaryWeapon : Weapon
 		float xOffSet = 0.3f * (first ? 1 : -1);
 		bulletNode.Translate(Vector3(xOffSet,-0.2,0));
 		
-		ScriptFile@ sFile = cache.GetResource("ScriptFile","Scripts/GameObjects.as");
-		bulletNode.CreateScriptObject(sFile, "LowLevelBullet");
+		bulletNode.CreateScriptObject("Scripts/GameObjects.as", "LowLevelBullet");
 	}
 }
 
