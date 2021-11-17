@@ -64,23 +64,6 @@ abstract class LevelManager : ScriptObject
 	protected bool isActivated = false;
 	protected SoundSource@ backgroundMusicSource_;
 	
-		
-	bool initialised
-	{
-		get const
-		{
-			return isInitialised;
-		}
-	}
-	
-	
-	bool activated
-	{
-		get const
-		{
-			return isActivated;
-		}
-	}
 	
 	
 	void Initialise()
@@ -625,7 +608,7 @@ class LevelOneManager : LevelManager
 			droneSpawnRate = CRITICAL_PHASE_RATE;
 			gamePhaseCounter_ = CRITICAL_PHASE;		
 		}
-		else if(gamePhaseCounter_ >= MODERATE_PHASE)
+		else if(gamePhaseCounter_ >= MODERATE_PHASE) 
 		{
 			droneSpawnRate = MODERATE_PHASE_RATE;
 		}

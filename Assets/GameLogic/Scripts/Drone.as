@@ -32,14 +32,6 @@ abstract class Drone : ScriptObject
 	
 	bool hasAttacked_;
 	
-	DroneType droneType
-	{
-		get const
-		{
-			return droneType_;
-		}
-	}
-	
 	void Start(){}
 	
 	void DelayedStart()
