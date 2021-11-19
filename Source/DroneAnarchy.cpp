@@ -518,15 +518,13 @@ void DroneAnarchy::InitMouseMode(MouseMode mode)
 
 void DroneAnarchy::UpdateIntroUIDimension()
 {
-
-    IntVector2 rect = GetSubsystem<Graphics>()->GetSize();
-
     if( !introUI_ )
     {
         return;
     }
 
-    introUI_->SetSize( rect );
+    auto rootSize = GetSubsystem<UI>()->GetRoot()->GetSize();
+    introUI_->SetSize(rootSize.x_, rootSize.y_);
 }
 
 
@@ -561,7 +559,7 @@ void DroneAnarchy::HandleWebResized()
         return;
     }
 
-    IntVector2 rect = GetSubsystem<Graphics>()->GetSize();
+    IntVector2 rect =  GetSubsystem<UI>()->GetRoot()->GetSize();
 
 
     VariantMap eventData;

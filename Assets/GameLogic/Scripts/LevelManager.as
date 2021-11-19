@@ -300,6 +300,7 @@ class LevelOneManager : LevelManager
 
             if( displayRoot_ !is null )
             {
+				displayRoot_.size = ui.root.size;
                 displayRoot_.visible = true;
             }
             
@@ -354,9 +355,10 @@ class LevelOneManager : LevelManager
 		playerScoreMessageText_ = displayRoot_.GetChild("ScoreMessage");
 		optionsInfoText_ = displayRoot_.GetChild("OptionInfo");
 
-        IntVector2 rect = graphics.size;
-		displayRoot_.SetSize(rect.x, rect.y);
+        //IntVector2 rect = graphics.size;
+		//displayRoot_.SetSize(rect.x, rect.y);
 
+		displayRoot_.size = ui.root.size;
 
 	}
 	
@@ -677,6 +679,8 @@ class LevelOneManager : LevelManager
 	{
 		IntVector2 rect = eventData["CurrentWebWindowSize"].GetIntVector2();	
 		displayRoot_.SetSize(rect.x, rect.y);
+
+		//displayRoot_.size = ui.root.size;
 	}
 	
 	
