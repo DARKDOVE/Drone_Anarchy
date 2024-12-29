@@ -99,8 +99,6 @@ void DroneAnarchy::Setup()
     //seed the random number function
     srand(time(NULL) % 1000);
 
-    engineParameters_[EP_RESOURCE_PREFIX_PATHS] = GetSubsystem<FileSystem>()->GetCurrentDir() + "Assets";
-
     engineParameters_[EP_RESOURCE_PATHS] = "CoreData;GameData;GameLogic";
 
 
