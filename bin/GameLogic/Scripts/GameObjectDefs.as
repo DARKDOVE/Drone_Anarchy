@@ -36,8 +36,6 @@ const int CLASSIC_WEAPON = 2;
 const int ENHANCED_WEAPON = 3;
 const int ADVANCED_WEAPON = 4;
 
-
-
 //Bullet Type Enum
 enum BulletObjectType
 {
@@ -45,7 +43,6 @@ enum BulletObjectType
 	BOT_NORMAL,
 	BOT_POWERFUL
 }
-
 
 //Bullet Physics Mask
 const int BULLET_COLLISION_LAYER = 1;

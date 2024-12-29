@@ -20,7 +20,6 @@
 // THE SOFTWARE.
 //
 
-
 #ifndef LEVELMANAGER_H
 #define LEVELMANAGER_H
 
@@ -34,7 +33,6 @@ class LevelManager : public LogicComponent
 {
     URHO3D_OBJECT(LevelManager, LogicComponent)
 
-
 public:
         LevelManager(Context* context);
         void Initialise();
@@ -47,9 +45,6 @@ public:
 private:
         bool hasScriptObject;
         WeakPtr<ScriptInstance> instance_;
-
-
 };
 
 #endif // LEVELMANAGER_H
-

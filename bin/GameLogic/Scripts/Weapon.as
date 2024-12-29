@@ -66,4 +66,3 @@ class OrdinaryWeapon : Weapon
 		bulletNode.CreateScriptObject("Scripts/GameObjects.as", "LowLevelBullet");
 	}
 }
-

@@ -28,7 +28,6 @@
 
 #include "InputController.h"
 
-
 virtualController::virtualController() :  // xbox 360 button mapping is default
     lookup(),
     updatecounter_(0),

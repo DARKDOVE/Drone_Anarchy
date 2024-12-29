@@ -30,7 +30,6 @@ abstract class Bullet : ScriptObject
 	BulletObjectType bulletObjectType_;
 	float damagePoint_;
 	
-	
 	void DelayedStart()
 	{
 		SubscribeToEvent(node, "NodeCollision", "HandleNodeCollision");
@@ -38,7 +37,6 @@ abstract class Bullet : ScriptObject
 	}
 	
 	void Initialise(){}
-	
 	
 	void FixedUpdate(float timestep)
 	{
@@ -50,12 +48,10 @@ abstract class Bullet : ScriptObject
 		}
 	}
 	
-	
 	void HandleNodeCollision(StringHash eventType, VariantMap& eventData)
 	{
 		Node@ otherNode = eventData["OtherNode"].GetPtr();
 		Drone@ droneObj = cast<Drone>(otherNode.scriptObject);
-		
 		
 		if(droneObj !is null)
 		{
@@ -108,6 +104,3 @@ class LowLevelBullet : Bullet
 	}
 
 }
-
-
-

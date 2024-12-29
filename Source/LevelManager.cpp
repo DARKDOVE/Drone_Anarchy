@@ -26,8 +26,6 @@
 
 #include "LevelManager.h"
 
-
-
 LevelManager::LevelManager(Context *context): LogicComponent(context), hasScriptObject(false)
 {
 

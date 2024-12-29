@@ -20,8 +20,6 @@
 // THE SOFTWARE.
 //
 
-
-
 #ifndef __DRONEANARCHY_H_
 #define __DRONEANARCHY_H_
 
@@ -29,9 +27,7 @@ using namespace Urho3D;
 
 class DroneAnarchy : public Application
 {
-
     URHO3D_OBJECT(DroneAnarchy,Application);
-
 
 public:
     DroneAnarchy(Context* context);
@@ -39,7 +35,6 @@ public:
     virtual void Setup();
     virtual void Start();
     virtual void Stop();
-
 
     void HandleKeyDown(StringHash eventType,VariantMap& eventData);
     void HandleMouseMove(StringHash eventType, VariantMap& eventData);
@@ -65,7 +60,6 @@ public:
 #endif
 
 private:
-
     void SubscribeToEvents();
     void SetWindowTitleAndIcon();
     void CreateLevel();
@@ -75,7 +69,6 @@ private:
     void SetupAudioGain();
     void UpdateIntroUIDimension();
 
-    
     bool hasPointerLock_;
 
     SharedPtr<Scene> levelScene_;
@@ -91,6 +84,5 @@ private:
     MouseMode useMouseMode_;
     bool showingIntroScene_;
 };
-
 
 #endif // #ifndef __DRONEANARCHY_H_

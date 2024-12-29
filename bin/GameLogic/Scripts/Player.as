@@ -35,7 +35,6 @@ class PlayerObject : ScriptObject
 	float healthIncrementTimeCounter_;
 	Weapon@ weapon_;
 	
-	
 	PlayerObject()
 	{
 		maximumHealth_ = 100;
@@ -116,9 +115,7 @@ class PlayerObject : ScriptObject
 		}
 		
 		healthIncrementTimeCounter_ = 0;
-		
 	}
-	
 	
 	void FixedUpdate(float timeStep)
 	{
@@ -131,7 +128,6 @@ class PlayerObject : ScriptObject
 			UpdateHealth(healthIncrement_);	
 		}
 	}
-	
 	
 	void UpdateHealth(float incrementValue)
 	{
@@ -157,14 +153,8 @@ class PlayerObject : ScriptObject
 		SendEvent("PlayerHealthUpdate", eventData);
 	}
 	
-	
-	
 	void SetWeapon(Weapon@ weapon)
 	{
 		weapon_ = weapon;
 	}
 }
-
-
-
-

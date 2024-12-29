@@ -23,7 +23,6 @@
 
 //-----------------------------------------------EXPLOSION OBJECT--------------------------------------------------------------------------------
 
-
 ///Explosion Object Base
 abstract class ExplosionObjectBase : ScriptObject
 {
@@ -40,7 +39,6 @@ abstract class ExplosionObjectBase : ScriptObject
 ///Explosion Object
 class SimpleExplosion : ExplosionObjectBase 
 {
-	
 	SimpleExplosion()
 	{
 		duration_ = 0.78f;
@@ -66,12 +64,4 @@ class SimpleExplosion : ExplosionObjectBase
 		eventData["SoundName"] = "Sounds/explosion.ogg";
 		SendEvent("SoundGenerated", eventData);
 	}
-	
-	
 }
-
-
-
-
-
-
