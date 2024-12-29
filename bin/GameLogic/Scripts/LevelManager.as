@@ -20,14 +20,12 @@
 // THE SOFTWARE.
 //
 
-
 #include "InputController.as"
 
 //Level Status
 const int LSTATUS_NORMAL = 0;
 const int LSTATUS_QUIT = 1;
 const int LSTATUS_SUSPEND = 2;
-
 
 //Level Manager Events
 const int EVT_UPDATE = 1;
@@ -39,7 +37,6 @@ const int EVT_JOYSTICK_BUTTONDOWN = 6;
 const int EVT_JOYSTICK_BUTTONUP = 7;
 const int EVT_JOYSTICK_HATMOVE = 8;
 const int EVT_WEB_WINDOW_RESIZED = 9;
-
 	
 //Bullet Physics Mask
 const int BULLET_COLLISION_LAYER = 1;
@@ -57,15 +54,12 @@ enum LevelState
     LS_COUNTDOWN
 }
 
-
 abstract class LevelManager : ScriptObject
 {
 	protected bool isInitialised = false;
 	protected bool isActivated = false;
 	protected SoundSource@ backgroundMusicSource_;
-	
-	
-	
+
 	void Initialise()
 	{
 		if(isInitialised)
@@ -85,7 +79,6 @@ abstract class LevelManager : ScriptObject
 		
 		isActivated = true;
 	}
-
 	
 	void Deactivate()
 	{
@@ -96,14 +89,12 @@ abstract class LevelManager : ScriptObject
 		
 		isActivated = false;
 	}
-	
 		
 	void InitialiseAndActivate()
 	{
 		Initialise();
 		Activate();
 	}
-	
 	
 	void SetupLevel(){}
 	
@@ -149,23 +140,18 @@ abstract class LevelManager : ScriptObject
 	void HandleHatMove(VariantMap& eventData){}
     void HandleWebWindowResized(VariantMap& eventData){}
 	
-	
 	protected void SetViewportCamera(Camera@ viewCamera)
 	{
 		renderer.viewports[0] = Viewport(scene, viewCamera);
 	}
 	
-	
 	private void CreateAudioSystem()
 	{
-		
 		Node@ backgroundMusicNode = scene.CreateChild();
 		backgroundMusicSource_ = backgroundMusicNode.CreateComponent("SoundSource");
 		backgroundMusicSource_.soundType = SOUND_MUSIC;
-		
 	}
-	
-	
+
 	protected void SetSoundListener(Node@ listenerNode)
 	{
 		if(listenerNode.GetComponent("SoundListener") is null)
@@ -180,10 +166,8 @@ abstract class LevelManager : ScriptObject
 
 //=========================== LEVEL ONE MANAGER ==========================================
 
-
 class LevelOneManager : LevelManager
 {
-
 	uint MAX_DRONE_COUNT = 15;
 
 	float EASY_PHASE = 0;
@@ -205,7 +189,6 @@ class LevelOneManager : LevelManager
 	float gamePhaseCounter_ = 0.0f;
     float tempCounterSpeed_ = 0.0f;
 	
-	
 	bool playerDestroyed_ = false;
 
 	int joydirection_ = -1;  // which way the game controller wants to go
@@ -220,7 +203,6 @@ class LevelOneManager : LevelManager
 	Node@ playerNode_;
 
 	Viewport@ viewport_ = renderer.viewports[0];
-
 
 	ValueAnimation@ damageAnimation_;
 	ValueAnimation@ textAnimation_;
@@ -272,7 +254,6 @@ class LevelOneManager : LevelManager
         backgroundMusicSource_.Stop();
 	}
 	
-
     void StartOrResumeLevel()
     {
         if( levelState_ == LS_FIRSTRUN )
@@ -303,7 +284,6 @@ class LevelOneManager : LevelManager
 				displayRoot_.size = ui.root.size;
                 displayRoot_.visible = true;
             }
-            
         }
     }
 
@@ -327,7 +307,6 @@ class LevelOneManager : LevelManager
 
     private void CreateSkyBox()
     {
-            
         Node@ skyNode = scene.CreateChild("Sky");
         Skybox@ skybox = skyNode.CreateComponent("Skybox");
 
@@ -359,9 +338,7 @@ class LevelOneManager : LevelManager
 		//displayRoot_.SetSize(rect.x, rect.y);
 
 		displayRoot_.size = ui.root.size;
-
 	}
-	
 	
 	void LoadBackgroundResources()
 	{
@@ -386,17 +363,13 @@ class LevelOneManager : LevelManager
 		cache.BackgroundLoadResource("Texture2D", "Textures/health_bar_yellow.png");
 		
 		cache.BackgroundLoadResource("Sound", "Sounds/boom1.wav");
-		
-		
 	}
-
 
 	void LoadAttributeAnimations()
 	{
 		textAnimation_ = cache.GetResource("ValueAnimation", "AttributeAnimations/GameStartCounterAnimation.xml");
 		damageAnimation_ = cache.GetResource("ValueAnimation", "AttributeAnimations/DamageWarningAnimation.xml");
 	}
-	
 	
 	void CreateCameraAndLight()
 	{
@@ -423,10 +396,8 @@ class LevelOneManager : LevelManager
         }
 	}
 	
-	
 	void CreatePlayer()
 	{
-		
 		playerNode_ = scene.CreateChild("PlayerNode");
 		Node@ playerCameraNode = playerNode_.CreateChild("CameraNode");
 		playerCameraNode.CreateComponent("Camera");
@@ -442,11 +413,8 @@ class LevelOneManager : LevelManager
         viewport_.camera =  playerCameraNode.GetComponent("Camera") ;
 		
 		playerDestroyed_ = false;
-
 	}
 	
-	
-
 	void SubscribeToEvents()
 	{
 		SubscribeToEvent("PlayerHit","HandlePlayerHit");
@@ -456,10 +424,7 @@ class LevelOneManager : LevelManager
 		SubscribeToEvent("PlayerDestroyed", "HandlePlayerDestroyed");
 		SubscribeToEvent("PlayerHealthUpdate", "HandlePlayerHealthUpdate");
 		SubscribeToEvent(scene.physicsWorld, "PhysicsPreStep", "HandleFixedUpdate");
-		
 	}
-
-	
 	
 	void StartCounterToGame()
 	{
@@ -481,7 +446,6 @@ class LevelOneManager : LevelManager
 		StartCounterToGame();
 	}
 
-	
 	void InitiateGameOver()
 	{
 		scene.updateEnabled = false;
@@ -500,9 +464,7 @@ class LevelOneManager : LevelManager
 		statusText_.text = "YOU FAILED";
 		playerScoreMessageText_.text = "Score : " + String(playerScore_);
 		optionsInfoText_.text = optionsMessage_ ;
-
 	}
-	
 	
 	void CleanupScene()
 	{
@@ -521,14 +483,10 @@ class LevelOneManager : LevelManager
 			scriptNode.Remove();
 		}
 		
-		
 		//Hide the enemy counter and player score texts
 		enemyCounterText_.text = "";
 		playerScoreText_.text = "";
-
 	}
-	
-	
 
 	void HandlePlayerHit()
 	{
@@ -536,14 +494,12 @@ class LevelOneManager : LevelManager
 		radarScreenBase_.SetAttributeAnimation("Color", damageAnimation_, WM_ONCE);
 		PlaySoundFX(cameraNode_,"Sounds/boom5.ogg");
 	}
-
 	
 	void HandleDroneDestroyed(StringHash eventType, VariantMap& eventData)
 	{
 		playerScore_ += eventData["DronePoint"].GetInt();
 		UpdateScoreDisplay();
 	}
-	
 	
 	void HandleCountFinished()
 	{
@@ -564,7 +520,6 @@ class LevelOneManager : LevelManager
         }
 	}
 	
-	
 	void HandleSoundGenerated(StringHash eventType, VariantMap& eventData)
 	{
 		Node@ soundNode = eventData["SoundNode"].GetPtr();
@@ -572,7 +527,6 @@ class LevelOneManager : LevelManager
 		
 		PlaySoundFX(soundNode, soundName);
 	}
-	
 	
 	void HandlePlayerDestroyed(StringHash eventType, VariantMap& eventData)
 	{
@@ -587,7 +541,6 @@ class LevelOneManager : LevelManager
 		SetSoundListener(cameraNode_);
 	}
 	
-	
 	void HandlePlayerHealthUpdate(StringHash eventType, VariantMap& eventData)
 	{
 		//Update Health
@@ -597,7 +550,6 @@ class LevelOneManager : LevelManager
 		healthFillSprite_.imageRect = IntRect(range, 0, 512 + range, 64);
 		UpdateHealthTexture(playerHealthFraction);
 	}
-	
 	
 	void HandleFixedUpdate(StringHash eventType, VariantMap& eventData)
 	{
@@ -619,8 +571,6 @@ class LevelOneManager : LevelManager
 			droneSpawnRate = EASY_PHASE_RATE;
 		}
 		
-		
-		
 		droneSpawnCounter_ +=timeStep;
 		if(droneSpawnCounter_ >= droneSpawnRate)
 		{
@@ -632,7 +582,6 @@ class LevelOneManager : LevelManager
 			}
 		}
 		
-		
 		spriteUpdateCounter_ += timeStep;
 		
 		if(spriteUpdateCounter_ >= SPRITE_UPDATE_TIME)
@@ -640,8 +589,6 @@ class LevelOneManager : LevelManager
 			UpdateDroneSprites();
 			spriteUpdateCounter_ = 0;
 		}
-		
-
 	}
 	
 	private void HandleUpdate(VariantMap& eventData)
@@ -700,7 +647,6 @@ class LevelOneManager : LevelManager
 		}
 	}
 	
-	
 	void HandleMouseMove(VariantMap& eventData)
 	{
 		if(levelState_ != LS_INGAME)
@@ -713,9 +659,7 @@ class LevelOneManager : LevelManager
 
 		RotatePlayer(dx, dy);
 	}
-	
-	
-	
+
 	void HandleMouseClick()
 	{
 		if(levelState_ != LS_INGAME)
@@ -731,14 +675,12 @@ class LevelOneManager : LevelManager
 		}
 	}
 	
-	
 	void HandleSoundFinish(VariantMap& eventData)
 	{	
 		Node@ soundNode = eventData["Node"].GetPtr();
 		soundNode.RemoveComponent("SoundSource3D");
 	}
 	
-
 	void PlayBackgroundMusic()
 	{
 		if(backgroundMusic_ is null)
@@ -747,7 +689,6 @@ class LevelOneManager : LevelManager
 		backgroundMusic_.looped = true;
 		backgroundMusicSource_.Play(backgroundMusic_);
 	}
-
 
 	void PlayDefeatMusic()
 	{
@@ -758,12 +699,10 @@ class LevelOneManager : LevelManager
 		backgroundMusicSource_.Play(defeatMusic_);
 	}
 
-
     void StopBackgroundMusic()
     {
         backgroundMusicSource_.Stop();
     }
-	
 	
 	void PlaySoundFX(Node@ soundNode, String soundName )
 	{
@@ -775,7 +714,6 @@ class LevelOneManager : LevelManager
 		source.Play(sound);
 	}
 	
-	
 	void SpawnDrone()
 	{
 		Node@ droneNode = scene.CreateChild();
@@ -785,7 +723,6 @@ class LevelOneManager : LevelManager
 		
 		droneNode.vars["Sprite"] = CreateDroneSprite(NORMAL_DRONE_SPRITE);
 	}
-
 
 	Sprite@ CreateDroneSprite(String spriteTexture)
 	{
@@ -802,8 +739,6 @@ class LevelOneManager : LevelManager
 		return droneSprite;
 	}
 	
-
-	
 	void UpdateHealthTexture(float healthFraction)
 	{
 		if(healthFraction > 0.5)
@@ -819,8 +754,6 @@ class LevelOneManager : LevelManager
 			healthFillSprite_.texture = cache.GetResource("Texture2D", "Textures/health_bar_red.png");
 		}
 	}
-	
-	
 	
 	void UpdateDroneSprites()
 	{
@@ -840,15 +773,12 @@ class LevelOneManager : LevelManager
 		}
 		
 		enemyCounterText_.text = scriptNodes.length;;
-		
 	}
-	
 
 	void UpdateScoreDisplay()
 	{
 		playerScoreText_.text = playerScore_;
 	}
-	
 	 
 	void RotatePlayer(int dx, int dy)
 	{
@@ -860,12 +790,10 @@ class LevelOneManager : LevelManager
 		radarScreenBase_.rotation = -playerNode_.worldRotation.yaw;
 	}
 
-	
 	void Fire()
 	{	
 		SendEvent("ActivateWeapon");
 	}
-	
 	
 	void ToggleGamePause()
 	{
@@ -891,9 +819,6 @@ class LevelOneManager : LevelManager
 		return scriptNodes.length;
 	}
 
-	
-	
-	
 	// look for a config file to normalize the controller button functions.
 	// and set up the event handlers in case 1 joystick is connected
 	void CreateGameControllers()
@@ -904,9 +829,6 @@ class LevelOneManager : LevelManager
 		}
 	}
 	
-	
-	
-
 	// continuous action function. This is needed because unlike keyboard keys,
 	// the joystick buttons do not auto-repeat. That not being bad enough, if
 	// a linear function is used to move around, it wont be fast enough to get
@@ -972,11 +894,9 @@ class LevelOneManager : LevelManager
 	// conflict with button numbers.
 	void HandleHatMove(VariantMap& eventData)
 	{	    
-	
 		if ( myjoystick_.button(DA_HAT_UP) <= -1 )
 			return;
 		
-			
 		if(levelState_ != LS_INGAME) // if we are not playing, dont get new positions
 		{
 			return;
@@ -988,7 +908,6 @@ class LevelOneManager : LevelManager
 		// the continuous action studders.  
 		if ( joydirection_ == 9 || joydirection_ == 12 ) joydirection_ = myjoystick_.button(DA_HAT_LEFT);  
 		else if ( joydirection_ == 3 || joydirection_ == 6) joydirection_ = myjoystick_.button(DA_HAT_RIGHT);
-
 	}
 
 	// Get the joystick button presses. For controllers without the hat, the direction
@@ -1046,5 +965,4 @@ class LevelOneManager : LevelManager
 			joydirection_ = 0;  // stop the spinning
 		}
 	}
-	
 }

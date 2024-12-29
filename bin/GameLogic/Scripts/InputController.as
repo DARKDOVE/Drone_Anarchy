@@ -20,7 +20,6 @@
 // THE SOFTWARE.
 //
 
-
 /// Console Game Controller handling 
 
 // Additional enumerations for controller features
@@ -171,5 +170,4 @@ class virtualController
 	private int [] lookup (DA_LAST);  // local button database
     int updatecounter_; // used for pseudo easing movement
     int updatevalue_;  // used for pseudo easing movement
-
 }

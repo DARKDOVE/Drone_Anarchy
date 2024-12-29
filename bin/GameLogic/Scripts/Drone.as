@@ -23,7 +23,6 @@
 
 //-----------------------------------------------DRONE OBJECT--------------------------------------------------------------------------------
 
-
 ///Drone Base Class
 abstract class Drone : ScriptObject
 {
@@ -48,14 +47,12 @@ abstract class Drone : ScriptObject
 	
 	void FixedUpdate(float timestep)
 	{
-		
 		if(currentHealthLevel_ <= 0)
 		{
 			//Add explosion Effects
 			OnDestroyed();
 			Destroy();
 		}
-		
 	}
 	
 	void OnDestroyed(){}
@@ -88,7 +85,6 @@ class LowLevelDrone : Drone
 		hasAttacked_ = false;
 		dronePoint_ = 2;
 		damagePoint_ = 2;
-		
 	}
 	
 	void Start()
@@ -101,10 +97,8 @@ class LowLevelDrone : Drone
 		//node.Translate(Vector3(0,7,40));
 	}
 	
-	
 	void DelayedStart()
 	{
-		
 		Drone::DelayedStart();
 	}
 
@@ -112,7 +106,6 @@ class LowLevelDrone : Drone
 	{
 		Drone::FixedUpdate(timestep);
 
-		
 		if(!hasAttacked_ && currentHealthLevel_ > 0)
 		{
 			Vector3 playerPos = Vector3(0,0,0); //used 0, 0, 0 as temprorary player position
@@ -123,8 +116,6 @@ class LowLevelDrone : Drone
 				Attack();			
 			}
 		}
-
-		
 	}
 
 	void SetupNodeAnimation()
@@ -135,7 +126,6 @@ class LowLevelDrone : Drone
 		valAnim.SetKeyFrame(20.0f, Variant(node.rotation * Vector3(0,4,-35)));
 		node.SetAttributeAnimation("Position", valAnim);
 	}
-	
 	
 	void HandleNodeCollision(StringHash eventType, VariantMap& eventData)
 	{
@@ -184,6 +174,4 @@ class LowLevelDrone : Drone
 		explosionNode.worldPosition = node.worldPosition;	 
 		explosionNode.CreateScriptObject(scriptFile, "SimpleExplosion");
 	}
-	
-	
 }

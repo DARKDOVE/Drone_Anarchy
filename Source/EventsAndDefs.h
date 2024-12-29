@@ -20,8 +20,6 @@
 // THE SOFTWARE.
 //
 
-
-
 #ifndef EVENTS_AND_DEFS_H
 #define EVENTS_AND_DEFS_H
 

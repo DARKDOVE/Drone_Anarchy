@@ -20,7 +20,6 @@
 // THE SOFTWARE.
 //
 
-
 #include "GameObjectDefs.as"
 #include "Bullet.as"
 #include "Weapon.as"

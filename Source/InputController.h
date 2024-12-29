@@ -20,11 +20,8 @@
 // THE SOFTWARE.
 //
 
-
-
 #ifndef __INPUTCONTROLLER_H_
 #define __INPUTCONTROLLER_H_
-
 
 // Additional enumerations for controller features
 const int DA_LEFT_TRIGGER = 15;
@@ -40,8 +37,6 @@ using namespace Urho3D;
 // Contain the game controller functionality
 class virtualController
 {
-
-
    public :
     virtualController();  // xbox 360 button mapping is default
     int button ( int index ) const; // return actual controllers button value
@@ -56,8 +51,6 @@ class virtualController
      void clearAll(); // clear button settings to be invalid, we'll fix them later
      void make_ps3(); // A PS3 usb controller
      void make_2in1();  // MYPOWER 2in1 (cheap) usb controller
-
 };
-
 
 #endif // #ifndef __INPUTCONTROLLER_H_

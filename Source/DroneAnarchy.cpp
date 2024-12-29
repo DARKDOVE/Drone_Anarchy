@@ -20,7 +20,6 @@
 // THE SOFTWARE.
 //
 
-
 #include <ctime>
 
 #include <Urho3D/Urho3D.h>
@@ -93,14 +92,12 @@ DroneAnarchy::DroneAnarchy(Urho3D::Context *context) : Application(context), use
 
 }
 
-
 void DroneAnarchy::Setup()
 {
     //seed the random number function
     srand(time(NULL) % 1000);
 
     engineParameters_[EP_RESOURCE_PATHS] = "CoreData;GameData;GameLogic";
-
 
 #ifdef __EMSCRIPTEN__
     engineParameters_[EP_FULL_SCREEN] = false;
@@ -145,7 +142,7 @@ void DroneAnarchy::Start()
 
     SubscribeToEvents();
 
-    // Set the mouse mode to use in the sample
+    // Set the mouse mode to use
     InitMouseMode(MM_RELATIVE);
 
 }
@@ -161,7 +158,6 @@ void DroneAnarchy::SetupAudioGain()
     audio->SetMasterGain(SOUND_MASTER, 0.95);
     audio->SetMasterGain(SOUND_MUSIC, 0.23);
     audio->SetMasterGain(SOUND_EFFECT, 0.5);
-
 }
 
 void DroneAnarchy::HandleKeyDown(Urho3D::StringHash eventType, Urho3D::VariantMap &eventData)
@@ -188,7 +184,6 @@ void DroneAnarchy::HandleKeyDown(Urho3D::StringHash eventType, Urho3D::VariantMa
         eventData["ID"] = EVT_KEYDOWN;
         levelManager_->HandleLevelEvent(eventData);
     }
-
 }
 
 void DroneAnarchy::HandleMouseMove(StringHash eventType, VariantMap &eventData)
@@ -202,7 +197,6 @@ void DroneAnarchy::HandleMouseMove(StringHash eventType, VariantMap &eventData)
     eventData["ID"] = EVT_MOUSEMOVE;
     levelManager_->HandleLevelEvent(eventData);
 }
-
 
 void DroneAnarchy::HandleMouseClick(StringHash eventType, VariantMap &eventData)
 {
@@ -226,19 +220,14 @@ void DroneAnarchy::HandleMouseClick(StringHash eventType, VariantMap &eventData)
     }
 
 #endif
-    
 }
-
 
 void DroneAnarchy::HandleUpdate(StringHash eventType, VariantMap &eventData)
 {
-    
-
     //if intro scene is shoing then handle update for intro scene scenarios
     if(showingIntroScene_){
         HandleIntroSceneUpdate( eventData );
         return;
-
     }
 
     //no event handling if no pointer lock
@@ -247,7 +236,6 @@ void DroneAnarchy::HandleUpdate(StringHash eventType, VariantMap &eventData)
         return;
     }
     
-
     int statusId = GetGlobalVar("STATUS_ID").GetInt();
 
     //Quickly reset the status variable to normal
@@ -261,10 +249,8 @@ void DroneAnarchy::HandleUpdate(StringHash eventType, VariantMap &eventData)
     {
         eventData["ID"] = EVT_UPDATE;
         levelManager_->HandleLevelEvent(eventData);
-
     }
 }
-
 
 void DroneAnarchy::HandleIntroSceneUpdate(VariantMap &eventData)
 {
@@ -316,10 +302,8 @@ void DroneAnarchy::HandleHatMove(StringHash eventType, VariantMap &eventData)
     levelManager_->HandleLevelEvent(eventData);
 }
 
-
 void DroneAnarchy::CreateLevel()
 {
-
     ResourceCache* cache = GetSubsystem<ResourceCache>();
     XMLFile* file = cache->GetResource<XMLFile>("Objects/Scene.xml");
 
@@ -328,12 +312,10 @@ void DroneAnarchy::CreateLevel()
 
     levelManager_ = levelScene_->CreateComponent<LevelManager>();
     levelManager_->InitialiseAndActivate();
-
 }
 
 void DroneAnarchy::CreateIntroScene()
 {
-
     CreateIntroUI();
 
     auto *cache = GetSubsystem<ResourceCache>();
@@ -357,7 +339,6 @@ void DroneAnarchy::CreateIntroScene()
     planeNode->Pitch(-90);
     planeNode->Yaw(36);
     
-
     plane->SetModel( cache->GetResource<Model>("Models/floor.mdl") );
     plane->SetMaterial( cache->GetResource<Material>( "Materials/intro_wall.xml") );
 
@@ -378,7 +359,6 @@ void DroneAnarchy::CreateIntroScene()
     
     auto* animController = introDroneNode_->CreateComponent<AnimationController>();
     animController->PlayExclusive("Models/open_arm.ani", 0, false);
-
 
     Node* lightNode = introScene_->CreateChild("DirectionalLight");
     lightNode->SetDirection(Vector3(1, -3, 2));
@@ -404,13 +384,10 @@ void DroneAnarchy::CreateIntroScene()
     music->SetLooped(true);
 
     soundSource->Play(music);
-
-
 }
 
 void DroneAnarchy::CreateIntroUI()
 {
-
     auto *cache = GetSubsystem<ResourceCache>();
 
     //first create the UI
@@ -445,8 +422,6 @@ void DroneAnarchy::CreateIntroUI()
     instructionText->SetTextEffect(TextEffect::TE_SHADOW);
     instructionText->SetColor( Color(0.239, 0.913, 1) );
     instructionText->SetPosition( 0, 150);
-
-
 }
 
 void DroneAnarchy::CreateDebugHud()
@@ -459,7 +434,6 @@ void DroneAnarchy::CreateDebugHud()
 
     DebugHud* debugHud = engine_->CreateDebugHud();
     debugHud->SetDefaultStyle(file);
-
 }
 
 void DroneAnarchy::SetWindowTitleAndIcon()
@@ -471,12 +445,11 @@ void DroneAnarchy::SetWindowTitleAndIcon()
     graphics->SetWindowTitle("Drone Anarchy");
 }
 
-
 void DroneAnarchy::SubscribeToEvents()
 {
     SubscribeToEvent(E_KEYDOWN, URHO3D_HANDLER(DroneAnarchy, HandleKeyDown));
-    SubscribeToEvent(E_MOUSEMOVE,URHO3D_HANDLER(DroneAnarchy,HandleMouseMove));
-    SubscribeToEvent(E_MOUSEBUTTONDOWN, URHO3D_HANDLER(DroneAnarchy,HandleMouseClick));
+    SubscribeToEvent(E_MOUSEMOVE,URHO3D_HANDLER(DroneAnarchy, HandleMouseMove));
+    SubscribeToEvent(E_MOUSEBUTTONDOWN, URHO3D_HANDLER(DroneAnarchy, HandleMouseClick));
     SubscribeToEvent(E_UPDATE, URHO3D_HANDLER(DroneAnarchy, HandleUpdate));
     SubscribeToEvent(E_SOUNDFINISHED, URHO3D_HANDLER(DroneAnarchy, HandleSoundFinished));
 
@@ -487,7 +460,6 @@ void DroneAnarchy::SubscribeToEvents()
         SubscribeToEvent(E_JOYSTICKBUTTONUP, URHO3D_HANDLER(DroneAnarchy, HandleJoystickButtonUp));
         SubscribeToEvent(E_JOYSTICKHATMOVE, URHO3D_HANDLER(DroneAnarchy, HandleHatMove));
     }
-
 }
 
 void DroneAnarchy::InitMouseMode(MouseMode mode)
@@ -525,7 +497,6 @@ void DroneAnarchy::UpdateIntroUIDimension()
     introUI_->SetSize(rootSize.x_, rootSize.y_);
 }
 
-
 // If the user clicks the canvas, attempt to switch to relative mouse mode on web platform
 void DroneAnarchy::HandleMouseModeRequest(StringHash /*eventType*/, VariantMap& eventData)
 {
@@ -543,7 +514,6 @@ void DroneAnarchy::HandleMouseModeChange(StringHash /*eventType*/, VariantMap& e
     bool mouseLocked = eventData[MouseModeChanged::P_MOUSELOCKED].GetBool();
     input->SetMouseVisible(!mouseLocked);
 }
-
 
 #ifdef __EMSCRIPTEN__
 
@@ -566,7 +536,6 @@ void DroneAnarchy::HandleWebResized()
     
     levelManager_->HandleLevelEvent(eventData);
 }
-
 
 void DroneAnarchy::PonterLockAcquired()
 {
@@ -607,7 +576,6 @@ void DroneAnarchy::PointerLockLost()
     levelManager_->Deactivate();
 }
 
-
 static void SetPonterLockAcquired()
 {
     if (webInstance)
@@ -640,10 +608,6 @@ EMSCRIPTEN_BINDINGS(WebPlayer) {
     function("SetPointerLockLost", &SetPointerLockLost);
     function("WebWindowResized", &WebWindowResized);
 }
-
-
 #endif
 
-
 URHO3D_DEFINE_APPLICATION_MAIN(DroneAnarchy)
-
